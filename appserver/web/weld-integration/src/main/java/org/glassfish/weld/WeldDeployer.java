@@ -174,6 +174,12 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     @Inject
     ArchiveFactory archiveFactory;
 
+    @Inject
+    private JavaEEContextUtil ctxUtil;
+
+    @Inject
+    private Deployment deployment;
+
     private Map<Application, WeldBootstrap> appToBootstrap =
             new HashMap<Application, WeldBootstrap>();
 
