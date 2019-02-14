@@ -50,19 +50,23 @@ import com.sun.corba.ee.spi.transport.ORBSocketFactory;
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.security.integration.AppClientSSL;
 import com.sun.logging.LogDomains;
+import fish.payara.iiop.impl.SocketOperations;
 import org.glassfish.api.admin.ProcessEnvironment;
 import org.glassfish.api.admin.ProcessEnvironment.ProcessType;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.enterprise.iiop.api.IIOPSSLUtil;
-import org.glassfish.enterprise.iiop.util.IIOPUtils;
-import org.glassfish.enterprise.iiop.util.NotServerException;
 import org.glassfish.grizzly.config.dom.Ssl;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.orb.admin.config.IiopListener;
 import org.glassfish.orb.admin.config.IiopService;
 import org.glassfish.security.common.CipherInfo;
 
-import javax.net.ssl.*;
+import javax.net.ssl.KeyManager;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLServerSocket;
+import javax.net.ssl.SSLServerSocketFactory;
+import javax.net.ssl.SSLSocket;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.ServerSocket;
@@ -71,7 +75,11 @@ import java.net.SocketException;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
 import java.text.MessageFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.StringTokenizer;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -99,10 +107,6 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
     private static final String PERSISTENT_SSL = "PERSISTENT_SSL";
 
     private static final int BACKLOG = 50;
-
-    private static final String SO_KEEPALIVE = "fish.payara.SO_KEEPALIVE";
-    // Deprecated as of 5.191
-    private static final String SO_KEEPALIVE_DEPRECATED = "fish.payara.SOKeepAlive";
 
 
 
@@ -350,7 +354,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
                 }
 
                 // Enable SO_KEEPALIVE if required
-                enableSOKeepAliveAsRequired(socket);
+                SocketOperations.enableSOKeepAliveAsRequired(socket);
                 // Disable Nagle's algorithm (i.e. always send immediately).
                 socket.setTcpNoDelay(true);
                 return socket;
@@ -374,7 +378,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
             socket.setTcpNoDelay(true);
 
             // Enable SO_KEEPALIVE if required
-            enableSOKeepAliveAsRequired(socket);
+            SocketOperations.enableSOKeepAliveAsRequired(socket);
         } catch (SocketException ex) {
             throw new RuntimeException(ex);
         }
@@ -493,7 +497,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
             }
 
             // Enable SO_KEEPALIVE if required
-            enableSOKeepAliveAsRequired(socket);
+            SocketOperations.enableSOKeepAliveAsRequired(socket);
 
         } catch (Exception e) {
             if (_logger.isLoggable(Level.FINE)) {
@@ -634,97 +638,7 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
                 ssl2Enabled && cipherInfo.isSSL2());
     }
 
-    /**
-     * Checks whether SO_KEEPALIVE should be enabled on a Socket and enables it if it should be. Checks for the
-     * presence of a property on the IIOP listener and globally, preferring the value set in the listener.
-     *
-     * @param socket The socket to potentially enable SO_KEEPALIVE on
-     * @throws SocketException If there was an error enabling SO_KEEPALIVE on the socket.
-     */
-    private void enableSOKeepAliveAsRequired(Socket socket) throws SocketException {
-        boolean shouldSet = false;
 
-        try {
-            // Try to get the IIOP Service as this does a check for if we are a server or not (save checking twice)
-            IiopService iiopService = IIOPUtils.getInstance().getIiopService();
-
-            // For each listener, find one with a matching port
-            for (IiopListener iiopListener : IIOPUtils.getInstance().getIiopService().getIiopListener()) {
-                if (Integer.valueOf(iiopListener.getPort()) == socket.getLocalPort()) {
-                    // Check for the property globally before checking on the specific listener, giving precedence to the
-                    // new property
-                    if ((System.getProperty(SO_KEEPALIVE) == null && Boolean.getBoolean(SO_KEEPALIVE_DEPRECATED))
-                            || Boolean.getBoolean(SO_KEEPALIVE)) {
-                        // Check if the property has been set on the listener
-                        if (soKeepAlivePropertyPresentOnIiopListener(iiopListener)) {
-                            // Check if we should override the global value
-                            if (soKeepAlivePropertyEnabledOnIiopListener(iiopListener)) {
-                                shouldSet = true;
-                            }
-                        } else {
-                            // If the property wasn't set on the listener, go with the global setting
-                            shouldSet = true;
-                        }
-                        break;
-                    } else {
-                        // If it wasn't set globally, just check if it's set and enabled on the listener
-                        if (soKeepAlivePropertyPresentOnIiopListener(iiopListener)
-                                && soKeepAlivePropertyEnabledOnIiopListener(iiopListener)) {
-                            shouldSet = true;
-                        }
-                        break;
-                    }
-                }
-            }
-        } catch (NotServerException notServerException) {
-            // Enable or disable SO_KEEPALIVE for the socket as required
-            if (Boolean.getBoolean(SO_KEEPALIVE) && !socket.getKeepAlive()) {
-                shouldSet = true;
-            }
-        }
-
-        if (shouldSet) {
-            _logger.log(Level.FINER, "Enabling SO_KEEPALIVE");
-            socket.setKeepAlive(true);
-        }
-    }
-
-    /**
-     * Shorthand method that simply returns true if either the new or old SO_KEEPALIVE property is present on the
-     * listener.
-     * @param iiopListener The IIOP listener to check if the SO_KEEPALIVE property is set on
-     * @return True if the SO_KEEPALIVE property is present on the IIOP listener
-     */
-    private boolean soKeepAlivePropertyPresentOnIiopListener(IiopListener iiopListener) {
-        boolean soKeepAlivePropertyPresentOnListener = false;
-
-        if (iiopListener.getPropertyValue(SO_KEEPALIVE) != null
-                || iiopListener.getPropertyValue(SO_KEEPALIVE_DEPRECATED) != null) {
-            soKeepAlivePropertyPresentOnListener = true;
-        }
-
-        return soKeepAlivePropertyPresentOnListener;
-    }
-
-    /**
-     * Helper method that checks if either the deprecated or new SO_KEEPALIVE property is enabled on an IIOP
-     * listener, giving precedence to the new property if both are present.
-     * @param iiopListener The IIOP listener to check if the SO_KEEPALIVE property is set on
-     * @return True if the SO_KEEPALIVE property is enabled on the IIOP listener
-     */
-    private boolean soKeepAlivePropertyEnabledOnIiopListener(IiopListener iiopListener) {
-        boolean soKeepAliveEnabledOnListener = false;
-
-        // If the new property isn't present and the deprecated one is set to true, or if the new property is set to
-        // true, then register SO_KEEPALIVE as enabled on the listener
-        if ((iiopListener.getPropertyValue(SO_KEEPALIVE) == null
-                && Boolean.valueOf(iiopListener.getPropertyValue(SO_KEEPALIVE_DEPRECATED)))
-                || Boolean.valueOf(iiopListener.getPropertyValue(SO_KEEPALIVE))) {
-            soKeepAliveEnabledOnListener = true;
-        }
-
-        return soKeepAliveEnabledOnListener;
-    }
 
     /**
      * This API get the format string from resource bundle of _logger.
