@@ -193,9 +193,7 @@
                     <version>2.10.3</version>
                     <configuration>
                         <failOnError>false</failOnError>
-                        <additionalOptions>
-                            <additionalOption>${javadoc.options}</additionalOption>
-                        </additionalOptions>
+                        <additionalparam>${javadoc.options}</additionalparam>
                         <attach>false</attach>
                         <doctitle>${project.name}</doctitle>
                         <windowtitle>${project.name}</windowtitle>
