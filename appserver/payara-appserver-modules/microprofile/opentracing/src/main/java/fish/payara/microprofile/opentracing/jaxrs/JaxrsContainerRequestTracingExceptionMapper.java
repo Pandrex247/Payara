@@ -58,24 +58,18 @@ public class JaxrsContainerRequestTracingExceptionMapper implements ExceptionMap
     @Override
     public Response toResponse(Throwable exception) {
         StatusType status = Response.Status.INTERNAL_SERVER_ERROR;
-        URI location = null;
 
         // Get the status and location if available
         if (exception instanceof WebApplicationException) {
-            Response response = ((WebApplicationException) exception).getResponse();
-            location = response.getLocation();
-            status = response.getStatusInfo();
+            return ((WebApplicationException) exception).getResponse();
         }
 
         Response.ResponseBuilder responseBuilder = Response.status(status);
-        if (location != null) {
-            responseBuilder.location(location);
-        }
+
         // If the status is a server error, attach it as an entity, otherwise just return a response
         if (status.getFamily() == Response.Status.Family.SERVER_ERROR) {
             responseBuilder.entity(exception);
         }
         return responseBuilder.build();
     }
-
 }

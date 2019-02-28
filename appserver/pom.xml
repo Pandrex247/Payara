@@ -40,7 +40,7 @@
     holder.
 
 -->
-<!-- Portions Copyright [2016-2018] [Payara Foundation and/or its affiliates] -->
+<!-- Portions Copyright [2016-2019] [Payara Foundation and/or its affiliates] -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -63,10 +63,10 @@
 
     <properties>
         <jms-api.version>2.0.1</jms-api.version>
-        <jsp-api.version>2.3.2-b01</jsp-api.version>
-        <jsp-impl.version>2.3.3-b02</jsp-impl.version>
-        <jstl-impl.version>1.2.4</jstl-impl.version>
-        <jstl-api.version>1.2.1</jstl-api.version>
+        <jsp-api.version>2.3.3</jsp-api.version>
+        <jsp-impl.version>2.3.4</jsp-impl.version>
+        <jstl-api.version>1.2.2</jstl-api.version>
+        <jstl-impl.version>1.2.5</jstl-impl.version>
         <mojarra.version>2.2.18.payara-p2</mojarra.version>
         <jsf-ext.version>0.2</jsf-ext.version>
         <woodstock.version>4.0.2.10.payara4-p7</woodstock.version>
@@ -112,7 +112,7 @@
         <javaee.version_qualifier>-b${build.id}</javaee.version_qualifier>
         <javaee.version>${javaee.major_version}.${minor_version}${javaee.version_qualifier}</javaee.version>
 
-        <jsftemplating.version>2.1.2</jsftemplating.version>
+        <jsftemplating.version>2.1.3</jsftemplating.version>
         <uc-pkg-client.version>1.122-57.2889</uc-pkg-client.version>
         
         <nimbus-jose-jwt.version>5.1</nimbus-jose-jwt.version>
@@ -123,8 +123,6 @@
         <webservices.version>2.3.2-b608.payara-p3</webservices.version>
         <jsr181-api.version>1.0-MR1</jsr181-api.version>
         <jcip-annotations.version>1.0-1</jcip-annotations.version>
-        <jaxb-api.version>2.2.13-b141020.1521</jaxb-api.version>
-        <jaxb.version>2.2.12-b141219.1637</jaxb.version>
         <stax2-api.version>3.1.1</stax2-api.version>
         <eclipselink.version>2.6.5.payara-p3</eclipselink.version>
         <javax.xml.registry-api.version>1.0.7</javax.xml.registry-api.version>
@@ -137,11 +135,11 @@
         <javadb.version>10.10.2.0</javadb.version>
         <jaxr.version>JAXR_RA_20091012</jaxr.version>
         <weld-api.version>2.4.Final</weld-api.version>
-        <weld.version>2.4.7.Final</weld.version>
+        <weld.version>2.4.8.Final</weld.version>
         <jboss.classfilewriter.version>1.2.1.Final</jboss.classfilewriter.version>
-        <wsdl4j.version>1.6.2</wsdl4j.version>
+        <wsdl4j.version>1.6.3</wsdl4j.version>
         <websocket-api.version>1.1</websocket-api.version>
-        <tyrus.version>1.13.1</tyrus.version>
+        <tyrus.version>1.14</tyrus.version>
         <jsonp-api.version>1.0</jsonp-api.version>
         <jsonp-ri.version>1.0.4</jsonp-ri.version>
         <jsonp-jaxrs.version>1.0</jsonp-jaxrs.version>
@@ -169,7 +167,7 @@
         <imqjmx.version>4.3</imqjmx.version>
         <commons-fileupload.version>1.3.3</commons-fileupload.version>
         <dataprovider.version>1.0</dataprovider.version>
-        <prototype.version>1.5.0</prototype.version>
+        <prototype.version>1.7.3</prototype.version>
         <dojo-ajax-nodemo.version>0.4.4</dojo-ajax-nodemo.version>
         <json.version>1.0</json.version>
         <ddl.version>RELEASE65</ddl.version>
@@ -312,7 +310,7 @@
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
                             <specVersion>1.2</specVersion>
-                            <specImplVersion>1.2.1</specImplVersion>
+                            <specImplVersion>${jstl-impl.version}</specImplVersion>
                             <apiPackage>javax.servlet.jsp.jstl</apiPackage>
                         </spec>
                         <spec>
@@ -504,7 +502,7 @@
                             <nonFinal>false</nonFinal>
                             <jarType>api</jarType>
                             <specVersion>2.3</specVersion>
-                            <specImplVersion>2.3.1</specImplVersion>
+                            <specImplVersion>${jsp-impl.version}</specImplVersion>
                             <apiPackage>javax.servlet.jsp</apiPackage>
                         </spec>
                         <spec>
