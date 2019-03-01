@@ -656,17 +656,10 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
             if (certs != null) {
                 Subject subject = new Subject();
                 X509Certificate certificate = certs[0];
-                
-                
-                Principal x500principal = null;
+
                 Principal principal = certificate.getSubjectDN();
-                if (principal instanceof sun.security.x509.X500Name) {
-                    x500principal = ((sun.security.x509.X500Name) principal).asX500Principal();
-                } else {
-                    x500principal = certificate.getSubjectDN();
-                }
-                
-                subject.getPublicCredentials().add(x500principal);
+
+                subject.getPublicCredentials().add(principal);
                 // Put the certificate chain as an List in the subject, to be accessed by user's LoginModule.
                 final List<X509Certificate> certificateCred = Arrays.asList(certs);
                 subject.getPublicCredentials().add(certificateCred);
@@ -895,8 +888,8 @@ public class RealmAdapter extends RealmBase implements RealmInitializer, PostCon
      *
      * @param request Request we are processing
      * @param response Response we are creating
-     * @param constraint Security constraint we are enforcing
-     * @param The Context to which client of this class is attached.
+     * @param constraints Security constraint we are enforcing
+     * @param context The Context to which client of this class is attached.
      *
      * @exception IOException if an input/output error occurs
      */

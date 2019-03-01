@@ -761,14 +761,6 @@ public class IIOPSSLSocketFactory implements ORBSocketFactory {
         SSLContext getContext() {
             return ctx;
         }
-        
-        void addProtocol(String protocol) {
-            allowedProtocols.add(protocol);
-        }
-        
-        String[] getAllowedProtocol() {
-            return (String[]) allowedProtocols.toArray();
-        }
 
         void addProtocol(String protocol) {
             allowedProtocols.add(protocol);
