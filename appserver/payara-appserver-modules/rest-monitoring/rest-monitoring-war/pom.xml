@@ -43,7 +43,7 @@
     <parent>
         <groupId>fish.payara.appserver.monitoring.rest</groupId>
         <artifactId>rest-monitoring-parent</artifactId>
-        <version>4.1.2.191</version>
+        <version>4.1.2.191.1</version>
     </parent>
     
     <artifactId>rest-monitoring-war</artifactId>
