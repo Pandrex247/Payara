@@ -125,7 +125,7 @@ public class SetHealthCheckServiceNotifierConfiguration implements AdminCommand 
     private Config targetConfig;
 
     @Param(name = "enabled")
-    private boolean enabled;
+    private Boolean enabled;
 
     @Param(name = "noisy", optional = true)
     private Boolean noisy;
@@ -196,7 +196,7 @@ public class SetHealthCheckServiceNotifierConfiguration implements AdminCommand 
     }
 
     void applyValues(Notifier notifier) throws PropertyVetoException {
-        if (Boolean.parseBoolean(notifier.getEnabled()) != enabled) {
+        if (Boolean.parseBoolean(notifier.getEnabled()) != enabled.booleanValue()) {
             report.appendMessage(notifierName + ".enabled was " + notifier.getEnabled() + " set to " + enabled + "\n");
             notifier.enabled(enabled);
         }

@@ -122,7 +122,7 @@ public class SetHealthCheckConfiguration implements AdminCommand {
     private String target;
 
     @Param(name = "enabled")
-    private boolean enabled;
+    private Boolean enabled;
 
     @Param(name = "historical-trace-enabled", optional = true)
     private Boolean historicalTraceEnabled;
@@ -162,7 +162,7 @@ public class SetHealthCheckConfiguration implements AdminCommand {
                 @Override
                 public Object run(HealthCheckServiceConfiguration configProxy)
                         throws PropertyVetoException, TransactionFailure {
-                                configProxy.enabled(String.valueOf(enabled));
+                                configProxy.enabled(enabled.toString());
                                 configProxy.setHistoricalTraceStoreSize(String.valueOf(historicalTraceStoreSize));
                                 if (historicalTraceEnabled != null) {
                                     configProxy.setHistoricalTraceEnabled(historicalTraceEnabled.toString());
@@ -189,7 +189,7 @@ public class SetHealthCheckConfiguration implements AdminCommand {
         ParameterMap params = new ParameterMap();
         params.add("target", target);
         params.add("dynamic", String.valueOf(dynamic));
-        params.add("enabled", String.valueOf(enabled));
+        params.add("enabled", enabled.toString());
         params.add("notifier", NotifierType.LOG.name().toLowerCase());
         // noisy will default to the notifier's config when not set so we do not set it as this is what we want
         inv.parameters(params);

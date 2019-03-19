@@ -141,7 +141,7 @@ public class SetHealthCheckServiceConfiguration implements AdminCommand {
     // general properties params:
 
     @Param(name = "enabled", optional = false)
-    private boolean enabled;
+    private Boolean enabled;
 
     @Param(name = "time", optional = true)
     @Min(value = 1, message = "Time period must be 1 or more")
@@ -308,9 +308,7 @@ public class SetHealthCheckServiceConfiguration implements AdminCommand {
 
     private <C extends Checker, O extends HealthCheckExecutionOptions> void configureDynamically(
             BaseHealthCheck<O, C> service, C config) {
-        if (service.getOptions() == null) {
-            service.setOptions(service.constructOptions(config));
-        }
+        service.setOptions(service.constructOptions(config));
         healthCheckService.registerCheck(config.getName(), service);
         healthCheckService.reboot();
         if (service instanceof BaseThresholdHealthCheck) {
@@ -341,7 +339,7 @@ public class SetHealthCheckServiceConfiguration implements AdminCommand {
     }
 
     <C extends Checker> Checker updateProperties(Checker config, Class<C> type) throws PropertyVetoException {
-        String enabled = updateProperty("enabled", config.getEnabled(), String.valueOf(this.enabled));
+        String enabled = updateProperty("enabled", config.getEnabled(), this.enabled.toString());
         if (enabled != null) {
             config.setEnabled(enabled);
         }
