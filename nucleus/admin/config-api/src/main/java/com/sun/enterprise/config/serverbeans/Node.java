@@ -202,6 +202,26 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
 
     void setSshConnector(SshConnector connector);
 
+    @Attribute
+    String getDockerImage();
+    void setDockerImage(String dockerImage);
+
+    @Attribute(defaultValue = "", dataType = Integer.class)
+    String getDockerPort();
+    void setDockerPort(String dockerPort);
+
+    @Attribute(defaultValue = "")
+    String tlsCert();
+    void setTlsCert(String tlsCert);
+
+    @Attribute(defaultValue = "")
+    String tlsCa();
+    void setTlsCa(String tlsCa);
+
+    @Attribute(defaultValue = "")
+    String tlsPem();
+    void setTlsPem(String tlsPem);
+
     /**
      * Returns the install dir with separators as forward slashes.  This is needed to run commands
      * over SSH tools on Windows where the backslashes are interpruted as escape chars.
@@ -365,6 +385,16 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
         String sshkeypassphrase;
         @Param(name = "windowsdomain", optional = true)
         String windowsdomain;
+        @Param(name = "dockerImage", alias = "dockerimage")
+        String dockerImage;
+        @Param(name = "dockerPort", alias = "dockerport", optional = true)
+        Integer dockerPort;
+        @Param(name = "tlsCert", alias = "tlscert", optional = true)
+        String tlsCert;
+        @Param(name = "tlsCa", alias = "tlsca", optional = true)
+        String tlsCa;
+        @Param(name = "tlsPem", alias = "tlspem", optional = true)
+        String tlsPem;
         @Inject
         ServiceLocator habitat;
         @Inject
@@ -417,6 +447,30 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
 
             if (type.equals("CONFIG"))
                 return;
+
+            if (type.equals("DOCKER")) {
+                if (StringUtils.ok(dockerImage)) {
+                    instance.setDockerImage(dockerImage);
+                }
+
+                if (dockerPort != null) {
+                    instance.setDockerPort(Integer.toString(dockerPort));
+                }
+
+                if (StringUtils.ok(tlsCert)) {
+                    instance.setTlsCert(tlsCert);
+                }
+
+                if (StringUtils.ok(tlsCa)) {
+                    instance.setTlsCa(tlsCa);
+                }
+
+                if (StringUtils.ok(tlsPem)) {
+                    instance.setTlsPem(tlsPem);
+                }
+
+                return;
+            }
 
             SshConnector sshC = instance.createChild(SshConnector.class);
 

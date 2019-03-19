@@ -210,7 +210,7 @@ public class CreateInstanceCommand implements AdminCommand {
 
         // if nodehost is localhost and installdir is null and config node, update config node
         // so installdir is product root. see register-instance above
-        if (theNode.isLocal() && installDir == null) {
+        if (theNode.isLocal() && installDir == null && theNode.getType().equals("CONFIG")) {
             ci = cr.getCommandInvocation("_update-node", report, context.getSubject());
             map = new ParameterMap();
             map.add("installdir", "${com.sun.aas.productRoot}");
@@ -232,8 +232,13 @@ public class CreateInstanceCommand implements AdminCommand {
             return;
         }
 
-        // Then go create the instance filesystem on the node
-        createInstanceFilesystem();
+        // If this
+        if (theNode.getType().equals("DOCKER")) {
+            createDockerContainer();
+        } else {
+            // Then go create the instance filesystem on the node
+            createInstanceFilesystem();
+        }
     }
 
     private void validateInstanceDirUnique(ActionReport report, AdminCommandContext context) {
@@ -474,6 +479,20 @@ public class CreateInstanceCommand implements AdminCommand {
             // because config was updated correctly or we would not be here.
             report.setActionExitCode(ActionReport.ExitCode.WARNING);
         }
+    }
+
+    private void createDockerContainer() {
+        ActionReport actionReport = ctx.getActionReport();
+
+        ParameterMap parameterMap = new ParameterMap();
+
+        parameterMap.add("node", theNode.getName());
+        parameterMap.add("config", configRef);
+        parameterMap.add("DEFAULT", instance);
+
+        cr.getCommandInvocation("_create-docker-container", actionReport, ctx.getSubject())
+                .parameters(parameterMap)
+                .execute();
     }
 
     /**
