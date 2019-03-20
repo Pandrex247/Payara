@@ -1,4 +1,4 @@
-package fish.payara.cluster.docker;
+package fish.payara.docker.node.admin;
 
 
 import com.sun.enterprise.util.StringUtils;

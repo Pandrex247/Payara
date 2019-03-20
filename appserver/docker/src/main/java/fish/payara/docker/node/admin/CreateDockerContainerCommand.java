@@ -1,8 +1,9 @@
-package fish.payara.cluster.docker;
+package fish.payara.docker.node.admin;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.config.serverbeans.Nodes;
+import fish.payara.docker.node.contants.DockerNodeConstants;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
@@ -15,8 +16,12 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Inject;
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.WebTarget;
 import java.util.logging.Logger;
 
 @Service(name = "_create-docker-container")
@@ -61,7 +66,14 @@ public class CreateDockerContainerCommand implements AdminCommand {
             return;
         }
 
+        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder().add(DockerNodeConstants.DOCKER_NAME, instanceName);
+        jsonObjectBuilder.add(Json.createArrayBuilder().add(DockerNodeConstants.INSTANCE_CONFIG + "=" + instanceName).build());
+
+
+
+
         Client client = ClientBuilder.newClient();
-        client.target(node.getNodeHost())
+        WebTarget webTarget = client.target(node.getNodeHost() + ":" + node.getDockerPort() + "/containers/create");
+        webTarget.request().
     }
 }
