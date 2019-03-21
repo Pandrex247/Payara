@@ -298,8 +298,7 @@ public class CreateInstanceCommand implements AdminCommand {
 
     /**
      * Returns the directory for the selected instance that is on the local system.
-     * 
-     * @param instanceName name of the instance
+     *
      * @return File for the local file system location of the instance directory
      * @throws IOException
      */
@@ -488,7 +487,7 @@ public class CreateInstanceCommand implements AdminCommand {
         parameterMap.add("config", configRef);
         parameterMap.add("DEFAULT", instance);
 
-        cr.getCommandInvocation("_create-docker-container", actionReport, ctx.getSubject())
+        commandRunner.getCommandInvocation("_create-docker-container", actionReport, ctx.getSubject())
                 .parameters(parameterMap)
                 .execute();
     }

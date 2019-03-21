@@ -99,7 +99,6 @@
         <module>common-l10n</module>
         <module>admin-l10n</module>
         <module>uc-l10n</module>
-        <module>docker</module>
     </modules>
 </project>
 

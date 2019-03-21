@@ -2,7 +2,6 @@ package fish.payara.docker.node.admin;
 
 
 import com.sun.enterprise.util.StringUtils;
-import com.sun.enterprise.v3.admin.cluster.NodeUtils;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
@@ -17,28 +16,28 @@ public class CreateNodeDockerCommand implements AdminCommand {
     @Param(name = "name", primary = true)
     String name;
 
-    @Param(name = NodeUtils.PARAM_NODEHOST)
+    @Param(name = "nodehost")
     String nodehost;
 
-    @Param(name = NodeUtils.PARAM_NODEDIR, optional= true)
+    @Param(name = "nodedir", optional= true)
     String nodedir;
 
-    @Param(name = NodeUtils.PARAM_INSTALLDIR, optional= true)
+    @Param(name = "installdir", optional= true)
     String installdir;
 
-    @Param(name = NodeUtils.PARAM_DOCKER_IMAGE)
+    @Param(name = "dockerImage")
     String dockerImage;
 
-    @Param(name = NodeUtils.PARAM_DOCKER_PORT, optional = true)
+    @Param(name = "dockerPort", optional = true)
     Integer dockerPort;
 
-    @Param(name = NodeUtils.PARAM_TLS_CERT, optional = true)
+    @Param(name = "tlsCert", optional = true)
     String tlsCert;
 
-    @Param(name = NodeUtils.PARAM_TLS_CA, optional = true)
+    @Param(name = "tlsCa", optional = true)
     String tlsCa;
 
-    @Param(name = NodeUtils.PARAM_TLS_PEM, optional = true)
+    @Param(name = "tlsPem", optional = true)
     String tlsPem;
 
     @Inject
@@ -61,37 +60,35 @@ public class CreateNodeDockerCommand implements AdminCommand {
         map.add("DEFAULT", name);
 
         if (StringUtils.ok(nodedir)) {
-            map.add(NodeUtils.PARAM_NODEDIR, nodedir);
+            map.add("nodedir", nodedir);
         }
 
         if (StringUtils.ok(installdir)) {
-            map.add(NodeUtils.PARAM_INSTALLDIR, installdir);
+            map.add("installdir", installdir);
         }
 
         if (StringUtils.ok(dockerImage)) {
-            map.add(NodeUtils.PARAM_DOCKER_IMAGE, dockerImage);
+            map.add("dockerImage", dockerImage);
         }
 
         if (dockerPort != null) {
-            map.add(NodeUtils.PARAM_DOCKER_PORT, Integer.toString(dockerPort));
+            map.add("dockerPort", Integer.toString(dockerPort));
         }
 
         if (StringUtils.ok(tlsCert)) {
-            map.add(NodeUtils.PARAM_TLS_CERT, tlsCert);
+            map.add("tlsCert", tlsCert);
         }
 
         if (StringUtils.ok(tlsCa)) {
-            map.add(NodeUtils.PARAM_TLS_CA, tlsCa);
+            map.add("tlsCa", tlsCa);
         }
 
         if (StringUtils.ok(tlsPem)) {
-            map.add(NodeUtils.PARAM_TLS_PEM, tlsPem);
+            map.add("tlsPem", tlsPem);
         }
 
-        map.add(NodeUtils.PARAM_TYPE,"DOCKER");
+        map.add("type","DOCKER");
         commandInvocation.parameters(map);
         commandInvocation.execute();
-
-        NodeUtils.sanitizeReport(actionReport);
     }
 }
