@@ -21,7 +21,10 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import java.util.logging.Logger;
 
 @Service(name = "_create-docker-container")
@@ -46,6 +49,9 @@ public class CreateDockerContainerCommand implements AdminCommand {
     @Param(name = "instance", primary = true)
     String instanceName;
 
+    @Param(name = "containerConfig", optional = true, alias = "containerconfig", separator = '|')
+    String[] containerConfig;
+
     @Inject
     Nodes nodes;
 
@@ -67,13 +73,30 @@ public class CreateDockerContainerCommand implements AdminCommand {
         }
 
         JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder().add(DockerNodeConstants.DOCKER_NAME, instanceName);
-        jsonObjectBuilder.add(Json.createArrayBuilder().add(DockerNodeConstants.INSTANCE_CONFIG + "=" + instanceName).build());
+        jsonObjectBuilder.add(DockerNodeConstants.DOCKER_ENV, Json.createArrayBuilder()
+                .add(DockerNodeConstants.INSTANCE_CONFIG + "=" + config)
+                .add(DockerNodeConstants.INSTANCE_NAME + "=" + instanceName));
+        jsonObjectBuilder.add(DockerNodeConstants.DOCKER_IMAGE, node.getDockerImage());
+
+        // TO-DO: Container Config
 
 
 
 
+
+
+        // Create client and send request to Docker API
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target(node.getNodeHost() + ":" + node.getDockerPort() + "/containers/create");
-        webTarget.request().
+        Response response = webTarget.request(MediaType.APPLICATION_JSON).post(
+                Entity.entity(jsonObjectBuilder.build(), MediaType.APPLICATION_JSON));
+
+        // Check status of response and act on result
+        Response.StatusType responseStatus = response.getStatusInfo();
+        if (responseStatus.getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
+            // woohoo
+        } else {
+            actionReport.failure(logger, "Failed to create Docker Container: \n" + responseStatus.getReasonPhrase());
+        }
     }
 }
