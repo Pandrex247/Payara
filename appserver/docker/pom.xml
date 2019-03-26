@@ -10,10 +10,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>fish.payara.docker</groupId>
-    <artifactId>node</artifactId>
+    <artifactId>core</artifactId>
+    <packaging>glassfish-jar</packaging>
 
-    <name>Docker Node</name>
-    <description>Module that provides the functionality for Docker Nodes</description>
+    <name>Docker Core</name>
+    <description>Module that provides the core functionality for Docker Nodes and other related features</description>
 
     <dependencies>
         <dependency>
@@ -41,5 +42,10 @@
             <optional>true</optional>
         </dependency>
     </dependencies>
+
+    <build>
+        <finalName>docker-core</finalName>
+    </build>
+
 
 </project>

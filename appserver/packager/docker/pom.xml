@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>packages</artifactId>
+        <groupId>org.glassfish.main.packager</groupId>
+        <version>5.192-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>docker</artifactId>
+    <packaging>distribution-fragment</packaging>
+
+    <name>Docker Package</name>
+    <description>This module describes how to assemble the Docker package</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <!-- Copy artefact to glassfish/modules and rename to strip version and differentiate -->
+                    <execution>
+                        <id>copy-dependency</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>fish.payara.docker</groupId>
+                                    <artifactId>core</artifactId>
+                                    <version>${project.version}</version>
+                                    <outputDirectory>${temp.modules.dir}</outputDirectory>
+                                    <destFileName>docker-core.jar</destFileName>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

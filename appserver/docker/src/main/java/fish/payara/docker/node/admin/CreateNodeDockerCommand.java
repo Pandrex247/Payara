@@ -1,16 +1,37 @@
 package fish.payara.docker.node.admin;
 
 
+import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.util.StringUtils;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandLock;
 import org.glassfish.api.admin.CommandRunner;
+import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.ParameterMap;
+import org.glassfish.api.admin.RestEndpoint;
+import org.glassfish.api.admin.RestEndpoints;
+import org.glassfish.api.admin.RuntimeType;
+import org.glassfish.config.support.CommandTarget;
+import org.glassfish.config.support.TargetType;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Inject;
 
+@Service(name = "create-node-docker")
+@PerLookup
+@ExecuteOn({RuntimeType.DAS})
+@CommandLock(CommandLock.LockType.NONE)
+@TargetType(value = {CommandTarget.DAS})
+@RestEndpoints({
+        @RestEndpoint(configBean= Domain.class,
+                opType=RestEndpoint.OpType.POST,
+                path="create-node-docker",
+                description="Create a Docker Node to spawn containers on")
+})
 public class CreateNodeDockerCommand implements AdminCommand {
 
     @Param(name = "name", primary = true)
