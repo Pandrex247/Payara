@@ -72,24 +72,29 @@ public class CreateDockerContainerCommand implements AdminCommand {
             return;
         }
 
-        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder().add(DockerNodeConstants.DOCKER_NAME, instanceName);
+        if (!node.getType().equals("DOCKER")) {
+            actionReport.failure(logger, "Node is not of type DOCKER, node is of type: " + node.getType());
+            return;
+        }
+
+        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+        jsonObjectBuilder.add(DockerNodeConstants.DOCKER_IMAGE, node.getDockerImage());
         jsonObjectBuilder.add(DockerNodeConstants.DOCKER_ENV, Json.createArrayBuilder()
                 .add(DockerNodeConstants.INSTANCE_CONFIG + "=" + config)
                 .add(DockerNodeConstants.INSTANCE_NAME + "=" + instanceName));
-        jsonObjectBuilder.add(DockerNodeConstants.DOCKER_IMAGE, node.getDockerImage());
 
         // TO-DO: Container Config
 
 
-
-
-
-
         // Create client and send request to Docker API
         Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target(node.getNodeHost() + ":" + node.getDockerPort() + "/containers/create");
-        Response response = webTarget.request(MediaType.APPLICATION_JSON).post(
-                Entity.entity(jsonObjectBuilder.build(), MediaType.APPLICATION_JSON));
+        WebTarget webTarget = client.target("http://" + node.getNodeHost() + ":" + node.getDockerPort() + "/containers/create");
+        webTarget = webTarget.queryParam(DockerNodeConstants.DOCKER_NAME, instanceName);
+
+
+        Response response = webTarget.queryParam(DockerNodeConstants.DOCKER_NAME, instanceName)
+                .request(MediaType.APPLICATION_JSON).post(
+                        Entity.entity(jsonObjectBuilder.build(), MediaType.APPLICATION_JSON));
 
         // Check status of response and act on result
         Response.StatusType responseStatus = response.getStatusInfo();

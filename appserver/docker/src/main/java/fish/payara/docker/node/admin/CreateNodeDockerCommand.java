@@ -88,6 +88,10 @@ public class CreateNodeDockerCommand implements AdminCommand {
             map.add("installdir", installdir);
         }
 
+        if (StringUtils.ok(nodehost)) {
+            map.add("nodehost", nodehost);
+        }
+
         if (StringUtils.ok(dockerImage)) {
             map.add("dockerImage", dockerImage);
         }
