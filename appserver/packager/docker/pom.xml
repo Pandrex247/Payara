@@ -15,30 +15,38 @@
     <name>Docker Package</name>
     <description>This module describes how to assemble the Docker package</description>
 
+    <properties>
+        <temp.dir>${project.build.directory}/dependency</temp.dir>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>fish.payara</groupId>
+            <artifactId>docker</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
-                    <!-- Copy artefact to glassfish/modules and rename to strip version and differentiate -->
                     <execution>
-                        <id>copy-dependency</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>fish.payara.docker</groupId>
-                                    <artifactId>core</artifactId>
-                                    <version>${project.version}</version>
-                                    <outputDirectory>${temp.modules.dir}</outputDirectory>
-                                    <destFileName>docker-core.jar</destFileName>
-                                </artifactItem>
-                            </artifactItems>
-                        </configuration>
+                        <id>process-step1</id>
+                    </execution>
+                    <execution>
+                        <id>process-step2</id>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>process-step3</id>
                     </execution>
                 </executions>
             </plugin>

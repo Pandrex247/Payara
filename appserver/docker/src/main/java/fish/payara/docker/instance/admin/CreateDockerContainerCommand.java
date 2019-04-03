@@ -1,4 +1,4 @@
-package fish.payara.docker.node.admin;
+package fish.payara.docker.instance.admin;
 
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Node;
@@ -49,8 +49,18 @@ public class CreateDockerContainerCommand implements AdminCommand {
     @Param(name = "instance", primary = true)
     String instanceName;
 
-    @Param(name = "containerConfig", optional = true, alias = "containerconfig", separator = '|')
-    String[] containerConfig;
+    @Param(name = "deploymentgroup", optional = true)
+    String deploymentGroup;
+
+    @Param(name = "portbase", optional = true)
+    private String portBase;
+
+    @Param(name = "systemproperties", optional = true, separator = ':')
+    private String systemProperties;
+
+//    TO-DO
+//    @Param(name = "containerConfig", optional = true, alias = "containerconfig", separator = '|')
+//    String[] containerConfig;
 
     @Inject
     Nodes nodes;
@@ -80,17 +90,18 @@ public class CreateDockerContainerCommand implements AdminCommand {
         JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
         jsonObjectBuilder.add(DockerNodeConstants.DOCKER_IMAGE, node.getDockerImage());
         jsonObjectBuilder.add(DockerNodeConstants.DOCKER_ENV, Json.createArrayBuilder()
-                .add(DockerNodeConstants.INSTANCE_CONFIG + "=" + config)
-                .add(DockerNodeConstants.INSTANCE_NAME + "=" + instanceName));
-
-        // TO-DO: Container Config
-
+                .add(DockerNodeConstants.PAYARA_INSTALL_DIR + "=" + node.getInstallDir())
+                .add(DockerNodeConstants.PAYARA_NODE_DIR + "=" + node.getNodeDir())
+                .add(DockerInstanceConstants.INSTANCE_CONFIG + "=" + config)
+                .add(DockerInstanceConstants.INSTANCE_NAME + "=" + instanceName)
+                .add(DockerInstanceConstants.DEPLOYMENT_GROUP + "=" + deploymentGroup)
+                .add(DockerInstanceConstants.PORTBASE + "=" + portBase)
+                .add(DockerInstanceConstants.SYSTEM_PROPERTIES + "=" + systemProperties));
 
         // Create client and send request to Docker API
         Client client = ClientBuilder.newClient();
         WebTarget webTarget = client.target("http://" + node.getNodeHost() + ":" + node.getDockerPort() + "/containers/create");
         webTarget = webTarget.queryParam(DockerNodeConstants.DOCKER_NAME, instanceName);
-
 
         Response response = webTarget.queryParam(DockerNodeConstants.DOCKER_NAME, instanceName)
                 .request(MediaType.APPLICATION_JSON).post(

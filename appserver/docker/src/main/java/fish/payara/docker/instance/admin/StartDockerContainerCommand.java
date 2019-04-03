@@ -1,4 +1,4 @@
-package fish.payara.docker.node.admin;
+package fish.payara.docker.instance.admin;
 
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;

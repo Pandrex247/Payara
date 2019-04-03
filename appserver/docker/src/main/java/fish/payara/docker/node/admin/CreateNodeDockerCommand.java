@@ -1,6 +1,7 @@
 package fish.payara.docker.node.admin;
 
 
+import com.sun.appserv.server.util.Version;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.util.StringUtils;
 import org.glassfish.api.ActionReport;
@@ -40,13 +41,13 @@ public class CreateNodeDockerCommand implements AdminCommand {
     @Param(name = "nodehost")
     String nodehost;
 
-    @Param(name = "nodedir", optional= true)
+    @Param(name = "nodedir", optional = true)
     String nodedir;
 
-    @Param(name = "installdir", optional= true)
+    @Param(name = "installdir", optional = true)
     String installdir;
 
-    @Param(name = "dockerImage")
+    @Param(name = "dockerImage", optional = true)
     String dockerImage;
 
     @Param(name = "dockerPort", optional = true)
@@ -93,6 +94,10 @@ public class CreateNodeDockerCommand implements AdminCommand {
         }
 
         if (StringUtils.ok(dockerImage)) {
+            map.add("dockerImage", dockerImage);
+        } else {
+            // Can't be added to default of parameter or attribute due to not being a constant
+            dockerImage = "payara/micro:" + Version.getMajorVersion() + "." + Version.getMinorVersion();
             map.add("dockerImage", dockerImage);
         }
 

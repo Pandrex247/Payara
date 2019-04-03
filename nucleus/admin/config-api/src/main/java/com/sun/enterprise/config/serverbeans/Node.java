@@ -202,24 +202,24 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
 
     void setSshConnector(SshConnector connector);
 
-    @Attribute
+    @Attribute()
     String getDockerImage();
     void setDockerImage(String dockerImage);
 
-    @Attribute(defaultValue = "", dataType = Integer.class)
+    @Attribute(defaultValue = "2376", dataType = Integer.class)
     String getDockerPort();
     void setDockerPort(String dockerPort);
 
     @Attribute(defaultValue = "")
-    String tlsCert();
+    String getTlsCert();
     void setTlsCert(String tlsCert);
 
     @Attribute(defaultValue = "")
-    String tlsCa();
+    String getTlsCa();
     void setTlsCa(String tlsCa);
 
     @Attribute(defaultValue = "")
-    String tlsPem();
+    String getTlsPem();
     void setTlsPem(String tlsPem);
 
     /**
@@ -385,7 +385,7 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
         String sshkeypassphrase;
         @Param(name = "windowsdomain", optional = true)
         String windowsdomain;
-        @Param(name = "dockerImage", alias = "dockerimage")
+        @Param(name = "dockerImage", alias = "dockerimage", optional = true)
         String dockerImage;
         @Param(name = "dockerPort", alias = "dockerport", optional = true)
         Integer dockerPort;
@@ -516,8 +516,7 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
         private ServerEnvironment env;
 
         @Override
-        public void decorate(AdminCommandContext context, Nodes parent, Node child) throws
-                PropertyVetoException, TransactionFailure {
+        public void decorate(AdminCommandContext context, Nodes parent, Node child) throws TransactionFailure {
             Logger logger = ConfigApiLoggerInfo.getLogger();
             LocalStringManagerImpl localStrings = new LocalStringManagerImpl(Node.class);
             String nodeName = child.getName();
