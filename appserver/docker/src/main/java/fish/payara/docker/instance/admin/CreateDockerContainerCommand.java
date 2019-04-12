@@ -16,9 +16,7 @@ import org.glassfish.api.admin.ExecuteOn;
 import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RuntimeType;
-import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.hk2.api.PerLookup;
-import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Inject;
@@ -129,6 +127,7 @@ public class CreateDockerContainerCommand implements AdminCommand {
         jsonObjectBuilder.add(DockerNodeConstants.DOCKER_ENV, Json.createArrayBuilder()
                 .add(DockerNodeConstants.PAYARA_DAS_HOST + "=" + dasHost)
                 .add(DockerNodeConstants.PAYARA_DAS_PORT + "=" + dasPort)
+                .add(DockerNodeConstants.PAYARA_NODE_NAME + "=" + nodeName)
                 .add(DockerInstanceConstants.INSTANCE_CONFIG + "=" + config)
                 .add(DockerInstanceConstants.INSTANCE_NAME + "=" + instanceName)
                 .add(DockerInstanceConstants.DEPLOYMENT_GROUP + "=" + deploymentGroup)
