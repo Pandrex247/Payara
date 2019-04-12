@@ -4,6 +4,8 @@ package fish.payara.docker.node.admin;
 import com.sun.appserv.server.util.Version;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.util.StringUtils;
+import com.sun.enterprise.v3.admin.cluster.NodeUtils;
+import fish.payara.docker.node.DockerNodeConstants;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
@@ -38,29 +40,23 @@ public class CreateNodeDockerCommand implements AdminCommand {
     @Param(name = "name", primary = true)
     String name;
 
-    @Param(name = "nodehost")
+    @Param(name = NodeUtils.PARAM_NODEHOST)
     String nodehost;
 
-    @Param(name = "nodedir", optional = true)
-    String nodedir;
-
-    @Param(name = "installdir", optional = true)
-    String installdir;
-
-    @Param(name = "dockerImage", optional = true)
+    @Param(name = "dockerImage", optional = true, alias = "dockerimage")
     String dockerImage;
 
-    @Param(name = "dockerPort", optional = true)
+    @Param(name = "dockerPort", optional = true, alias = "dockerport")
     Integer dockerPort;
 
-    @Param(name = "tlsCert", optional = true)
-    String tlsCert;
+    @Param(name = "dockerCert", optional = true, alias = "cert")
+    String dockerCert;
 
-    @Param(name = "tlsCa", optional = true)
-    String tlsCa;
+    @Param(name = "dockerCa", optional = true, alias = "ca")
+    String dockerCa;
 
-    @Param(name = "tlsPem", optional = true)
-    String tlsPem;
+    @Param(name = "dockerPem", optional = true, alias = "pem")
+    String dockerPem;
 
     @Inject
     private CommandRunner commandRunner;
@@ -81,13 +77,7 @@ public class CreateNodeDockerCommand implements AdminCommand {
         ParameterMap map = new ParameterMap();
         map.add("DEFAULT", name);
 
-        if (StringUtils.ok(nodedir)) {
-            map.add("nodedir", nodedir);
-        }
-
-        if (StringUtils.ok(installdir)) {
-            map.add("installdir", installdir);
-        }
+        map.add(NodeUtils.PARAM_INSTALLDIR, DockerNodeConstants.PAYARA_INSTALL_DIR);
 
         if (StringUtils.ok(nodehost)) {
             map.add("nodehost", nodehost);
@@ -97,7 +87,7 @@ public class CreateNodeDockerCommand implements AdminCommand {
             map.add("dockerImage", dockerImage);
         } else {
             // Can't be added to default of parameter or attribute due to not being a constant
-            dockerImage = "payara/micro:" + Version.getMajorVersion() + "." + Version.getMinorVersion();
+            dockerImage = "payara/server-full:" + Version.getMajorVersion() + "." + Version.getMinorVersion();
             map.add("dockerImage", dockerImage);
         }
 
@@ -105,16 +95,16 @@ public class CreateNodeDockerCommand implements AdminCommand {
             map.add("dockerPort", Integer.toString(dockerPort));
         }
 
-        if (StringUtils.ok(tlsCert)) {
-            map.add("tlsCert", tlsCert);
+        if (StringUtils.ok(dockerCert)) {
+            map.add("dockerCert", dockerCert);
         }
 
-        if (StringUtils.ok(tlsCa)) {
-            map.add("tlsCa", tlsCa);
+        if (StringUtils.ok(dockerCa)) {
+            map.add("ca", dockerCa);
         }
 
-        if (StringUtils.ok(tlsPem)) {
-            map.add("tlsPem", tlsPem);
+        if (StringUtils.ok(dockerPem)) {
+            map.add("dockerPem", dockerPem);
         }
 
         map.add("type","DOCKER");

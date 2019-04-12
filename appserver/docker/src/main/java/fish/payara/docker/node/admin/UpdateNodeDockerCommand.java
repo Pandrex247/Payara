@@ -54,19 +54,19 @@ public class UpdateNodeDockerCommand implements AdminCommand {
     @Param(name = "installdir", optional = true)
     String installdir;
 
-    @Param(name = "dockerImage", optional = true)
+    @Param(name = "dockerImage", optional = true, alias = "dockerimage")
     String dockerImage;
 
-    @Param(name = "dockerPort", optional = true)
+    @Param(name = "dockerPort", optional = true, alias = "dockerport")
     Integer dockerPort;
 
-    @Param(name = "tlsCert", optional = true)
+    @Param(name = "dockerCert", optional = true, alias = "cert")
     String tlsCert;
 
-    @Param(name = "tlsCa", optional = true)
+    @Param(name = "dockerCa", optional = true, alias = "ca")
     String tlsCa;
 
-    @Param(name = "tlsPem", optional = true)
+    @Param(name = "dockerPem", optional = true, alias = "pem")
     String tlsPem;
 
     @Inject
@@ -123,15 +123,15 @@ public class UpdateNodeDockerCommand implements AdminCommand {
         }
 
         if (tlsCert != null) {
-            parameterMap.add("tlsCert", tlsCert);
+            parameterMap.add("dockerCert", tlsCert);
         }
 
         if (tlsCa != null) {
-            parameterMap.add("tlsCa", tlsCa);
+            parameterMap.add("ca", tlsCa);
         }
 
         if (tlsPem != null) {
-            parameterMap.add("tlsPem", tlsPem);
+            parameterMap.add("dockerPem", tlsPem);
         }
 
         if (parameterMap.size() > 1) {

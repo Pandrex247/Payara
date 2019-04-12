@@ -493,6 +493,12 @@ public class CreateInstanceCommand implements AdminCommand {
         commandRunner.getCommandInvocation("_create-docker-container", actionReport, ctx.getSubject())
                 .parameters(parameterMap)
                 .execute();
+
+        if (actionReport.getActionExitCode() != SUCCESS) {
+            // Something went wrong with the non-local command so don't continue but set status to warning
+            // because config was updated correctly or we would not be here.
+            actionReport.setActionExitCode(WARNING);
+        }
     }
 
     /**

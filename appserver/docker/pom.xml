@@ -21,12 +21,14 @@
             <groupId>org.glassfish.main.common</groupId>
             <artifactId>glassfish-api</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.glassfish.main.admin</groupId>
             <artifactId>config-api</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
             <optional>true</optional>
         </dependency>
         <dependency>
@@ -38,6 +40,13 @@
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>javax.json</artifactId>
+            <scope>provided</scope>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.main.cluster</groupId>
+            <artifactId>cluster-admin</artifactId>
+            <version>${project.version}</version>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
