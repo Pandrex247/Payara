@@ -35,10 +35,10 @@ public class DeleteDockerContainerCommand implements AdminCommand {
 
     private static final Logger logger = Logger.getLogger(DeleteDockerContainerCommand.class.getName());
 
-    @Param(name = "instance_name", primary = true)
+    @Param(name = "instanceName", alias = "instance", primary = true)
     private String instanceName;
 
-    @Param(name = "node")
+    @Param(name = "nodeName", alias = "node")
     private String nodeName;
 
     @Inject
@@ -48,7 +48,7 @@ public class DeleteDockerContainerCommand implements AdminCommand {
     public void execute(AdminCommandContext adminCommandContext) {
         ActionReport actionReport = adminCommandContext.getActionReport();
 
-        // Shouldn't need to check for presence of this node, as its presence was checked for in DeleteInstanceCommand
+        // Shouldn't need to check for presence of this nodeName, as its presence was checked for in DeleteInstanceCommand
         Node node = nodes.getNode(nodeName);
 
         Client client = ClientBuilder.newClient();

@@ -39,19 +39,19 @@ import java.util.logging.Logger;
         @RestEndpoint(configBean= Domain.class,
                 opType=RestEndpoint.OpType.POST,
                 path="_create-docker-container",
-                description="Create a Docker Container and Instance on the specified node")
+                description="Create a Docker Container and Instance on the specified nodeName")
 })
 public class CreateDockerContainerCommand implements AdminCommand {
 
     private static final Logger logger = Logger.getLogger(CreateDockerContainerCommand.class.getName());
 
-    @Param(name = "node")
+    @Param(name = "nodeName", alias = "node")
     String nodeName;
 
     @Param(name = "config", optional = true, defaultValue = "default-config")
     String config;
 
-    @Param(name = "instance", primary = true)
+    @Param(name = "instanceName", alias = "instance", primary = true)
     String instanceName;
 
     @Param(name = "deploymentgroup", optional = true)
@@ -80,12 +80,12 @@ public class CreateDockerContainerCommand implements AdminCommand {
         Node node = nodes.getNode(nodeName);
 
         if (node == null) {
-            actionReport.failure(logger, "No node found with given name: " + nodeName);
+            actionReport.failure(logger, "No nodeName found with given name: " + nodeName);
             return;
         }
 
         if (!node.getType().equals("DOCKER")) {
-            actionReport.failure(logger, "Node is not of type DOCKER, node is of type: " + node.getType());
+            actionReport.failure(logger, "Node is not of type DOCKER, nodeName is of type: " + node.getType());
             return;
         }
 
@@ -124,25 +124,26 @@ public class CreateDockerContainerCommand implements AdminCommand {
         JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
         jsonObjectBuilder.add(DockerNodeConstants.DOCKER_IMAGE, node.getDockerImage());
         jsonObjectBuilder.add(DockerNodeConstants.DOCKER_IMAGE, node.getDockerImage());
-        jsonObjectBuilder.add(DockerNodeConstants.DOCKER_ENV, Json.createArrayBuilder()
+        jsonObjectBuilder.add(DockerInstanceConstants.DOCKER_CONTAINER_CMD, Json.createArrayBuilder()
                 .add(DockerNodeConstants.PAYARA_DAS_HOST + "=" + dasHost)
                 .add(DockerNodeConstants.PAYARA_DAS_PORT + "=" + dasPort)
                 .add(DockerNodeConstants.PAYARA_NODE_NAME + "=" + nodeName)
-                .add(DockerInstanceConstants.INSTANCE_CONFIG + "=" + config)
+//                .add(DockerInstanceConstants.INSTANCE_CONFIG + "=" + config)
                 .add(DockerInstanceConstants.INSTANCE_NAME + "=" + instanceName)
-                .add(DockerInstanceConstants.DEPLOYMENT_GROUP + "=" + deploymentGroup)
-                .add(DockerInstanceConstants.PORTBASE + "=" + portBase)
-                .add(DockerInstanceConstants.SYSTEM_PROPERTIES + "=" + systemProperties)
-                .add(PortConstants.ADMIN + "=" + server.getSystemProperty(PortConstants.ADMIN))
-                .add(PortConstants.HTTP + "=" + server.getSystemProperty(PortConstants.HTTP))
-                .add(PortConstants.HTTPS + "=" + server.getSystemProperty(PortConstants.HTTPS))
-                .add(PortConstants.IIOP + "=" + server.getSystemProperty(PortConstants.IIOP))
-                .add(PortConstants.IIOPM + "=" + server.getSystemProperty(PortConstants.IIOPM))
-                .add(PortConstants.IIOPS + "=" + server.getSystemProperty(PortConstants.IIOPS))
-                .add(PortConstants.JMS + "=" + server.getSystemProperty(PortConstants.JMS))
-                .add(PortConstants.JMX + "=" + server.getSystemProperty(PortConstants.JMX))
-                .add(PortConstants.OSGI + "=" + server.getSystemProperty(PortConstants.OSGI))
-                .add(PortConstants.DEBUG + "=" + server.getSystemProperty(PortConstants.DEBUG)));
+//                .add(DockerInstanceConstants.DEPLOYMENT_GROUP + "=" + deploymentGroup)
+//                .add(DockerInstanceConstants.PORTBASE + "=" + portBase)
+//                .add(DockerInstanceConstants.SYSTEM_PROPERTIES + "=" + systemProperties)
+//                .add(PortConstants.ADMIN + "=" + server.getSystemProperty(PortConstants.ADMIN))
+//                .add(PortConstants.HTTP + "=" + server.getSystemProperty(PortConstants.HTTP))
+//                .add(PortConstants.HTTPS + "=" + server.getSystemProperty(PortConstants.HTTPS))
+//                .add(PortConstants.IIOP + "=" + server.getSystemProperty(PortConstants.IIOP))
+//                .add(PortConstants.IIOPM + "=" + server.getSystemProperty(PortConstants.IIOPM))
+//                .add(PortConstants.IIOPS + "=" + server.getSystemProperty(PortConstants.IIOPS))
+//                .add(PortConstants.JMS + "=" + server.getSystemProperty(PortConstants.JMS))
+//                .add(PortConstants.JMX + "=" + server.getSystemProperty(PortConstants.JMX))
+//                .add(PortConstants.OSGI + "=" + server.getSystemProperty(PortConstants.OSGI))
+//                .add(PortConstants.DEBUG + "=" + server.getSystemProperty(PortConstants.DEBUG))
+        );
 
         // Create web target with query
         Client client = ClientBuilder.newClient();

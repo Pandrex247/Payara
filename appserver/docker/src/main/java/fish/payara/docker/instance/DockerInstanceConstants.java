@@ -7,5 +7,6 @@ public class DockerInstanceConstants {
     public static final String DEPLOYMENT_GROUP = "PAYARA_DEPLOYMENT_GROUP";
     public static final String PORTBASE = "PAYARA_PORTBASE";
     public static final String SYSTEM_PROPERTIES = "PAYARA_INSTANCE_PROPERTIES";
+    public static final String DOCKER_CONTAINER_CMD = "Cmd";
 
 }
