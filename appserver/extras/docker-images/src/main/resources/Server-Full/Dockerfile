@@ -1,10 +1,17 @@
 FROM openjdk:8u171-jdk
 
 ENV WORK_DIR=/opt/payara
-ENV PAYARA_HOME=${WORK_DIR}/payara5
+ENV PAYARA_HOME=${WORK_DIR}/payara5 \
+    PAYARA_PASSWORD_FILE_DIR=${WORK_DIR}/passwords \
+    PAYARA_DAS_HOST="localhost" \
+    PAYARA_DAS_PORT="4848" \
+    PAYARA_NODE_NAME="LocalDockerNode1" \
+    PAYARA_INSTANCE_NAME="LocalDockerInstance1"
+ENV PAYARA_PASSWORD_FILE=${PAYARA_PASSWORD_FILE_DIR}/passwordfile.txt
 
 # Create and set the Payara user and working directory owned by the new user
 RUN mkdir ${WORK_DIR} && \
+    mkdir ${PAYARA_PASSWORD_FILE_DIR} && \
     groupadd -g 1000 payara && \
     useradd -u 1000 -M -s /bin/bash -d ${WORK_DIR} payara -g payara && \
     echo payara:payara | chpasswd && \
@@ -24,7 +31,8 @@ RUN unzip -qq payara.zip -d ./ && \
 
 # Install entrypoint script
 ARG ENTRYPOINT_SCRIPT
-COPY ${ENTRYPOINT_SCRIPT} ${WORK_DIR}
+COPY --chown=payara:payara ${ENTRYPOINT_SCRIPT} ${WORK_DIR}
+RUN chmod +x ${WORK_DIR}/entrypoint.sh
 
-ENTRYPOINT "${WORK_DIR}/entrypoint.sh"
-CMD "PAYARA_DAS_HOST", "PAYARA_DAS_PORT", "PAYARA_NODE_NAME", "PAYARA_INSTANCE_NAME"
+# Start the instance
+ENTRYPOINT ["/opt/payara/entrypoint.sh"]

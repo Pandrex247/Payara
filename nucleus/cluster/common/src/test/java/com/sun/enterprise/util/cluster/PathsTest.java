@@ -188,6 +188,16 @@ public class PathsTest {
         }
 
         @Override
+        public String getDockerPasswordFile() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void setDockerPasswordFile(String dockerPasswordFile) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
         public String getDockerImage() {
             throw new UnsupportedOperationException("Not supported yet.");
         }

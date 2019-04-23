@@ -5,7 +5,6 @@ import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.config.serverbeans.Nodes;
 import com.sun.enterprise.config.serverbeans.Server;
 import com.sun.enterprise.config.serverbeans.Servers;
-import com.sun.enterprise.config.util.PortConstants;
 import fish.payara.docker.instance.DockerInstanceConstants;
 import fish.payara.docker.node.DockerNodeConstants;
 import org.glassfish.api.ActionReport;
@@ -48,20 +47,8 @@ public class CreateDockerContainerCommand implements AdminCommand {
     @Param(name = "nodeName", alias = "node")
     String nodeName;
 
-    @Param(name = "config", optional = true, defaultValue = "default-config")
-    String config;
-
     @Param(name = "instanceName", alias = "instance", primary = true)
     String instanceName;
-
-    @Param(name = "deploymentgroup", optional = true)
-    String deploymentGroup;
-
-    @Param(name = "portbase", optional = true)
-    private String portBase;
-
-    @Param(name = "systemproperties", optional = true, separator = ':')
-    private String systemProperties;
 
 //    TO-DO
 //    @Param(name = "containerConfig", optional = true, alias = "containerconfig", separator = '|')
@@ -122,28 +109,19 @@ public class CreateDockerContainerCommand implements AdminCommand {
 
         // Create the JSON request to send
         JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
-        jsonObjectBuilder.add(DockerNodeConstants.DOCKER_IMAGE, node.getDockerImage());
-        jsonObjectBuilder.add(DockerNodeConstants.DOCKER_IMAGE, node.getDockerImage());
-        jsonObjectBuilder.add(DockerInstanceConstants.DOCKER_CONTAINER_CMD, Json.createArrayBuilder()
+        jsonObjectBuilder.add(DockerNodeConstants.DOCKER_IMAGE_KEY, node.getDockerImage());
+        jsonObjectBuilder.add(DockerNodeConstants.DOCKER_HOST_CONFIG_KEY, Json.createObjectBuilder()
+                .add(DockerNodeConstants.DOCKER_MOUNTS_KEY, Json.createArrayBuilder()
+                        .add(Json.createObjectBuilder()
+                                .add("Type", "bind")
+                                .add("Source", node.getDockerPasswordFile())
+                                .add("Target", DockerNodeConstants.PAYARA_PASSWORD_FILE)
+                                .add("ReadOnly", true))));
+        jsonObjectBuilder.add(DockerInstanceConstants.DOCKER_CONTAINER_ENV, Json.createArrayBuilder()
                 .add(DockerNodeConstants.PAYARA_DAS_HOST + "=" + dasHost)
                 .add(DockerNodeConstants.PAYARA_DAS_PORT + "=" + dasPort)
                 .add(DockerNodeConstants.PAYARA_NODE_NAME + "=" + nodeName)
-//                .add(DockerInstanceConstants.INSTANCE_CONFIG + "=" + config)
-                .add(DockerInstanceConstants.INSTANCE_NAME + "=" + instanceName)
-//                .add(DockerInstanceConstants.DEPLOYMENT_GROUP + "=" + deploymentGroup)
-//                .add(DockerInstanceConstants.PORTBASE + "=" + portBase)
-//                .add(DockerInstanceConstants.SYSTEM_PROPERTIES + "=" + systemProperties)
-//                .add(PortConstants.ADMIN + "=" + server.getSystemProperty(PortConstants.ADMIN))
-//                .add(PortConstants.HTTP + "=" + server.getSystemProperty(PortConstants.HTTP))
-//                .add(PortConstants.HTTPS + "=" + server.getSystemProperty(PortConstants.HTTPS))
-//                .add(PortConstants.IIOP + "=" + server.getSystemProperty(PortConstants.IIOP))
-//                .add(PortConstants.IIOPM + "=" + server.getSystemProperty(PortConstants.IIOPM))
-//                .add(PortConstants.IIOPS + "=" + server.getSystemProperty(PortConstants.IIOPS))
-//                .add(PortConstants.JMS + "=" + server.getSystemProperty(PortConstants.JMS))
-//                .add(PortConstants.JMX + "=" + server.getSystemProperty(PortConstants.JMX))
-//                .add(PortConstants.OSGI + "=" + server.getSystemProperty(PortConstants.OSGI))
-//                .add(PortConstants.DEBUG + "=" + server.getSystemProperty(PortConstants.DEBUG))
-        );
+                .add(DockerInstanceConstants.INSTANCE_NAME + "=" + instanceName));
 
         // Create web target with query
         Client client = ClientBuilder.newClient();
@@ -153,10 +131,10 @@ public class CreateDockerContainerCommand implements AdminCommand {
                 + ":"
                 + node.getDockerPort()
                 + "/containers/create");
-        webTarget = webTarget.queryParam(DockerNodeConstants.DOCKER_NAME, instanceName);
+        webTarget = webTarget.queryParam(DockerNodeConstants.DOCKER_NAME_KEY, instanceName);
 
         // Send the POST request
-        Response response = webTarget.queryParam(DockerNodeConstants.DOCKER_NAME, instanceName)
+        Response response = webTarget.queryParam(DockerNodeConstants.DOCKER_NAME_KEY, instanceName)
                 .request(MediaType.APPLICATION_JSON).post(
                         Entity.entity(jsonObjectBuilder.build(), MediaType.APPLICATION_JSON));
 

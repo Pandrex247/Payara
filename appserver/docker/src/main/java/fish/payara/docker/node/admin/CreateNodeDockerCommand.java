@@ -43,6 +43,9 @@ public class CreateNodeDockerCommand implements AdminCommand {
     @Param(name = NodeUtils.PARAM_NODEHOST)
     String nodehost;
 
+    @Param(name = "dockerPasswordFile", alias = "dockerpasswordfile")
+    String dockerPasswordFile;
+
     @Param(name = "dockerImage", optional = true, alias = "dockerimage")
     String dockerImage;
 
@@ -81,6 +84,10 @@ public class CreateNodeDockerCommand implements AdminCommand {
 
         if (StringUtils.ok(nodehost)) {
             map.add("nodehost", nodehost);
+        }
+
+        if (StringUtils.ok(dockerPasswordFile)) {
+            map.add("dockerPasswordFile", dockerPasswordFile);
         }
 
         if (StringUtils.ok(dockerImage)) {

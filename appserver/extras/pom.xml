@@ -78,7 +78,7 @@
             </modules>
         </profile>
         
-        <!-- Profile to build Embedded and Docker distributions-->
+        <!-- Profile to build Embedded distributions-->
         <profile>
             <id>BuildExtras</id>
             <activation>
@@ -88,7 +88,18 @@
             </activation>
             <modules>
                 <module>embedded</module>
-                <module>docker</module>
+            </modules>
+        </profile>
+        <!-- Profile to build Docker Images-->
+        <profile>
+            <id>BuildDockerImages</id>
+            <activation>
+                <property>
+                    <name>BuildDockerImages</name>
+                </property>
+            </activation>
+            <modules>
+                <module>docker-images</module>
             </modules>
         </profile>
     </profiles>

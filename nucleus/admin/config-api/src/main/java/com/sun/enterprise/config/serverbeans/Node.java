@@ -202,7 +202,11 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
 
     void setSshConnector(SshConnector connector);
 
-    @Attribute()
+    @Attribute
+    String getDockerPasswordFile();
+    void setDockerPasswordFile(String dockerPasswordFile);
+
+    @Attribute
     String getDockerImage();
     void setDockerImage(String dockerImage);
 
@@ -389,6 +393,8 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
         String sshkeypassphrase;
         @Param(name = "windowsdomain", optional = true)
         String windowsdomain;
+        @Param(name = "dockerPasswordFile", alias = "dockerpasswordfile", optional = true)
+        String dockerPasswordFile;
         @Param(name = "dockerImage", alias = "dockerimage", optional = true)
         String dockerImage;
         @Param(name = "dockerPort", alias = "dockerport", optional = true)
@@ -453,6 +459,10 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
                 return;
 
             if (type.equals("DOCKER")) {
+                if (StringUtils.ok(dockerPasswordFile)) {
+                    instance.setDockerPasswordFile(dockerPasswordFile);
+                }
+
                 if (StringUtils.ok(dockerImage)) {
                     instance.setDockerImage(dockerImage);
                 }

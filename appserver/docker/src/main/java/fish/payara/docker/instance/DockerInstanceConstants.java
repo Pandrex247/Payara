@@ -2,11 +2,7 @@ package fish.payara.docker.instance;
 
 public class DockerInstanceConstants {
 
-    public static final String INSTANCE_CONFIG = "PAYARA_INSTANCE_CONFIG";
     public static final String INSTANCE_NAME = "PAYARA_INSTANCE_NAME";
-    public static final String DEPLOYMENT_GROUP = "PAYARA_DEPLOYMENT_GROUP";
-    public static final String PORTBASE = "PAYARA_PORTBASE";
-    public static final String SYSTEM_PROPERTIES = "PAYARA_INSTANCE_PROPERTIES";
-    public static final String DOCKER_CONTAINER_CMD = "Cmd";
-
+    public static final String DOCKER_CONTAINER_ENV = "Env";
+    public static final String ASADMIN_PASSWORD = "ASADMIN_PASSWORD";
 }
