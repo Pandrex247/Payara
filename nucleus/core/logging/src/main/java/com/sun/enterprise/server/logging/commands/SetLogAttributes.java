@@ -44,28 +44,15 @@ import com.sun.common.util.logging.LoggingConfigFactory;
 import com.sun.enterprise.config.serverbeans.Clusters;
 import com.sun.enterprise.config.serverbeans.Domain;
 import com.sun.enterprise.config.serverbeans.Servers;
-import com.sun.enterprise.server.logging.GFFileHandler;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.SystemPropertyConstants;
-import java.beans.PropertyChangeEvent;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.inject.Inject;
-import javax.validation.ValidationException;
-
-import com.sun.common.util.logging.LoggingConfigFactory;
-import com.sun.enterprise.config.serverbeans.Clusters;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Servers;
 import com.sun.enterprise.server.logging.LogManagerService;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
-
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import javax.inject.Inject;
+import javax.validation.ValidationException;
 import org.glassfish.api.ActionReport;
 import org.glassfish.api.I18n;
 import org.glassfish.api.Param;
@@ -81,8 +68,6 @@ import org.glassfish.config.support.TargetType;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.internal.config.UnprocessedConfigListener;
 import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.UnprocessedChangeEvent;
-import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
 /**
  * Set Log Attributes Command
@@ -154,6 +139,7 @@ public class SetLogAttributes implements AdminCommand {
         "com.sun.enterprise.server.logging.GFFileHandler.excludeFields",
         "com.sun.enterprise.server.logging.GFFileHandler.multiLineMode",
         "com.sun.enterprise.server.logging.GFFileHandler.compressOnRotation",
+        "com.sun.enterprise.server.logging.GFFileHandler.logStandardStreams",
         "com.sun.enterprise.server.logging.UniformLogFormatter.ansiColor",
         "com.sun.enterprise.server.logging.UniformLogFormatter.infoColor",
         "com.sun.enterprise.server.logging.UniformLogFormatter.warnColor",
@@ -241,25 +227,6 @@ public class SetLogAttributes implements AdminCommand {
             success = true;
 
             if (success) {
-                // do not record duplicate logging attribute restart events
-                /*boolean triggerRestart = true;
-                unprocessedLoop:
-                for(UnprocessedChangeEvents evts : ucl.getUnprocessedChangeEvents()) {
-                    for(UnprocessedChangeEvent evt : evts.getUnprocessed()) {
-                        if(evt.getEvent().getSource().getClass().getName().equals(this.getClass().getName())) {
-                            triggerRestart = false;
-                            break unprocessedLoop;
-                        }
-                    }
-                }
-                if (triggerRestart) {
-                    List<UnprocessedChangeEvents> logAttrChanges = new ArrayList<>();
-                    logAttrChanges.add(new UnprocessedChangeEvents(new UnprocessedChangeEvent(
-                            new PropertyChangeEvent(this, "Logging Attribute", null, null),
-                            "logging attribute(s) modified")));
-                    ucl.unprocessedTransactedEvents(logAttrChanges);
-                }*/
-
                 String effectiveTarget = (isDas ? SystemPropertyConstants.DAS_SERVER_NAME : targetConfigName);
                 sbfSuccessMsg.append(localStrings.getLocalString(
                         "set.log.attribute.success",

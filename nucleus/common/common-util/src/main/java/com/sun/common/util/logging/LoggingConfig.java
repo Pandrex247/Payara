@@ -44,7 +44,6 @@ package com.sun.common.util.logging;
 
 import java.io.IOException;
 import java.util.Map;
-
 import org.jvnet.hk2.annotations.Contract;
 
 /**
@@ -78,6 +77,16 @@ public interface LoggingConfig {
      * @throws IOException if an error occurred while reading from the managed file.
      */
     Map<String, String> getLoggingProperties() throws IOException;
+
+    /**
+     * Get all properties from the managed file.
+     *
+     * @param usePlaceHolderReplacement whether to
+     * @return all properties contained within the managed file.
+     * @throws IOException if an error occurred while reading from the managed
+     * file.
+     */
+    Map<String, String> getLoggingProperties(boolean usePlaceholderReplacement) throws IOException;
 
     /**
      * Sets the given property within the managed file.

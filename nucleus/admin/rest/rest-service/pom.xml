@@ -54,7 +54,7 @@
     
     <name>GlassFish Admin REST Service</name>
     <description>Rest Interface for GlassFish Management and Monitoring</description>
-
+    
     <dependencies>
         <dependency>
             <groupId>javax.ws.rs</groupId>

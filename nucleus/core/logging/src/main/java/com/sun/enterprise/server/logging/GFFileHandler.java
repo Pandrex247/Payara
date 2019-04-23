@@ -41,14 +41,26 @@
 
 package com.sun.enterprise.server.logging;
 
+import com.sun.appserv.server.util.Version;
+import com.sun.common.util.logging.BooleanLatch;
 import com.sun.common.util.logging.GFLogRecord;
+import com.sun.common.util.logging.LoggingOutputStream;
+import com.sun.enterprise.admin.monitor.callflow.Agent;
+import com.sun.enterprise.module.bootstrap.EarlyLogHandler;
+import com.sun.enterprise.util.LocalStringManagerImpl;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.enterprise.v3.logging.AgentFormatterDelegate;
+import fish.payara.enterprise.server.logging.JSONLogFormatter;
+import fish.payara.enterprise.server.logging.PayaraNotificationLogRotationTimer;
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.text.FieldPosition;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -66,11 +78,11 @@ import java.util.logging.Formatter;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 import java.util.logging.StreamHandler;
-
+import java.util.zip.GZIPOutputStream;
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
 import org.glassfish.api.logging.Task;
 import org.glassfish.config.support.TranslatedConfigView;
 import org.glassfish.hk2.api.PostConstruct;
@@ -81,18 +93,6 @@ import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.ContractsProvided;
 import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
-
-import com.sun.appserv.server.util.Version;
-import com.sun.common.util.logging.BooleanLatch;
-import com.sun.enterprise.admin.monitor.callflow.Agent;
-import com.sun.enterprise.module.bootstrap.EarlyLogHandler;
-import com.sun.enterprise.util.LocalStringManagerImpl;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.enterprise.v3.logging.AgentFormatterDelegate;
-import fish.payara.enterprise.server.logging.JSONLogFormatter;
-import fish.payara.enterprise.server.logging.PayaraNotificationLogRotationTimer;
-import java.io.FileInputStream;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * GFFileHandler publishes formatted log Messages to a FILE.
@@ -146,11 +146,17 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
     private boolean multiLineMode;
     private String fileHandlerFormatter = "";
     private String currentFileHandlerFormatter = "";
+    private boolean logStandardStreams;
+
+    private PrintStream oStdOutBackup = System.out;
+    private PrintStream oStdErrBackup = System.err;
+    private LoggingOutputStream stdoutOutputStream=null;
+    private LoggingOutputStream stderrOutputStream=null;
 
     // Initially the LogRotation will be off until the domain.xml value is read.
     private int limitForFileRotation = 0;
 
-    private BlockingQueue<LogRecord> pendingRecords = new ArrayBlockingQueue<LogRecord>(5000);
+    private BlockingQueue<LogRecord> pendingRecords = new ArrayBlockingQueue<>(5000);
 
     // Rotation can be done in 3 ways
     // 1. Based on the Size: Rotate when some Threshold number of bytes are 
@@ -323,6 +329,14 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
         compressionOnRotation = false;
         if (propertyValue != null) {
             compressionOnRotation = Boolean.parseBoolean(propertyValue);
+        }
+
+        propertyValue = manager.getProperty(className + ".logStandardStreams");
+        if (propertyValue != null) {
+            logStandardStreams = Boolean.parseBoolean(propertyValue);
+            if (logStandardStreams) {
+                logStandardStreams();
+            }
         }
 
         String formatterName = manager.getProperty(className + ".formatter");
@@ -622,6 +636,22 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
         if (LogFacade.LOGGING_LOGGER.isLoggable(Level.FINE)) {
             LogFacade.LOGGING_LOGGER.fine("Logger handler killed");            
         }
+        
+        System.setOut(oStdOutBackup);
+        System.setErr(oStdErrBackup);
+
+        try {
+            if (stdoutOutputStream != null) {
+                stdoutOutputStream.close();
+            }
+
+            if (stderrOutputStream != null) {
+                stderrOutputStream.close();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
         done.tryReleaseShared(1);
         pump.interrupt();
 
@@ -1060,6 +1090,21 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
         return status;
     }
 
+    private void logStandardStreams() {
+        // redirect stderr and stdout, a better way to do this
+        //http://blogs.sun.com/nickstephen/entry/java_redirecting_system_out_and
+  
+        Logger _ologger = LogFacade.STDOUT_LOGGER;
+        stdoutOutputStream = new LoggingOutputStream(_ologger, Level.INFO);
+        LoggingOutputStream.LoggingPrintStream pout = stdoutOutputStream.new LoggingPrintStream(stdoutOutputStream);
+        System.setOut(pout);
+    
+        Logger _elogger = LogFacade.STDERR_LOGGER;
+        stderrOutputStream = new LoggingOutputStream(_elogger, Level.SEVERE);
+        LoggingOutputStream.LoggingPrintStream perr = stderrOutputStream.new LoggingPrintStream(stderrOutputStream);
+        System.setErr(perr);
+    }
+    
     public synchronized void setLogFile(String fileName) {
         String logFileName = TranslatedConfigView.getTranslatedValue(fileName).toString();
         File logFile = new File(logFileName);
@@ -1127,5 +1172,16 @@ PostConstruct, PreDestroy, LogEventBroadcaster, LoggingRuntime {
 
     public synchronized void setCompressionOnRotation(boolean compressionOnRotation) {
         this.compressionOnRotation = compressionOnRotation;
+    }
+
+    public synchronized void setLogStandardStreams(boolean logStandardStreams) {
+        this.logStandardStreams = logStandardStreams;
+
+        if (logStandardStreams) {
+            logStandardStreams();
+        } else {
+            System.setOut(oStdOutBackup);
+            System.setErr(oStdErrBackup);
+        }
     }
 }

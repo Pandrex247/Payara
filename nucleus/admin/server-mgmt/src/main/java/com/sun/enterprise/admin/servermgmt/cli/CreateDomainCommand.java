@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
+// Portions Copyright [2018-2019] [Payara Foundation and/or its affiliates]
 
 package com.sun.enterprise.admin.servermgmt.cli;
 
@@ -47,19 +47,19 @@ import com.sun.appserv.management.client.prefs.LoginInfoStoreFactory;
 import com.sun.appserv.server.util.Version;
 import com.sun.enterprise.admin.cli.CLICommand;
 import com.sun.enterprise.admin.cli.CLIConstants;
-import com.sun.enterprise.admin.servermgmt.*;
+import com.sun.enterprise.admin.servermgmt.DomainConfig;
+import com.sun.enterprise.admin.servermgmt.DomainException;
+import com.sun.enterprise.admin.servermgmt.DomainsManager;
+import com.sun.enterprise.admin.servermgmt.KeystoreManager;
+import com.sun.enterprise.admin.servermgmt.RepositoryManager;
 import com.sun.enterprise.admin.servermgmt.domain.DomainBuilder;
 import com.sun.enterprise.admin.servermgmt.pe.PEDomainsManager;
 import com.sun.enterprise.admin.util.CommandModelData.ParamModelData;
-import static com.sun.enterprise.config.util.PortConstants.*;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.SystemPropertyConstants;
 import com.sun.enterprise.util.io.FileUtils;
 import com.sun.enterprise.util.net.NetUtils;
-import java.io.Console;
-import java.io.File;
-import java.util.*;
-import java.util.logging.Level;
+import jline.console.ConsoleReader;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.api.admin.CommandModel.ParamModel;
@@ -67,6 +67,28 @@ import org.glassfish.api.admin.CommandValidationException;
 import org.glassfish.hk2.api.PerLookup;
 import org.glassfish.security.common.FileRealmHelper;
 import org.jvnet.hk2.annotations.Service;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.LinkedHashSet;
+import java.util.Properties;
+import java.util.Set;
+import java.util.UUID;
+import java.util.logging.Level;
+
+import static com.sun.enterprise.config.util.PortConstants.DEFAULT_INSTANCE_PORT;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_ADMINPORT_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_DEBUG_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_HTTPSSL_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_IIOPMUTUALAUTH_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_IIOPSSL_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_IIOP_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_INSTANCE_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_JMS_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_JMX_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORTBASE_OSGI_SUFFIX;
+import static com.sun.enterprise.config.util.PortConstants.PORT_MAX_VAL;
 
 /**
  * This is a local command that creates a domain.
@@ -175,21 +197,23 @@ public final class CreateDomainCommand extends CLICommand {
          */
         if (programOpts.getUser() == null && !noPassword) {
             // prompt for it (if interactive)
-            Console console = System.console();
-            
-            if (console != null && programOpts.isInteractive()) {
-                console.printf("%s", STRINGS.get("AdminUserRequiredPrompt", SystemPropertyConstants.DEFAULT_ADMIN_USER));
-                
-                String val = console.readLine();
-                
-                if (ok(val)) {
-                    programOpts.setUser(val);
-                    if (adminPassword == null) {
-                        adminPassword = getAdminPassword();
+            try (ConsoleReader console = new ConsoleReader(System.in, System.out, null)) {
+                if (console != null && programOpts.isInteractive()) {
+                    console.setPrompt(STRINGS.get("AdminUserRequiredPrompt", SystemPropertyConstants.DEFAULT_ADMIN_USER));
+
+                    String val = console.readLine();
+
+                    if (ok(val)) {
+                        programOpts.setUser(val);
+                        if (adminPassword == null) {
+                            adminPassword = getAdminPassword();
+                        }
                     }
+                } else {
+                    throw new CommandValidationException(STRINGS.get("AdminUserRequired"));
                 }
-            } else {
-                throw new CommandValidationException(STRINGS.get("AdminUserRequired"));
+            } catch (IOException ioe) {
+                logger.log(Level.WARNING, "Error reading input", ioe);
             }
         }
         if (programOpts.getUser() != null) {

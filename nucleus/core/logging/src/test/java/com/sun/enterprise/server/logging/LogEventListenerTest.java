@@ -39,17 +39,16 @@
  */
 package com.sun.enterprise.server.logging;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.File;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * Test class to exercise the LogEvent notification mechanism.

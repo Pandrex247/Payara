@@ -39,7 +39,7 @@
     holder.
 
 -->
-<!-- Portions Copyright [2016-2018] [Payara Foundation and/or its affiliates] -->
+<!-- Portions Copyright [2016-2019] [Payara Foundation and/or its affiliates] -->
 
 <!-- common/configuration/loggerGeneral.jsf -->
 
@@ -109,51 +109,55 @@
 <sun:propertySheet id="general">
 #include "/common/shared/configNameSection.inc"
     <sun:propertySheetSection id="sheetSection">
-          <sun:property id="writeSystemLogEnabledProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.WriteSystemLog}" helpText="$resource{i18nc.log.WriteSystemlogHelp}">
+            <sun:property id="writeSystemLogEnabledProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.WriteSystemLog}" helpText="$resource{i18nc.log.WriteSystemlogHelp}">
                 <sun:checkbox id="writeSystemLogEnabled" label="$resource{i18n.common.Enabled}" selected="#{pageSession.logAttributes['com.sun.enterprise.server.logging.SyslogHandler.useSystemLogging']}" selectedValue="true" />
-           </sun:property> 
+            </sun:property> 
           
-          <sun:property id="logtoFile"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.LogtoFile}" helpText="$resource{i18nc.log.LogtoFileHelp}">
+            <sun:property id="logtoFile"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.LogtoFile}" helpText="$resource{i18nc.log.LogtoFileHelp}">
                 <sun:checkbox label="$resource{i18n.common.Enabled}" selected="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.logtoFile']}"  selectedValue="true" />
-           </sun:property>
+            </sun:property>
 
-           <sun:property id="logtoConsole"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.LogtoConsole}" helpText="$resource{i18nc.log.LogtoConsoleHelp}">
+            <sun:property id="logtoConsole"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.LogtoConsole}" helpText="$resource{i18nc.log.LogtoConsoleHelp}">
                 <sun:checkbox label="$resource{i18n.common.Enabled}" selected="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.logtoConsole']}"  selectedValue="true" />
-           </sun:property>
+            </sun:property>
           
-           <sun:property id="rotationOnDateChange"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.rotationOnDateChange}" helpText="$resource{i18nc.log.rotationOnDateChangeHelp}">
+            <sun:property id="rotationOnDateChange"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.rotationOnDateChange}" helpText="$resource{i18nc.log.rotationOnDateChangeHelp}">
                 <sun:checkbox label="$resource{i18n.common.Enabled}" selected="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.rotationOnDateChange']}"  selectedValue="true" />
-           </sun:property>
+            </sun:property>
 
-          <sun:property id="multiline"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.multiLineMode}" helpText="$resource{i18nc.log.multiLineModeHelp}">
+            <sun:property id="multiline"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.multiLineMode}" helpText="$resource{i18nc.log.multiLineModeHelp}">
                 <sun:checkbox label="$resource{i18n.common.Enabled}" selected="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.multiLineMode']}"  selectedValue="true" />
-           </sun:property>
+            </sun:property>
 
-           <sun:property id="consoleFormat"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.ConsoleLogFormat}" helpText="$resource{i18nc.log.ConsoleLogFormatHelp}">
+            <sun:property id="consoleFormat"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.ConsoleLogFormat}" helpText="$resource{i18nc.log.ConsoleLogFormatHelp}">
                 <sun:dropDown id="consoleFormat" selected="#{pageSession.logAttributes['java.util.logging.ConsoleHandler.formatter']}"
                     labels={ "ULF","ODL","JSON"}
                     values={"com.sun.enterprise.server.logging.UniformLogFormatter", "com.sun.enterprise.server.logging.ODLLogFormatter", "fish.payara.enterprise.server.logging.JSONLogFormatter"} />
-          </sun:property>
+            </sun:property>
 
-        <sun:property id="logfileFormat"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.FileLogFormat}" helpText="$resource{i18nc.log.FileLogFormatHelp}">
-          <sun:dropDown id="logfileFormat" selected="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.formatter']}"
-                labels={ "ULF","ODL","JSON"}
-                values={"com.sun.enterprise.server.logging.UniformLogFormatter", "com.sun.enterprise.server.logging.ODLLogFormatter", "fish.payara.enterprise.server.logging.JSONLogFormatter"} />
-        </sun:property>
+            <sun:property id="logStandardStreamsProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.LogStandardStreams}" helpText="$resource{i18nc.log.LogStandardStreamsHelp}">
+                <sun:checkbox id="logStandardStreamsEnabled" label="$resource{i18n.common.Enabled}" selected="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.logStandardStreams']}" selectedValue="true"/>
+            </sun:property>
 
-        <sun:property id="excludeFields"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.excludeFields}" helpText="$resource{i18nc.log.excludeFieldsHelp}">
-            <sun:listbox id="excludeFields" immediate="#{true}"  rows="$int{6}" multiple="#{true}"
-                labels="#{pageSession.excludeFieldsOptions}" selected="#{pageSession.excludeFields}" >
-                <!beforeCreate
-                    getListBoxOptions(
-                        availableList={ "tid", "userId", "ecid", "timeMillis", "levelValue" },
-                        selectedCommaString="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.excludeFields']}",
-                        availableListResult="#{pageSession.excludeFieldsOptions}",
-                        selectedOptions="#{pageSession.excludeFields}"
-                        addEmptyFirstChoice="true");
-                />
-            </sun:listbox>
-        </sun:property>
+            <sun:property id="logfileFormat"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.FileLogFormat}" helpText="$resource{i18nc.log.FileLogFormatHelp}">
+              <sun:dropDown id="logfileFormat" selected="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.formatter']}"
+                    labels={ "ULF","ODL","JSON"}
+                    values={"com.sun.enterprise.server.logging.UniformLogFormatter", "com.sun.enterprise.server.logging.ODLLogFormatter", "fish.payara.enterprise.server.logging.JSONLogFormatter"} />
+            </sun:property>
+
+            <sun:property id="excludeFields"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.excludeFields}" helpText="$resource{i18nc.log.excludeFieldsHelp}">
+                <sun:listbox id="excludeFields" immediate="#{true}"  rows="$int{6}" multiple="#{true}"
+                    labels="#{pageSession.excludeFieldsOptions}" selected="#{pageSession.excludeFields}" >
+                    <!beforeCreate
+                        getListBoxOptions(
+                            availableList={ "tid", "userId", "ecid", "timeMillis", "levelValue" },
+                            selectedCommaString="#{pageSession.logAttributes['com.sun.enterprise.server.logging.GFFileHandler.excludeFields']}",
+                            availableListResult="#{pageSession.excludeFieldsOptions}",
+                            selectedOptions="#{pageSession.excludeFields}"
+                            addEmptyFirstChoice="true");
+                    />
+                </sun:listbox>
+            </sun:property>
 
           
             <sun:property id="FileRotationLimitProp"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18nc.log.FileRotationLimit}" helpText="$resource{i18nc.log.FileRotationLimitHelp}">

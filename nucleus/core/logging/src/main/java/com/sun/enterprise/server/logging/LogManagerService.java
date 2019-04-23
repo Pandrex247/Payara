@@ -41,11 +41,22 @@
 
 package com.sun.enterprise.server.logging;
 
+import com.sun.common.util.logging.LoggingConfig;
+import com.sun.common.util.logging.LoggingConfigFactory;
+import com.sun.common.util.logging.LoggingXMLNames;
+import com.sun.enterprise.admin.monitor.callflow.Agent;
+import com.sun.enterprise.config.serverbeans.Domain;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.module.bootstrap.EarlyLogHandler;
+import com.sun.enterprise.util.EarlyLogger;
+import com.sun.enterprise.util.io.FileUtils;
+import com.sun.enterprise.v3.logging.AgentFormatterDelegate;
+import fish.payara.enterprise.server.logging.JSONLogFormatter;
+import fish.payara.enterprise.server.logging.PayaraNotificationFileHandler;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -56,10 +67,9 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.Vector;
-import java.util.Map.Entry;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.Filter;
@@ -69,22 +79,8 @@ import java.util.logging.Level;
 import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-
 import javax.inject.Inject;
 import javax.validation.ValidationException;
-
-import com.sun.common.util.logging.LoggingConfig;
-import com.sun.common.util.logging.LoggingConfigFactory;
-import com.sun.common.util.logging.LoggingOutputStream;
-import com.sun.common.util.logging.LoggingXMLNames;
-import com.sun.enterprise.admin.monitor.callflow.Agent;
-import com.sun.enterprise.config.serverbeans.Domain;
-import com.sun.enterprise.config.serverbeans.Server;
-import com.sun.enterprise.module.bootstrap.EarlyLogHandler;
-import com.sun.enterprise.util.EarlyLogger;
-import com.sun.enterprise.util.io.FileUtils;
-import com.sun.enterprise.v3.logging.AgentFormatterDelegate;
-
 import org.glassfish.api.admin.FileMonitoring;
 import org.glassfish.common.util.Constants;
 import org.glassfish.hk2.api.PostConstruct;
@@ -101,9 +97,6 @@ import org.jvnet.hk2.annotations.Optional;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.UnprocessedChangeEvent;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
-
-import fish.payara.enterprise.server.logging.JSONLogFormatter;
-import fish.payara.enterprise.server.logging.PayaraNotificationFileHandler;
 
 /**
  * Reinitialise the log manager using our logging.properties file.
@@ -138,7 +131,7 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
     @Inject
     Domain domain;
     
-    final Map<String, Handler> gfHandlers = new HashMap<String, Handler>();
+    final Map<String, Handler> gfHandlers = new HashMap<>();
 
     private static final Logger LOGGER = LogFacade.LOGGING_LOGGER;
 
@@ -166,6 +159,7 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
     String fileHandlerFormatterDetail = "";
     String logFormatDateFormatDetail = "";
     String compressOnRotationDetail = "";
+    String logStandardStreamsDetail = "";
     
     //Payara Notification Logging   
     String payaraNotificationLogFileDetail = "";
@@ -200,6 +194,7 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
     private static final String FILEHANDLER_FORMATTER_PROPERTY = "java.util.logging.FileHandler.formatter";
     private static final String LOGFORMAT_DATEFORMAT_PROPERTY = "com.sun.enterprise.server.logging.GFFileHandler.logFormatDateFormat";
     private static final String COMPRESS_ON_ROTATION_PROPERTY = "com.sun.enterprise.server.logging.GFFileHandler.compressOnRotation";
+    private static final String LOG_STANDARD_STREAMS_PROPERTY = "com.sun.enterprise.server.logging.GFFileHandler.logStandardStreams";
     
     //Payara Notification Logging
     private static final String PAYARA_NOTIFICATION_LOG_FILE_PROPERTY = "fish.payara.enterprise.server.logging.PayaraNotificationFileHandler.file";
@@ -237,10 +232,6 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
 
     private boolean multiLineMode = false;
 
-    private LoggingOutputStream stdoutOutputStream=null;
-
-    private LoggingOutputStream stderrOutputStream=null;
-    
     private  GFFileHandler gfFileHandler = null;
     
     private  PayaraNotificationFileHandler pyFileHandler = null;
@@ -391,8 +382,6 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
             logging = getLoggingFile();
             System.setProperty("java.util.logging.config.file", logging.getAbsolutePath());
             
-
-
             String rootFolder = env.getProps().get(com.sun.enterprise.util.SystemPropertyConstants.INSTALL_ROOT_PROPERTY);
             String templateDir = rootFolder + File.separator + "lib" + File.separator + "templates";
             File src = new File(templateDir, ServerEnvironmentImpl.kLoggingPropertiesFileName);
@@ -408,6 +397,7 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
                 FileUtils.copy(src, dest);
                 logging = new File(env.getConfigDirPath(), ServerEnvironmentImpl.kLoggingPropertiesFileName);
             }
+            
             logMgr.readConfiguration();
 
 
@@ -477,19 +467,6 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
                 }
             }
         }
-
-        // redirect stderr and stdout, a better way to do this
-        //http://blogs.sun.com/nickstephen/entry/java_redirecting_system_out_and
-
-        Logger _ologger = LogFacade.STDOUT_LOGGER;
-        stdoutOutputStream = new LoggingOutputStream(_ologger, Level.INFO);
-        LoggingOutputStream.LoggingPrintStream pout = stdoutOutputStream.new LoggingPrintStream(stdoutOutputStream);
-        System.setOut(pout);
-
-        Logger _elogger = LogFacade.STDERR_LOGGER;
-        stderrOutputStream = new LoggingOutputStream(_elogger, Level.SEVERE);
-        LoggingOutputStream.LoggingPrintStream perr = stderrOutputStream.new LoggingPrintStream(stderrOutputStream);
-        System.setErr(perr);
                 
         // finally listen to changes to the logging.properties file
         if (logging != null) {
@@ -738,7 +715,19 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
                                             }
                                         }
                                     }
-                                } else if (a.equals(PAYARA_NOTIFICATION_LOG_FILE_PROPERTY)) {
+                                } else if (a.equals(LOG_STANDARD_STREAMS_PROPERTY)) {
+                                    if (!val.equals(logStandardStreamsDetail)) {
+                                        logStandardStreamsDetail = val;
+                                        for (Handler handler : logMgr.getLogger("").getHandlers()) {
+                                            // only get the GFFileHandler
+                                            if (handler.getClass().equals(GFFileHandler.class)) {
+                                                gfFileHandler = (GFFileHandler) handler;
+                                                gfFileHandler.setLogStandardStreams(Boolean.parseBoolean(logStandardStreamsDetail));
+                                                break;
+                                            }
+                                        }
+                                    }
+                                }else if (a.equals(PAYARA_NOTIFICATION_LOG_FILE_PROPERTY)) {
                                     if (!val.equals(payaraNotificationLogFileDetail)) {
                                         Handler[] payaraNotificationLogFileHandlers = logMgr.getLogger(payaraNotificationLogger).getHandlers();
                                         if (payaraNotificationLogFileHandlers.length > 0) {
@@ -751,7 +740,7 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
                                                 }
                                             }
                                         } else {
-                                            LOGGER.log(Level.INFO, "Payara Notification Service isn't using a separate Log File ");
+                                            LOGGER.log(Level.INFO, PAYARA_NOTIFICATION_NOT_USING_SEPARATE_LOG);
                                         }
                                     }
                                 } else if (a.equals(PAYARA_NOTIFICATION_LOGTOFILE_PROPERTY)) {
@@ -767,7 +756,7 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
                                                 }
                                             }
                                         } else {
-                                            LOGGER.log(Level.INFO, "Payara Notification Service isn't using a separate Log File ");
+                                            LOGGER.log(Level.INFO, PAYARA_NOTIFICATION_NOT_USING_SEPARATE_LOG);
                                         }
                                     }
                                 } else if (a.equals(PAYARA_NOTIFICATION_LOG_ROTATIONTIMELIMITINMINUTES_PROPERTY)) {
@@ -783,7 +772,7 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
                                                 }
                                             }
                                         } else {
-                                            LOGGER.log(Level.INFO, "Payara Notification Service isn't using a separate Log File ");
+                                            LOGGER.log(Level.INFO, PAYARA_NOTIFICATION_NOT_USING_SEPARATE_LOG);
                                         }
                                     }
                                 } else if (a.equals(PAYARA_NOTIFICATION_LOG_ROTATIONLIMITINBYTES_PROPERTY)) {
@@ -799,7 +788,23 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
                                                 }
                                             }                                           
                                         } else {
-                                            LOGGER.log(Level.INFO, "Payara Notification Service isn't using a separate Log File ");
+                                            LOGGER.log(Level.INFO, PAYARA_NOTIFICATION_NOT_USING_SEPARATE_LOG);
+                                        }
+                                    }
+                                } else if (a.equals(PAYARA_NOTIFICATION_LOG_ROTATIONONDATECHANGE_PROPERTY)) {
+                                    if (!val.equals(payaraNotificationLogRotationOnDateChangeDetail)) {
+                                        Handler[] payaraNotificationLogFileHandlers = logMgr.getLogger(payaraNotificationLogger).getHandlers();
+                                        if (payaraNotificationLogFileHandlers.length > 0) {
+                                            payaraNotificationLogRotationOnDateChangeDetail = val;
+                                            for (Handler handler : payaraNotificationLogFileHandlers) {
+                                                if (handler.getClass().equals(PayaraNotificationFileHandler.class)) {
+                                                    pyFileHandler = (PayaraNotificationFileHandler) handler;
+                                                    pyFileHandler.setRotationOnDateChange(Boolean.parseBoolean(val));
+                                                    break;
+                                                }
+                                            }
+                                        } else {
+                                            LOGGER.log(Level.INFO, PAYARA_NOTIFICATION_NOT_USING_SEPARATE_LOG);
                                         }
                                     }
                                 } else if (a.equals(PAYARA_NOTIFICATION_LOG_MAXHISTORY_FILES_PROPERTY)) {
@@ -815,7 +820,7 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
                                                 }
                                             }                                           
                                         } else {
-                                            LOGGER.log(Level.INFO, "Payara Notification Service isn't using a separate Log File ");
+                                            LOGGER.log(Level.INFO, PAYARA_NOTIFICATION_NOT_USING_SEPARATE_LOG);
                                         }
                                     }
                                 } else if (a.equals(PAYARA_NOTIFICATION_LOG_COMPRESS_ON_ROTATION_PROPERTY)) {
@@ -831,7 +836,7 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
                                                 }
                                             }                                          
                                         } else {
-                                            LOGGER.log(Level.INFO, "Payara Notification Service isn't using a separate Log File ");
+                                            LOGGER.log(Level.INFO, PAYARA_NOTIFICATION_NOT_USING_SEPARATE_LOG);
                                         }
                                     }
                                 }
@@ -1064,22 +1069,12 @@ public class LogManagerService implements PostConstruct, PreDestroy, org.glassfi
     @Override
     public void preDestroy() {
         //destroy the handlers
-        try {
-            for (ServiceHandle<?> i : habitat.getAllServiceHandles(BuilderHelper.createContractFilter(Handler.class.getName()))) {
-                i.destroy();
-            }
-            System.setOut(oStdOutBackup);
-            System.setErr(oStdErrBackup);
-            if (stdoutOutputStream != null) {
-                stdoutOutputStream.close();
-            }
-            if (stderrOutputStream != null) {
-                stderrOutputStream.close();
-            }
-            System.out.println("Completed shutdown of Log manager service");
-        } catch (Exception e) {
-            e.printStackTrace();
+        for (ServiceHandle<?> i : habitat.getAllServiceHandles(BuilderHelper.createContractFilter(Handler.class.getName()))) {
+            i.destroy();
         }
+        System.setOut(oStdOutBackup);
+        System.setErr(oStdErrBackup);
+        System.out.println("Completed shutdown of Log manager service");
     }
 
     @Override
