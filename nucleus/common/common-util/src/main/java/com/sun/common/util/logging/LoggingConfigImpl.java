@@ -68,7 +68,6 @@ import org.glassfish.server.ServerEnvironmentImpl;
 import org.jvnet.hk2.annotations.Contract;
 import org.jvnet.hk2.annotations.Service;
 
-import static com.sun.common.util.logging.LoggingXMLNames.xmltoPropsMap;
 
 
 /**
@@ -435,29 +434,30 @@ public class LoggingConfigImpl implements LoggingConfig {
             }
         }
     }
-    
- /* Return a logging file details  in the logging.properties file.
+
+    /* Return a logging file details  in the logging.properties file.
       * @throws  IOException
-     */
+    */
+    
     public synchronized String getLoggingFileDetails() throws IOException {
-        loadLoggingProperties();
+        try {
+            loadLoggingProperties();
+            Enumeration e = props.propertyNames();
 
-        @SuppressWarnings("unchecked")
-        Enumeration<String> loggingPropertyNames = (Enumeration<String>) props.propertyNames();
+            while (e.hasMoreElements()) {
+                String key = (String) e.nextElement();
+                // convert the name in domain.xml to the name in logging.properties if needed
+                if (LoggingXMLNames.xmltoPropsMap.get(key) != null) {
+                    key = LoggingXMLNames.xmltoPropsMap.get(key);
+                }
 
-        while (loggingPropertyNames.hasMoreElements()) {
-            String key = loggingPropertyNames.nextElement();
-
-            // Convert the name in domain.xml to the name in logging.properties if needed
-            key = xmltoPropsMap.getOrDefault(key, key);
-
-            if (key != null && key.equals("com.sun.enterprise.server.logging.GFFileHandler.file")) {
-                return props.getProperty(key);
+                if (key != null && key.equals("com.sun.enterprise.server.logging.GFFileHandler.file")) {
+                    return props.getProperty(key);
+                }
             }
+        } catch (IOException ex) {
+            throw ex;
         }
-
-        // If "com.sun.enterprise.server.logging.GFFileHandler.file" not found, check "java.util.logging.FileHandler.pattern"
-        // This property can have been set by Payara Micro when using the --logtofile
-        return props.getProperty("java.util.logging.FileHandler.pattern");
+        return null;
     }
 }
