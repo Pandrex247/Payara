@@ -47,7 +47,7 @@
     <parent>
         <groupId>fish.payara</groupId>
         <artifactId>payara-nucleus-parent</artifactId>
-        <version>4.1.2.191.1</version>
+        <version>4.1.2.191.2</version>
         <relativePath>../nucleus/pom.xml</relativePath>
     </parent>
     <artifactId>payara-parent</artifactId>
@@ -58,7 +58,7 @@
         <connection>scm:svn:https://svn.java.net/svn/glassfish~svn/tags/4.1/main/appserver</connection>
         <developerConnection>scm:svn:https://svn.java.net/svn/glassfish~svn/tags/4.1/main/appserver</developerConnection>
         <url>https://svn.java.net/svn/glassfish~svn/tags/4.1/main/appserver</url>
-        <tag>payara-blue-4.1.2.191.1</tag>
+        <tag>payara-blue-4.1.2.191.2</tag>
     </scm>
 
     <properties>
@@ -101,7 +101,7 @@
         <minor_version>1</minor_version>
         <update_version>2</update_version>
         <payara_version>191</payara_version>
-        <payara_update_version>1</payara_update_version>
+        <payara_update_version>2</payara_update_version>
         <install.dir.name>payara${major_version}${minor_version}</install.dir.name>
 
         <javaee.major_version>7</javaee.major_version>
@@ -124,7 +124,7 @@
         <jsr181-api.version>1.0-MR1</jsr181-api.version>
         <jcip-annotations.version>1.0-1</jcip-annotations.version>
         <stax2-api.version>3.1.1</stax2-api.version>
-        <eclipselink.version>2.6.5.payara-p4</eclipselink.version>
+        <eclipselink.version>2.6.5.payara-p3</eclipselink.version>
         <javax.xml.registry-api.version>1.0.7</javax.xml.registry-api.version>
         <javax-persistence-api.version>2.1.0</javax-persistence-api.version>
         <dbschema.version>3.1.1</dbschema.version>
@@ -1157,6 +1157,15 @@
             <modules>
                 <module>javaee-api</module>
             </modules>
+        </profile>
+        <profile>
+            <id>jdk8</id>
+            <activation>
+                <jdk>1.8</jdk>
+            </activation>
+            <properties>
+                <eclipselink.version>2.6.5.payara-p4</eclipselink.version>
+            </properties>
         </profile>
     </profiles>
 </project>
