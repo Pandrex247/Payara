@@ -181,6 +181,19 @@
             	</snapshots>
         </repository>
 
+	<repository>
+           <id>payara-patched-externals-patrik</id>
+	   <name>Payara Patched Externals</name>
+	   <url>https://raw.github.com/pdudits/Payara_PatchedProjects/payara-3742</url>
+	   <!--<url>file:///opt/PayaraDev/Payara_PatchedProjects</url>-->
+           	<releases>
+           		<enabled>true</enabled>
+           	</releases>
+            	<snapshots>
+                	<enabled>false</enabled>
+            	</snapshots>
+        </repository>
+
     </repositories>
 
     <pluginRepositories>
