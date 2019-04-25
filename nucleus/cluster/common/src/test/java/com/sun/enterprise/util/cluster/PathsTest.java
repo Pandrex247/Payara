@@ -188,6 +188,66 @@ public class PathsTest {
         }
 
         @Override
+        public String getDockerPasswordFile() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void setDockerPasswordFile(String dockerPasswordFile) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public String getDockerImage() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void setDockerImage(String dockerImage) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public String getDockerPort() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void setDockerPort(String dockerPort) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public String getTlsCert() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void setTlsCert(String tlsCert) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public String getTlsCa() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void setTlsCa(String tlsCa) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public String getTlsPem() {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
+        public void setTlsPem(String tlsPem) {
+            throw new UnsupportedOperationException("Not supported yet.");
+        }
+
+        @Override
         public String getNodeDirUnixStyle() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
