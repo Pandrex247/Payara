@@ -1,4 +1,4 @@
-FROM openjdk:8u171-jdk
+FROM azul/zulu-openjdk:8u212
 
 ENV WORK_DIR=/opt/payara
 ENV PAYARA_HOME=${WORK_DIR}/payara5 \
@@ -11,6 +11,7 @@ ENV PAYARA_PASSWORD_FILE=${PAYARA_PASSWORD_FILE_DIR}/passwordfile.txt
 
 # Create and set the Payara user and working directory owned by the new user
 RUN mkdir ${WORK_DIR} && \
+    mkdir ${PAYARA_HOME} && \
     mkdir ${PAYARA_PASSWORD_FILE_DIR} && \
     groupadd -g 1000 payara && \
     useradd -u 1000 -M -s /bin/bash -d ${WORK_DIR} payara -g payara && \
@@ -20,13 +21,10 @@ RUN mkdir ${WORK_DIR} && \
 USER payara
 WORKDIR ${WORK_DIR}
 
-# Install Payara Server
-ARG PAYARA_ZIP
-COPY ${PAYARA_ZIP} ${WORK_DIR}
-RUN unzip -qq payara.zip -d ./ && \
-    # Cleanup unused files
-    rm -rf payara.zip/ && \
-    rm -rf ${PAYARA_HOME}/glassfish/domains/domain1/ && \
+# Install Payara Server and remove unused domains
+ARG PAYARA_INSTALL
+COPY --chown=payara:payara ${PAYARA_INSTALL} ${PAYARA_HOME}
+RUN rm -rf ${PAYARA_HOME}/glassfish/domains/domain1/ && \
     rm -rf ${PAYARA_HOME}/glassfish/domains/production
 
 # Install entrypoint script

@@ -76,23 +76,15 @@ public class CreateDockerContainerCommand implements AdminCommand {
             return;
         }
 
-        // Get the DAS instance port
+        // Get the DAS hostname and port
+        String dasHost = "";
         String dasPort = "";
         for (Server server : servers.getServer()) {
             if (server.isDas()) {
+                dasHost = server.getAdminHost();
                 dasPort = Integer.toString(server.getAdminPort());
                 break;
             }
-        }
-
-        // We want to make sure we have the IP address rather than a host name, which is why we don't get it from the
-        // server instance that we got the port from
-        String dasHost = "";
-        try {
-            dasHost = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException uhe) {
-            actionReport.failure(logger, "Could not determine DAS address", uhe);
-            return;
         }
 
         if (dasHost == null || dasHost.equals("") || dasPort == null || dasPort.equals("")) {
@@ -116,7 +108,8 @@ public class CreateDockerContainerCommand implements AdminCommand {
                                 .add("Type", "bind")
                                 .add("Source", node.getDockerPasswordFile())
                                 .add("Target", DockerNodeConstants.PAYARA_PASSWORD_FILE)
-                                .add("ReadOnly", true))));
+                                .add("ReadOnly", true)))
+                .add(DockerNodeConstants.DOCKER_NETWORK_MODE_KEY, "host"));
         jsonObjectBuilder.add(DockerInstanceConstants.DOCKER_CONTAINER_ENV, Json.createArrayBuilder()
                 .add(DockerNodeConstants.PAYARA_DAS_HOST + "=" + dasHost)
                 .add(DockerNodeConstants.PAYARA_DAS_PORT + "=" + dasPort)
