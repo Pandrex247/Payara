@@ -257,6 +257,8 @@ public class CreateInstanceCommand implements AdminCommand {
 
         // If this
         if (theNode.getType().equals("DOCKER")) {
+            report.appendMessage(
+                    "\n\nSuccessfully registered instance with DAS, now attempting to create Docker container...");
             createDockerContainer();
         } else {
             // Then go create the instance filesystem on the node
@@ -480,20 +482,20 @@ public class CreateInstanceCommand implements AdminCommand {
 
     private void createDockerContainer() {
         ActionReport actionReport = ctx.getActionReport();
+        ActionReport subActionReport = actionReport.addSubActionsReport();
 
         ParameterMap parameterMap = new ParameterMap();
 
         parameterMap.add("node", theNode.getName());
         parameterMap.add("DEFAULT", instance);
 
-        commandRunner.getCommandInvocation("_create-docker-container", actionReport, ctx.getSubject())
+        commandRunner.getCommandInvocation("_create-docker-container", subActionReport, ctx.getSubject())
                 .parameters(parameterMap)
                 .execute();
 
-        if (actionReport.getActionExitCode() != SUCCESS) {
-            // Something went wrong with the non-local command so don't continue but set status to warning
-            // because config was updated correctly or we would not be here.
-            actionReport.setActionExitCode(WARNING);
+        if (subActionReport.getActionExitCode() != SUCCESS) {
+            // Something went wrong with one of the sub-commands, so let's make sure this top level command fails as well
+            actionReport.setActionExitCode(FAILURE);
         }
     }
 

@@ -11,7 +11,10 @@ import org.glassfish.api.ActionReport;
 import org.glassfish.api.Param;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
+import org.glassfish.api.admin.CommandException;
+import org.glassfish.api.admin.CommandRunner;
 import org.glassfish.api.admin.ExecuteOn;
+import org.glassfish.api.admin.ParameterMap;
 import org.glassfish.api.admin.RestEndpoint;
 import org.glassfish.api.admin.RestEndpoints;
 import org.glassfish.api.admin.RuntimeType;
@@ -30,6 +33,9 @@ import javax.ws.rs.core.Response;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.logging.Logger;
+
+import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
+import static org.glassfish.api.ActionReport.ExitCode.WARNING;
 
 @Service(name = "_create-docker-container")
 @PerLookup
@@ -59,6 +65,9 @@ public class CreateDockerContainerCommand implements AdminCommand {
 
     @Inject
     private Nodes nodes;
+
+    @Inject
+    private CommandRunner commandRunner;
 
     @Override
     public void execute(AdminCommandContext adminCommandContext) {
@@ -134,8 +143,29 @@ public class CreateDockerContainerCommand implements AdminCommand {
         // Check status of response and act on result
         Response.StatusType responseStatus = response.getStatusInfo();
         if (!responseStatus.getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
+            // Log the failure
             actionReport.failure(logger, "Failed to create Docker Container: \n"
                     + responseStatus.getReasonPhrase());
+
+            if (commandRunner != null) {
+                actionReport.appendMessage("\n\nWill attempt to unregister instance...");
+
+                ActionReport subActionReport = actionReport.addSubActionsReport();
+                CommandRunner.CommandInvocation commandInvocation = commandRunner.getCommandInvocation("_unregister-instance",
+                        subActionReport, adminCommandContext.getSubject());
+                ParameterMap commandParameters = new ParameterMap();
+                commandParameters.add("DEFAULT", instanceName);
+                commandInvocation.parameters(commandParameters);
+                commandInvocation.execute();
+
+                // The unregister instance command doesn't actually log any messages to the asadmin prompt, so let's
+                // give a more useful message
+                if (subActionReport.getActionExitCode() == SUCCESS) {
+                    actionReport.appendMessage("\nSuccessfully unregistered instance");
+                } else {
+                    actionReport.appendMessage("\nFailed to unregister instance, user intervention will be required");
+                }
+            }
         }
     }
 }
