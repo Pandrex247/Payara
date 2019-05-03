@@ -214,17 +214,9 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
     String getDockerPort();
     void setDockerPort(String dockerPort);
 
-    @Attribute(defaultValue = "")
-    String getTlsCert();
-    void setTlsCert(String tlsCert);
-
-    @Attribute(defaultValue = "")
-    String getTlsCa();
-    void setTlsCa(String tlsCa);
-
-    @Attribute(defaultValue = "")
-    String getTlsPem();
-    void setTlsPem(String tlsPem);
+    @Attribute(defaultValue = "false", dataType = Boolean.class)
+    String getUseTls();
+    void setUseTls(String value);
 
     /**
      * Returns the install dir with separators as forward slashes.  This is needed to run commands
@@ -405,6 +397,8 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
         String tlsCa;
         @Param(name = "tlsPem", alias = "tlspem", optional = true)
         String tlsPem;
+        @Param(name = "useTls", alias = "usetls", optional = true)
+        Boolean useTls;
         @Inject
         ServiceLocator habitat;
         @Inject
@@ -471,16 +465,8 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
                     instance.setDockerPort(Integer.toString(dockerPort));
                 }
 
-                if (StringUtils.ok(tlsCert)) {
-                    instance.setTlsCert(tlsCert);
-                }
-
-                if (StringUtils.ok(tlsCa)) {
-                    instance.setTlsCa(tlsCa);
-                }
-
-                if (StringUtils.ok(tlsPem)) {
-                    instance.setTlsPem(tlsPem);
+                if (useTls != null) {
+                    instance.setUseTls(useTls.toString());
                 }
 
                 return;

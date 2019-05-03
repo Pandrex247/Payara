@@ -134,14 +134,8 @@ public class UpdateNodeCommand implements AdminCommand {
     @Param(name = "dockerPort", optional = true)
     Integer dockerPort;
 
-    @Param(name = "tlsCert", optional = true)
-    String tlsCert;
-
-    @Param(name = "tlsCa", optional = true)
-    String tlsCa;
-
-    @Param(name = "tlsPem", optional = true)
-    String tlsPem;
+    @Param(name = "useTls", optional = true)
+    String useTls;
 
     @Param(name = "type", optional=true)
     String type;
@@ -276,16 +270,8 @@ public class UpdateNodeCommand implements AdminCommand {
                         writeableNode.setDockerPort(Integer.toString(dockerPort));
                     }
 
-                    if (tlsCert != null) {
-                        writeableNode.setTlsCert(tlsCert);
-                    }
-
-                    if (tlsCa != null) {
-                        writeableNode.setTlsCa(tlsCa);
-                    }
-
-                    if (tlsPem != null) {
-                        writeableNode.setTlsPem(tlsPem);
+                    if (useTls != null) {
+                        writeableNode.setUseTls(useTls);
                     }
                 }
                 return Boolean.TRUE;

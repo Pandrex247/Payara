@@ -21,7 +21,6 @@ import org.glassfish.hk2.api.PerLookup;
 import org.jvnet.hk2.annotations.Service;
 
 import javax.inject.Inject;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service(name = "update-node-docker")
@@ -60,14 +59,8 @@ public class UpdateNodeDockerCommand implements AdminCommand {
     @Param(name = "dockerPort", optional = true, alias = "dockerport")
     Integer dockerPort;
 
-    @Param(name = "dockerCert", optional = true, alias = "cert")
-    String tlsCert;
-
-    @Param(name = "dockerCa", optional = true, alias = "ca")
-    String tlsCa;
-
-    @Param(name = "dockerPem", optional = true, alias = "pem")
-    String tlsPem;
+    @Param(name = "useTls", alias = "usetls", optional = true)
+    Boolean useTls;
 
     @Inject
     private CommandRunner commandRunner;
@@ -122,16 +115,8 @@ public class UpdateNodeDockerCommand implements AdminCommand {
             parameterMap.add("dockerPort", Integer.toString(dockerPort));
         }
 
-        if (tlsCert != null) {
-            parameterMap.add("dockerCert", tlsCert);
-        }
-
-        if (tlsCa != null) {
-            parameterMap.add("ca", tlsCa);
-        }
-
-        if (tlsPem != null) {
-            parameterMap.add("dockerPem", tlsPem);
+        if (useTls != null) {
+            parameterMap.add("useTls", useTls.toString());
         }
 
         if (parameterMap.size() > 1) {

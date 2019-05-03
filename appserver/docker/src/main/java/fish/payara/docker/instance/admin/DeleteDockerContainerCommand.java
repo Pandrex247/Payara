@@ -20,6 +20,7 @@ import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Service(name = "_delete-docker-container")
@@ -52,21 +53,43 @@ public class DeleteDockerContainerCommand implements AdminCommand {
         Node node = nodes.getNode(nodeName);
 
         Client client = ClientBuilder.newClient();
-        WebTarget webTarget = client.target("http://"
-                + node.getNodeHost()
-                + ":"
-                + node.getDockerPort()
-                + "/containers/"
-                + instanceName);
-
-        Response response = webTarget.request(MediaType.APPLICATION_JSON).delete();
-
-        // Check status of response and act on result
-        Response.StatusType responseStatus = response.getStatusInfo();
-        if (responseStatus.getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
-            // woohoo
+        WebTarget webTarget = null;
+        if (Boolean.valueOf(node.getUseTls())) {
+             webTarget = client.target("https://"
+                    + node.getNodeHost()
+                    + ":"
+                    + node.getDockerPort()
+                    + "/containers/"
+                    + instanceName);
         } else {
-            actionReport.failure(logger, "Failed to delete Docker Container: \n" + responseStatus.getReasonPhrase());
+            webTarget = client.target("http://"
+                    + node.getNodeHost()
+                    + ":"
+                    + node.getDockerPort()
+                    + "/containers/"
+                    + instanceName);
         }
+
+        Response response = null;
+        try {
+            response = webTarget.request(MediaType.APPLICATION_JSON).delete();
+        } catch (Exception ex) {
+            logger.log(Level.SEVERE, "Encountered an exception sending request to Docker: \n", ex);
+        }
+
+        if (response != null) {
+            // Check status of response and act on result
+            Response.StatusType responseStatus = response.getStatusInfo();
+            if (responseStatus.getFamily().equals(Response.Status.Family.SUCCESSFUL)) {
+                // woohoo
+            } else {
+                actionReport.failure(logger, "Failed to delete Docker Container, user action will be required: \n"
+                        + responseStatus.getReasonPhrase());
+            }
+        } else {
+            // If we don't have a response, clearly something has gone wrong
+            actionReport.failure(logger, "Failed to delete Docker Container, user action will be required");
+        }
+
     }
 }

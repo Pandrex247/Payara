@@ -218,32 +218,12 @@ public class PathsTest {
         }
 
         @Override
-        public String getTlsCert() {
+        public String getUseTls() {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 
         @Override
-        public void setTlsCert(String tlsCert) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public String getTlsCa() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void setTlsCa(String tlsCa) {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public String getTlsPem() {
-            throw new UnsupportedOperationException("Not supported yet.");
-        }
-
-        @Override
-        public void setTlsPem(String tlsPem) {
+        public void setUseTls(String tlsPem) {
             throw new UnsupportedOperationException("Not supported yet.");
         }
 

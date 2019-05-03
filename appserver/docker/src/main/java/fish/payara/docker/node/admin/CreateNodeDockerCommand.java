@@ -52,14 +52,8 @@ public class CreateNodeDockerCommand implements AdminCommand {
     @Param(name = "dockerPort", optional = true, alias = "dockerport")
     Integer dockerPort;
 
-    @Param(name = "dockerCert", optional = true, alias = "cert")
-    String dockerCert;
-
-    @Param(name = "dockerCa", optional = true, alias = "ca")
-    String dockerCa;
-
-    @Param(name = "dockerPem", optional = true, alias = "pem")
-    String dockerPem;
+    @Param(name = "useTls", alias = "usetls", optional = true)
+    Boolean useTls;
 
     @Inject
     private CommandRunner commandRunner;
@@ -102,16 +96,8 @@ public class CreateNodeDockerCommand implements AdminCommand {
             map.add("dockerPort", Integer.toString(dockerPort));
         }
 
-        if (StringUtils.ok(dockerCert)) {
-            map.add("dockerCert", dockerCert);
-        }
-
-        if (StringUtils.ok(dockerCa)) {
-            map.add("ca", dockerCa);
-        }
-
-        if (StringUtils.ok(dockerPem)) {
-            map.add("dockerPem", dockerPem);
+        if (useTls != null) {
+            map.add("useTls", useTls.toString());
         }
 
         map.add("type","DOCKER");
