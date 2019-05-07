@@ -136,7 +136,7 @@
             </sun:property>
 
             <sun:property id="typeProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.node.type}" helpText="$resource{i18ncs.node.typeHelp}">
-                <sun:dropDown id="type" labels={"SSH" "DCOM" "CONFIG"}  selected="#{pageSession.valueMap['type']}"
+                <sun:dropDown id="type" labels={"SSH" "DCOM" "CONFIG" "DOCKER"}  selected="#{pageSession.valueMap['type']}"
                               onChange="javascript:showSection(this.value, '#{pageSession.sshConnectorSectionId}', '#{pageSession.dcomSectionId}', '#{pageSession.installdirSshId}', '#{pageSession.installdirConfigId}',
                                         '#{pageSession.installProp}', '#{pageSession.archProp}');">
                 <!afterCreate
@@ -360,6 +360,24 @@
                         getClientId(component="$this{component}" clientId="#{pageSession.winPswdAliasId}");
                     />
                 </sun:dropDown>
+            </sun:property>
+
+        </sun:propertySheetSection>
+
+        <!-- =============================== Docker ====================== -->
+
+        <sun:propertySheetSection id="dockerSection" visible="#{pageSession.showDocker}" label="$resource{i18ncs.node.dockerSection}" >
+            <!afterCreate
+                getClientId(component="$this{component}" clientId="#{pageSession.dockerSectionId}");
+            />
+            <sun:property id="dockerPort"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.node.dockerPort}" helpText="$resource{i18ncs.node.dockerPortHelp}">
+                <sun:textField id="dockerport" text="#{pageSession.valueMap['dockerPort']}" columns="$int{60}" maxLength="#{sessionScope.fieldLengths['maxLength.node.dockerPort']}"  />
+            </sun:property>
+            <sun:property id="dockerPasswordFile"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.node.dockerPasswordFile}" helpText="$resource{i18ncs.node.dockerPasswordFileHelp}">
+                <sun:textField id="dockerPasswordFile" text="#{pageSession.valueMap['dockerPasswordFile']}" columns="$int{60}" maxLength="#{sessionScope.fieldLengths['maxLength.node.dockerPasswordFile']}"  />
+            </sun:property>
+            <sun:property id="useTls"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.node.useTls}" helpText="$resource{i18ncs.node.useTlsHelp}">
+                <sun:checkbox id="useTls" selected="#{pageSession.valueMap['useTls']}" label="$resource{i18n.common.Enabled}" selectedValue="true"">
             </sun:property>
 
         </sun:propertySheetSection>
