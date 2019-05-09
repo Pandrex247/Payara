@@ -391,12 +391,6 @@ public interface Node extends ConfigBeanProxy, Named, ReferenceContainer, RefCon
         String dockerImage;
         @Param(name = "dockerPort", alias = "dockerport", optional = true)
         Integer dockerPort;
-        @Param(name = "tlsCert", alias = "tlscert", optional = true)
-        String tlsCert;
-        @Param(name = "tlsCa", alias = "tlsca", optional = true)
-        String tlsCa;
-        @Param(name = "tlsPem", alias = "tlspem", optional = true)
-        String tlsPem;
         @Param(name = "useTls", alias = "usetls", optional = true)
         Boolean useTls;
         @Inject

@@ -30,7 +30,7 @@ import static org.glassfish.api.ActionReport.ExitCode.FAILURE;
 @CommandLock(CommandLock.LockType.NONE)
 @TargetType(value = {CommandTarget.DAS})
 @RestEndpoints({
-        @RestEndpoint(configBean= Domain.class,
+        @RestEndpoint(configBean= Nodes.class,
                 opType=RestEndpoint.OpType.DELETE,
                 path="delete-node-docker",
                 description="Deletes a Docker Node")

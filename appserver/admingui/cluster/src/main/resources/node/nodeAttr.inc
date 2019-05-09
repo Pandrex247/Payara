@@ -91,6 +91,7 @@
                    setPageSessionAttribute(key="showCONFIG" value="#{false}")
                    setPageSessionAttribute(key="showInstalldirSSH" value="#{true}");
                    setPageSessionAttribute(key="showInstalldirConfig" value="#{false}");
+                   setPageSessionAttribute(key="showInstalldirDocker" value="#{false}");
                    setPageSessionAttribute(key="showInstallOp" value="#{true}");
                    setPageSessionAttribute(key="showSetupSsh" value="#{true}");
                    setPageSessionAttribute(key="showGenerateKey" value="#{false}");
@@ -109,6 +110,7 @@
                    setPageSessionAttribute(key="showCONFIG" value="#{true}")
                    setPageSessionAttribute(key="showInstalldirSSH" value="#{false}");
                    setPageSessionAttribute(key="showInstalldirConfig" value="#{true}");
+                   setPageSessionAttribute(key="showInstalldirDocker" value="#{false}");
                    setPageSessionAttribute(key="showInstallOp" value="#{false}");
             }
             if ("#{pageSession.valueMap['type']}=DCOM"){
@@ -117,10 +119,21 @@
                    setPageSessionAttribute(key="showCONFIG" value="#{false}")
                    setPageSessionAttribute(key="showInstalldirSSH" value="#{true}");
                    setPageSessionAttribute(key="showInstalldirConfig" value="#{false}");
+                   setPageSessionAttribute(key="showInstalldirDocker" value="#{false}");
                    setPageSessionAttribute(key="showInstallOp" value="#{true}");
                    if ("#{pageSession.valueMap['validateDcom']}"){
                         setPageSessionAttribute(key="showTestdir" value="#{true}");
                    }
+            }
+            if ("#{pageSession.valueMap['type']}=DOCKER"){
+                setPageSessionAttribute(key="showSSH" value="#{false}")
+                setPageSessionAttribute(key="showDCOM" value="#{false}")
+                setPageSessionAttribute(key="showCONFIG" value="#{false}")
+                setPageSessionAttribute(key="showDOCKER" value="#{true}")
+                setPageSessionAttribute(key="showInstalldirSSH" value="#{false}");
+                setPageSessionAttribute(key="showInstalldirConfig" value="#{false}");
+                setPageSessionAttribute(key="showInstalldirDocker" value="#{true}");
+                setPageSessionAttribute(key="showInstallOp" value="#{false}");
             }
         />
      </event>
@@ -137,7 +150,8 @@
 
             <sun:property id="typeProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.node.type}" helpText="$resource{i18ncs.node.typeHelp}">
                 <sun:dropDown id="type" labels={"SSH" "DCOM" "CONFIG" "DOCKER"}  selected="#{pageSession.valueMap['type']}"
-                              onChange="javascript:showSection(this.value, '#{pageSession.sshConnectorSectionId}', '#{pageSession.dcomSectionId}', '#{pageSession.installdirSshId}', '#{pageSession.installdirConfigId}',
+                              onChange="javascript:showSection(this.value, '#{pageSession.sshConnectorSectionId}', '#{pageSession.dcomSectionId}', '#{pageSession.dockerSectionId}',
+                                        '#{pageSession.installdirSshId}', '#{pageSession.installdirConfigId}', '#{pageSession.installdirDockerId}',
                                         '#{pageSession.installProp}', '#{pageSession.archProp}');">
                 <!afterCreate
                     getClientId(component="$this{component}" clientId="#{pageSession.typeId}");
@@ -171,6 +185,13 @@
                     getClientId(component="$this{component}" clientId="#{pageSession.installdirConfigId}");
                 />
 
+            </sun:property>
+
+            <sun:property id="installdir-docker" visible="#{pageSession.showInstalldirDocker}" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.node.InstallDir}" helpText="$resource{i18ncs.node.DockerInstallDirHelp}">
+                <sun:textField id="installDirDocker" text="#{pageSession.valueMap['installdirDocker']}"  columns="$int{60}" maxLength="#{sessionScope.fieldLengths['maxLength.node.InstallDir']}"  />
+                <!afterCreate
+                    getClientId(component="$this{component}" clientId="#{pageSession.installdirDockerId}");
+                />
             </sun:property>
 
             <sun:property>
@@ -366,18 +387,21 @@
 
         <!-- =============================== Docker ====================== -->
 
-        <sun:propertySheetSection id="dockerSection" visible="#{pageSession.showDocker}" label="$resource{i18ncs.node.dockerSection}" >
+        <sun:propertySheetSection id="dockerSection" visible="#{pageSession.showDOCKER}" label="$resource{i18ncs.node.dockerSection}" >
             <!afterCreate
                 getClientId(component="$this{component}" clientId="#{pageSession.dockerSectionId}");
             />
+            <sun:property id="dockerImage"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.node.dockerImage}" helpText="$resource{i18ncs.node.dockerImageHelp}">
+                <sun:textField id="dockerImage" text="#{pageSession.valueMap['dockerimage']}" columns="$int{60}" />
+            </sun:property>
             <sun:property id="dockerPort"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.node.dockerPort}" helpText="$resource{i18ncs.node.dockerPortHelp}">
-                <sun:textField id="dockerport" text="#{pageSession.valueMap['dockerPort']}" columns="$int{60}" maxLength="#{sessionScope.fieldLengths['maxLength.node.dockerPort']}"  />
+                <sun:textField id="dockerport" text="#{pageSession.valueMap['dockerport']}" columns="$int{60}" />
             </sun:property>
             <sun:property id="dockerPasswordFile"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.node.dockerPasswordFile}" helpText="$resource{i18ncs.node.dockerPasswordFileHelp}">
-                <sun:textField id="dockerPasswordFile" text="#{pageSession.valueMap['dockerPasswordFile']}" columns="$int{60}" maxLength="#{sessionScope.fieldLengths['maxLength.node.dockerPasswordFile']}"  />
+                <sun:textField id="dockerPasswordFile" text="#{pageSession.valueMap['dockerpasswordfile']}" columns="$int{60}" />
             </sun:property>
             <sun:property id="useTls"  labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="$resource{i18ncs.node.useTls}" helpText="$resource{i18ncs.node.useTlsHelp}">
-                <sun:checkbox id="useTls" selected="#{pageSession.valueMap['useTls']}" label="$resource{i18n.common.Enabled}" selectedValue="true"">
+                <sun:checkbox id="useTls" selected="#{pageSession.valueMap['usetls']}" label="$resource{i18n.common.Enabled}" selectedValue="true"/>
             </sun:property>
 
         </sun:propertySheetSection>
