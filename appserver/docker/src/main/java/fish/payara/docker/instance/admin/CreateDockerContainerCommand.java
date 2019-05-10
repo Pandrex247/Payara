@@ -24,6 +24,7 @@ import javax.inject.Inject;
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonReader;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -31,7 +32,11 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.io.StringReader;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,10 +46,10 @@ import static org.glassfish.api.ActionReport.ExitCode.SUCCESS;
 @PerLookup
 @ExecuteOn({RuntimeType.DAS})
 @RestEndpoints({
-        @RestEndpoint(configBean= Domain.class,
-                opType=RestEndpoint.OpType.POST,
-                path="_create-docker-container",
-                description="Create a Docker Container and Instance on the specified nodeName")
+        @RestEndpoint(configBean = Domain.class,
+                opType = RestEndpoint.OpType.POST,
+                path = "_create-docker-container",
+                description = "Create a Docker Container and Instance on the specified nodeName")
 })
 public class CreateDockerContainerCommand implements AdminCommand {
 
@@ -56,9 +61,8 @@ public class CreateDockerContainerCommand implements AdminCommand {
     @Param(name = "instanceName", alias = "instance", primary = true)
     String instanceName;
 
-//    TO-DO
-//    @Param(name = "containerConfig", optional = true, alias = "containerconfig", separator = '|')
-//    String[] containerConfig;
+    @Param(name = "containerConfig", optional = true, alias = "containerconfig", separator = ':')
+    Properties containerConfig;
 
     @Inject
     private Servers servers;
@@ -108,8 +112,15 @@ public class CreateDockerContainerCommand implements AdminCommand {
             return;
         }
 
+        // Remove all non-docker related properties
+        for (String property : containerConfig.stringPropertyNames()) {
+            if (!property.startsWith("Docker.")) {
+                containerConfig.remove(property);
+            }
+        }
+
         // Create the JSON Object to send
-        JsonObject jsonObject = constructJsonRequest(node, dasHost, dasPort);
+        JsonObject jsonObject = constructJsonRequest(node, dasHost, dasPort, containerConfig);
 
         // Create web target with query
         Client client = ClientBuilder.newClient();
@@ -158,18 +169,11 @@ public class CreateDockerContainerCommand implements AdminCommand {
         }
     }
 
-    private JsonObject constructJsonRequest(Node node, String dasHost, String dasPort) {
+    private JsonObject constructJsonRequest(Node node, String dasHost, String dasPort, Properties containerConfig) {
         JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
 
         jsonObjectBuilder.add(DockerNodeConstants.DOCKER_IMAGE_KEY, node.getDockerImage());
-        jsonObjectBuilder.add(DockerNodeConstants.DOCKER_HOST_CONFIG_KEY, Json.createObjectBuilder()
-                .add(DockerNodeConstants.DOCKER_MOUNTS_KEY, Json.createArrayBuilder()
-                        .add(Json.createObjectBuilder()
-                                .add("Type", "bind")
-                                .add("Source", node.getDockerPasswordFile())
-                                .add("Target", DockerNodeConstants.PAYARA_PASSWORD_FILE)
-                                .add("ReadOnly", true)))
-                .add(DockerNodeConstants.DOCKER_NETWORK_MODE_KEY, "host"));
+        jsonObjectBuilder.add(DockerNodeConstants.DOCKER_HOST_CONFIG_KEY, createHostConfigJson(node, containerConfig));
         jsonObjectBuilder.add(DockerInstanceConstants.DOCKER_CONTAINER_ENV, Json.createArrayBuilder()
                 .add(DockerNodeConstants.PAYARA_DAS_HOST + "=" + dasHost)
                 .add(DockerNodeConstants.PAYARA_DAS_PORT + "=" + dasPort)
@@ -177,6 +181,51 @@ public class CreateDockerContainerCommand implements AdminCommand {
                 .add(DockerInstanceConstants.INSTANCE_NAME + "=" + instanceName));
 
         return jsonObjectBuilder.build();
+    }
+
+    private JsonObjectBuilder createHostConfigJson(Node node, Properties containerConfig) {
+        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+
+        // Resolve properties to their Docker Rest API equivalents
+        for (String property : containerConfig.stringPropertyNames()) {
+
+            // Resolve nested property
+            if (property.contains(".")) {
+                // resolveNestedProperty(property)
+            }
+            
+
+            switch (property) {
+                case "Hostname":
+
+                    containerConfig.remove(property);
+                    break;
+            }
+
+        }
+
+        // Resolve nested properties
+        for (String property : containerConfig.stringPropertyNames()) {
+
+            // Check if there are multiple levels of nesting, recursing in if so
+
+
+
+            switch (property) {
+
+            }
+
+        }
+
+        jsonObjectBuilder.add(DockerNodeConstants.DOCKER_MOUNTS_KEY, Json.createArrayBuilder()
+                .add(Json.createObjectBuilder()
+                        .add("Type", "bind")
+                        .add("Source", node.getDockerPasswordFile())
+                        .add("Target", DockerNodeConstants.PAYARA_PASSWORD_FILE)
+                        .add("ReadOnly", true)))
+                .add(DockerNodeConstants.DOCKER_NETWORK_MODE_KEY, "host");
+
+        return jsonObjectBuilder;
     }
 
     private void unregisterInstance(AdminCommandContext adminCommandContext, ActionReport actionReport) {
