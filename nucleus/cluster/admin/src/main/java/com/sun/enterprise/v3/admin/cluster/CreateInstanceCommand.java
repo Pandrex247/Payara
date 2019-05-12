@@ -486,13 +486,6 @@ public class CreateInstanceCommand implements AdminCommand {
 
         ParameterMap parameterMap = new ParameterMap();
 
-        // Get Docker container properties
-        List<String> containerConfigList = new ArrayList<>();
-
-        for (String systemProperty : systemProperties.split(":")) {
-
-        }
-
         parameterMap.add("node", theNode.getName());
         parameterMap.add("containerConfig", systemProperties);
         parameterMap.add("DEFAULT", instance);
