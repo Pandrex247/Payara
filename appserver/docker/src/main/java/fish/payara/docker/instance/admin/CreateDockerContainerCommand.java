@@ -185,13 +185,11 @@ public class CreateDockerContainerCommand implements AdminCommand {
             translatePropertyValuesToJson(jsonObjectBuilder, dasHost, dasPort);
         }
 
-
-
         return jsonObjectBuilder.build();
     }
 
-    private JsonObjectBuilder translatePropertyValuesToJson(JsonObjectBuilder jsonObjectBuilder,
-            Node node, String dasHost, String dasPort) {
+    private JsonObjectBuilder translatePropertyValuesToJson(JsonObjectBuilder jsonObjectBuilder, String dasHost,
+            String dasPort) {
         for (Object propertyKey : containerConfig.keySet()) {
             // Should always be a String
             String property = (String) propertyKey;
@@ -201,14 +199,14 @@ public class CreateDockerContainerCommand implements AdminCommand {
                 addHostConfigProperties(jsonObjectBuilder);
                 continue;
             } else if (property.startsWith(DockerInstanceConstants.DOCKER_CONTAINER_ENV)) {
-                translateEnvPropertiesToJson(jsonObjectBuilder, dasHost, dasPort);
+                addEnvProperties(jsonObjectBuilder, dasHost, dasPort);
                 continue;
             }
 
             // Check if this is a nested property
             if (property.contains(".")) {
                 // Recurse through the properties and add any other properties that fall under the same namespace
-                searchForPropertiesInSameNamespace(jsonObjectBuilder, property);
+                addNestedProperties(jsonObjectBuilder, property);
             } else {
                 // Not a nested property, add it as is
                 String propertyValue = containerConfig.getProperty(property);
@@ -406,7 +404,7 @@ public class CreateDockerContainerCommand implements AdminCommand {
         return propertiesToRemove;
     }
 
-    private void translateEnvPropertiesToJson(JsonObjectBuilder jsonObjectBuilder, String dasHost, String dasPort) {
+    private void addEnvProperties(JsonObjectBuilder jsonObjectBuilder, String dasHost, String dasPort) {
         String envConfigString = containerConfig.getProperty(DockerInstanceConstants.DOCKER_CONTAINER_ENV);
 
         if (!envConfigString.contains(DockerNodeConstants.PAYARA_DAS_HOST)) {
@@ -459,76 +457,39 @@ public class CreateDockerContainerCommand implements AdminCommand {
         }
     }
 
-    private JsonValue searchForPropertiesInSameNamespace(JsonObjectBuilder jsonObjectBuilder, String originalProperty) {
-        // Get all container config properties that match the parent property
-        List<String> matchingProperties = new ArrayList<>();
-
-        String parent = originalProperty.substring(0, originalProperty.indexOf("."));
-        String child = originalProperty.substring(originalProperty.indexOf(".") + 1);
-
+    private void addNestedProperties(JsonObjectBuilder jsonObjectBuilder, String originalProperty) {
+        JsonObjectBuilder nestedObjectBuilder = Json.createObjectBuilder();
+        List<String> nestedProperties = new ArrayList<>();
+        String topLevelProperty = originalProperty.substring(0, originalProperty.indexOf("."));
         for (String property : containerConfig.stringPropertyNames()) {
-            // Make sure we don't match against the child property passed in
-            if (property.startsWith(parent)
-                    && !property.substring(property.indexOf(".")).equals(child)) {
-                matchingProperties.add(property);
+            if (property.startsWith(topLevelProperty)) {
+                String nestedProperty = property.substring(property.indexOf(".") + 1);
+                nestedProperties.add(nestedProperty);
             }
         }
 
-        // If we've found a matching property, recurse in for all that we've found, otherwise just add the child property
-        if (!matchingProperties.isEmpty()) {
-            // Check if its value is anything special like an array or object
-            String propertyValue = containerConfig.getProperty(originalProperty);
+        // Sort them into alphabetical order to group them all related properties together
+        nestedProperties.sort(Comparator.comparing(String::toString));
 
-            // First, check if the value is an array
-            if (propertyValue.contains("|")) {
-                // If it is an array, check if there are objects in this array that we need to deal with
-                if (propertyValue.contains(",")) {
-                    // We have the split operator for an array and an object, the Docker Rest API does not currently have
-                    // any Arrays of Objects with in turn contain arrays or further objects
-                    JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
-                    for (String arrayElement : propertyValue.split("|")) {
-                        JsonObjectBuilder arrayObjectBuilder = Json.createObjectBuilder();
-                        for (String object : arrayElement.split(",")) {
-                            String[] keyValue = object.split("=");
-                            arrayObjectBuilder.add(keyValue[0], keyValue[1]);
-                        }
-                        jsonArrayBuilder.add(arrayObjectBuilder);
-                    }
 
-                    jsonObjectBuilder.add(parent, jsonArrayBuilder);
-                } else {
-                    // Just an array
-                    JsonArrayBuilder jsonArrayBuilder = Json.createArrayBuilder();
-                    for (String arrayElement : propertyValue.split("|")) {
-                        jsonArrayBuilder.add(arrayElement);
-                    }
-                    jsonObjectBuilder.add(parent, jsonArrayBuilder);
+        for (String property : nestedProperties) {
+
+            // Check if the property has any extra nested properties
+            if (property.contains("\\.")) {
+                List<String> propertiesAdded = recurseOverNested(nestedObjectBuilder, nestedProperties,
+                        property, null, false);
+                for (String addedProperty : propertiesAdded) {
+                    containerConfig.remove(topLevelProperty + "." + addedProperty);
                 }
-            } else {
-                // Just a value
-                jsonObjectBuilder.add(parent, propertyValue);
-            }
-        } else {
-            // If here, that means we've found other properties that share the same namespace, so we need to add them
-            // all to the Json tree together
-
-            // Sort them into alphabetical order to group them all related properties together
-            matchingProperties.sort(Comparator.comparing(String::toString));
-
-            // Now work through the map adding the properties as we go
-            for (String matchingProperty : matchingProperties) {
-                // Split it into its component parts
-                String[] propertyComponents = matchingProperty.split("\\.");
-
-
-
-                for (String propertyComponent : propertyComponents) {
-                    jsonObjectBuilder.add(propertyComponent)
-                }
+            } else  {
+                // Not a nested property, add it as is
+                String propertyValue = containerConfig.getProperty(topLevelProperty + "." + property);
+                addPropertyToJson(nestedObjectBuilder, property, propertyValue);
+                containerConfig.remove(topLevelProperty + "." + property);
             }
         }
 
-        return jsonObjectBuilder.build();
+        jsonObjectBuilder.add(topLevelProperty, nestedObjectBuilder);
     }
 
 
