@@ -29,7 +29,6 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import java.security.KeyStore;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -176,71 +175,93 @@ public class CreateDockerContainerCommand implements AdminCommand {
     }
 
     private JsonObject constructJsonRequest(Node node, String dasHost, String dasPort) {
-        JsonObjectBuilder jsonObjectBuilder = Json.createObjectBuilder();
+        JsonObjectBuilder rootObjectBuilder = Json.createObjectBuilder();
 
-        jsonObjectBuilder.add(DockerNodeConstants.DOCKER_IMAGE_KEY, node.getDockerImage());
+        rootObjectBuilder.add(DockerNodeConstants.DOCKER_IMAGE_KEY, node.getDockerImage());
 
         // If no user properties specified, go with defaults
         if (containerConfig.isEmpty()) {
-            jsonObjectBuilder.add(DockerNodeConstants.DOCKER_HOST_CONFIG_KEY, Json.createObjectBuilder()
+            rootObjectBuilder.add(DockerNodeConstants.DOCKER_HOST_CONFIG_KEY, Json.createObjectBuilder()
                     .add(DockerNodeConstants.DOCKER_MOUNTS_KEY, Json.createArrayBuilder()
                             .add(Json.createObjectBuilder()
-                                    .add("Type", "bind")
-                                    .add("Source", node.getDockerPasswordFile())
-                                    .add("Target", DockerNodeConstants.PAYARA_PASSWORD_FILE)
-                                    .add("ReadOnly", true)))
+                                    .add(DockerNodeConstants.DOCKER_MOUNTS_TYPE_KEY, "bind")
+                                    .add(DockerNodeConstants.DOCKER_MOUNTS_SOURCE_KEY, node.getDockerPasswordFile())
+                                    .add(DockerNodeConstants.DOCKER_MOUNTS_TARGET_KEY, DockerNodeConstants.PAYARA_PASSWORD_FILE)
+                                    .add(DockerNodeConstants.DOCKER_MOUNTS_READONLY_KEY, true)))
                     .add(DockerNodeConstants.DOCKER_NETWORK_MODE_KEY, "host"));
-            jsonObjectBuilder.add(DockerInstanceConstants.DOCKER_CONTAINER_ENV, Json.createArrayBuilder()
+            rootObjectBuilder.add(DockerInstanceConstants.DOCKER_CONTAINER_ENV, Json.createArrayBuilder()
                     .add(DockerNodeConstants.PAYARA_DAS_HOST + "=" + dasHost)
                     .add(DockerNodeConstants.PAYARA_DAS_PORT + "=" + dasPort)
                     .add(DockerNodeConstants.PAYARA_NODE_NAME + "=" + nodeName)
                     .add(DockerInstanceConstants.INSTANCE_NAME + "=" + instanceName));
         } else {
-            translatePropertyValuesToJson(jsonObjectBuilder, dasHost, dasPort);
+            translatePropertyValuesToJson(rootObjectBuilder, dasHost, dasPort);
         }
 
-        return jsonObjectBuilder.build();
+        return rootObjectBuilder.build();
     }
 
-    private JsonObjectBuilder translatePropertyValuesToJson(JsonObjectBuilder jsonObjectBuilder, String dasHost,
-            String dasPort) {
+    private JsonObjectBuilder translatePropertyValuesToJson(JsonObjectBuilder rootObjectBuilder, String dasHost,
+                                                            String dasPort) {
+        processedProperties = new ArrayList<>();
+        boolean hostConfigAdded = false;
+        boolean envConfigAdded = false;
 
-        Iterator<String> containerConfigIterator = containerConfig.stringPropertyNames().iterator();
-        while (containerConfigIterator.hasNext()) {
-            // Should always be a String
-            String property = containerConfigIterator.next();
+        for (String property : containerConfig.stringPropertyNames()) {
+            if (processedProperties.contains(property)) {
+                continue;
+            }
 
             // Check if any of the properties are in the same namespace as our defaults
             if (property.startsWith(DockerNodeConstants.DOCKER_HOST_CONFIG_KEY)) {
-                addHostConfigProperties(jsonObjectBuilder);
+                hostConfigAdded = true;
+                addHostConfigProperties(rootObjectBuilder);
                 continue;
             } else if (property.startsWith(DockerInstanceConstants.DOCKER_CONTAINER_ENV)) {
-                addEnvProperties(jsonObjectBuilder, dasHost, dasPort);
+                envConfigAdded = true;
+                addEnvProperties(rootObjectBuilder, dasHost, dasPort);
                 continue;
             }
 
             // Check if this is a nested property
             if (property.contains(".")) {
                 // Recurse through the properties and add any other properties that fall under the same namespace
-                addNestedProperties(jsonObjectBuilder, property);
+                addNestedProperties(rootObjectBuilder, property);
             } else {
                 // Not a nested property, add it as is
                 String propertyValue = containerConfig.getProperty(property);
-                addPropertyToJson(jsonObjectBuilder, property, propertyValue);
-                containerConfig.remove("property");
+                addPropertyToJson(rootObjectBuilder, property, propertyValue);
+                processedProperties.add(property);
             }
         }
 
-        return jsonObjectBuilder;
+        if (!hostConfigAdded) {
+            rootObjectBuilder.add(DockerNodeConstants.DOCKER_HOST_CONFIG_KEY, Json.createObjectBuilder()
+                    .add(DockerNodeConstants.DOCKER_MOUNTS_KEY, Json.createArrayBuilder()
+                            .add(Json.createObjectBuilder()
+                                    .add(DockerNodeConstants.DOCKER_MOUNTS_TYPE_KEY, "bind")
+                                    .add(DockerNodeConstants.DOCKER_MOUNTS_SOURCE_KEY, nodes.getNode(nodeName).getDockerPasswordFile())
+                                    .add(DockerNodeConstants.DOCKER_MOUNTS_TARGET_KEY, DockerNodeConstants.PAYARA_PASSWORD_FILE)
+                                    .add(DockerNodeConstants.DOCKER_MOUNTS_READONLY_KEY, true)))
+                    .add(DockerNodeConstants.DOCKER_NETWORK_MODE_KEY, "host"));
+        }
+
+        if (!envConfigAdded) {
+            rootObjectBuilder.add(DockerInstanceConstants.DOCKER_CONTAINER_ENV, Json.createArrayBuilder()
+                    .add(DockerNodeConstants.PAYARA_DAS_HOST + "=" + dasHost)
+                    .add(DockerNodeConstants.PAYARA_DAS_PORT + "=" + dasPort)
+                    .add(DockerNodeConstants.PAYARA_NODE_NAME + "=" + nodeName)
+                    .add(DockerInstanceConstants.INSTANCE_NAME + "=" + instanceName));
+        }
+
+        return rootObjectBuilder;
     }
 
-    private void addHostConfigProperties(JsonObjectBuilder jsonObjectBuilder) {
+    private void addHostConfigProperties(JsonObjectBuilder rootObjectBuilder) {
         JsonObjectBuilder hostConfigObjectBuilder = Json.createObjectBuilder();
         List<String> hostConfigProperties = new ArrayList<>();
         for (String property : containerConfig.stringPropertyNames()) {
             if (property.startsWith(DockerNodeConstants.DOCKER_HOST_CONFIG_KEY)) {
-//                String hostConfigProperty = property.substring(property.indexOf(".") + 1);
-//                hostConfigProperties.add(hostConfigProperty);
                 hostConfigProperties.add(property);
             }
         }
@@ -251,64 +272,35 @@ public class CreateDockerContainerCommand implements AdminCommand {
         // Populate HostConfig defaults map so we can check if any get overridden
         Map<String, Boolean> defaultsOverridden = new HashMap<>();
         defaultsOverridden.put(DockerNodeConstants.DOCKER_MOUNTS_KEY, false);
-        defaultsOverridden.put(DockerNodeConstants.DOCKER_MOUNTS_READONLY_KEY, false);
-        defaultsOverridden.put(DockerNodeConstants.DOCKER_MOUNTS_SOURCE_KEY, false);
-        defaultsOverridden.put(DockerNodeConstants.DOCKER_MOUNTS_TARGET_KEY, false);
-        defaultsOverridden.put(DockerNodeConstants.DOCKER_MOUNTS_TYPE_KEY, false);
         defaultsOverridden.put(DockerNodeConstants.DOCKER_NETWORK_MODE_KEY, false);
 
         for (String property : hostConfigProperties) {
-            // Check if property overrides any of our defaults
-            if (!defaultsOverridden.get(DockerNodeConstants.DOCKER_MOUNTS_KEY)
-                    && property.startsWith(DockerNodeConstants.DOCKER_HOST_CONFIG_KEY
-                    + "." + DockerNodeConstants.DOCKER_MOUNTS_KEY)) {
-                defaultsOverridden.put(DockerNodeConstants.DOCKER_MOUNTS_KEY, true);
+            if (processedProperties.contains(property)) {
+                continue;
             }
-
+            // Check if property overrides any of our defaults
             switch (property) {
-                case DockerNodeConstants.DOCKER_HOST_CONFIG_KEY + "." + DockerNodeConstants.DOCKER_MOUNTS_READONLY_KEY:
-                    defaultsOverridden.put(DockerNodeConstants.DOCKER_MOUNTS_READONLY_KEY, true);
-                    break;
-                case DockerNodeConstants.DOCKER_HOST_CONFIG_KEY + "." + DockerNodeConstants.DOCKER_MOUNTS_SOURCE_KEY:
-                    defaultsOverridden.put(DockerNodeConstants.DOCKER_MOUNTS_SOURCE_KEY, true);
-                    break;
-                case DockerNodeConstants.DOCKER_HOST_CONFIG_KEY + "." + DockerNodeConstants.DOCKER_MOUNTS_TARGET_KEY:
-                    defaultsOverridden.put(DockerNodeConstants.DOCKER_MOUNTS_TARGET_KEY, true);
-                    break;
-                case DockerNodeConstants.DOCKER_HOST_CONFIG_KEY + "." + DockerNodeConstants.DOCKER_MOUNTS_TYPE_KEY:
-                    defaultsOverridden.put(DockerNodeConstants.DOCKER_MOUNTS_TYPE_KEY, true);
+                case DockerNodeConstants.DOCKER_HOST_CONFIG_KEY + "." + DockerNodeConstants.DOCKER_MOUNTS_KEY:
+                    defaultsOverridden.put(DockerNodeConstants.DOCKER_MOUNTS_KEY, true);
                     break;
                 case DockerNodeConstants.DOCKER_HOST_CONFIG_KEY + "." + DockerNodeConstants.DOCKER_NETWORK_MODE_KEY:
                     defaultsOverridden.put(DockerNodeConstants.DOCKER_NETWORK_MODE_KEY, true);
                     break;
             }
 
-            // Check if the property has any extra nested properties
-            if (property.contains(".")) {
-                List<String> propertiesAdded = recurseOverNested(hostConfigObjectBuilder, hostConfigProperties,
-                        property, defaultsOverridden, null, null);
-                for (String addedProperty : propertiesAdded) {
-                    containerConfig.remove(addedProperty);
-                    if (!addedProperty.equals(property)) {
-                        hostConfigProperties.remove(addedProperty);
-                    }
-                }
-            } else {
-                // Not a nested property, add it as is
-                String propertyValue = containerConfig.getProperty(property);
-                addPropertyToJson(hostConfigObjectBuilder, property, propertyValue);
-                containerConfig.remove(property);
-            }
+            Map<String, JsonObjectBuilder> propertyComponentObjectBuilders = new HashMap<>();
+            propertyComponentObjectBuilders.put(DockerNodeConstants.DOCKER_HOST_CONFIG_KEY, hostConfigObjectBuilder);
+            recurseOverNested(rootObjectBuilder, hostConfigProperties, property, propertyComponentObjectBuilders, null);
         }
 
         // Add any remaining defaults
         if (!defaultsOverridden.get(DockerNodeConstants.DOCKER_MOUNTS_KEY)) {
             hostConfigObjectBuilder.add(DockerNodeConstants.DOCKER_MOUNTS_KEY, Json.createArrayBuilder()
                     .add(Json.createObjectBuilder()
-                            .add("Type", "bind")
-                            .add("Source", nodes.getNode(nodeName).getDockerPasswordFile())
-                            .add("Target", DockerNodeConstants.PAYARA_PASSWORD_FILE)
-                            .add("ReadOnly", true)));
+                            .add(DockerNodeConstants.DOCKER_MOUNTS_TYPE_KEY, "bind")
+                            .add(DockerNodeConstants.DOCKER_MOUNTS_SOURCE_KEY, nodes.getNode(nodeName).getDockerPasswordFile())
+                            .add(DockerNodeConstants.DOCKER_MOUNTS_TARGET_KEY, DockerNodeConstants.PAYARA_PASSWORD_FILE)
+                            .add(DockerNodeConstants.DOCKER_MOUNTS_READONLY_KEY, true)));
         }
 
         if (!defaultsOverridden.get(DockerNodeConstants.DOCKER_NETWORK_MODE_KEY)) {
@@ -316,44 +308,17 @@ public class CreateDockerContainerCommand implements AdminCommand {
         }
 
         // Finally, add host config object to final Json request object
-        jsonObjectBuilder.add(DockerNodeConstants.DOCKER_HOST_CONFIG_KEY, hostConfigObjectBuilder);
+        rootObjectBuilder.add(DockerNodeConstants.DOCKER_HOST_CONFIG_KEY, hostConfigObjectBuilder);
     }
 
-    private List<String> recurseOverNested(JsonObjectBuilder jsonObjectBuilder, List<String> sortedProperties,
-            String property, Map<String, Boolean> defaultsOverridden,
-            Map<String, JsonObjectBuilder> propertyComponentObjectBuilders, String parent) {
-        List<String> propertiesToRemove = new ArrayList<>();
+    private void recurseOverNested(JsonObjectBuilder jsonObjectBuilder, List<String> sortedProperties,
+                                                String property, Map<String, JsonObjectBuilder> propertyComponentObjectBuilders, String parent) {
         List<String> propertyComponents = Arrays.asList(property.split("\\."));
-
-        if (propertyComponentObjectBuilders == null) {
-            propertyComponentObjectBuilders = new HashMap<>();
-        }
 
         for (String propertyComponent : propertyComponents) {
             // We don't need to make a builder for the last component, as it isn't an object
             if (propertyComponents.indexOf(propertyComponent) != propertyComponents.size() - 1) {
                 propertyComponentObjectBuilders.putIfAbsent(propertyComponent, Json.createObjectBuilder());
-            }
-        }
-
-        // Add to defaults overridden map if required - only need to check if recursing as we already added the initial
-        // property
-        if (parent != null) {
-            switch (property) {
-                case DockerNodeConstants.DOCKER_MOUNTS_READONLY_KEY:
-                    defaultsOverridden.put(DockerNodeConstants.DOCKER_MOUNTS_READONLY_KEY, true);
-                    break;
-                case DockerNodeConstants.DOCKER_MOUNTS_SOURCE_KEY:
-                    defaultsOverridden.put(DockerNodeConstants.DOCKER_MOUNTS_SOURCE_KEY, true);
-                    break;
-                case DockerNodeConstants.DOCKER_MOUNTS_TARGET_KEY:
-                    defaultsOverridden.put(DockerNodeConstants.DOCKER_MOUNTS_TARGET_KEY, true);
-                    break;
-                case DockerNodeConstants.DOCKER_MOUNTS_TYPE_KEY:
-                    defaultsOverridden.put(DockerNodeConstants.DOCKER_MOUNTS_TYPE_KEY, true);
-                    break;
-                // We don't need to check for the Network Mode override as this isn't a nested property - it would never
-                // be overridden from here
             }
         }
 
@@ -367,10 +332,9 @@ public class CreateDockerContainerCommand implements AdminCommand {
             immediateParentObjectBuilder = propertyComponentObjectBuilders.get(immediateParent);
         }
         String propertyComponentKey = propertyComponents.get(propertyComponents.size() - 1);
-//        String propertyValue = containerConfig.getProperty(DockerNodeConstants.DOCKER_HOST_CONFIG_KEY + "." + property);
         String propertyValue = containerConfig.getProperty(property);
         addPropertyToJson(immediateParentObjectBuilder, propertyComponentKey, propertyValue);
-        propertiesToRemove.add(property);
+        processedProperties.add(property);
 
         // If there are more properties, check if the immediate parent has any extra children by checking the next property,
         // moving up the list until we reach the root property component
@@ -389,10 +353,10 @@ public class CreateDockerContainerCommand implements AdminCommand {
                 if (nextProperty.startsWith(remainingParents)) {
                     // We've found a property in the same namespace, recurse into this method to add this next property
                     // to the object builder
-                    propertiesToRemove.addAll(recurseOverNested(
+                    recurseOverNested(
                             propertyComponentObjectBuilders.get(propertyComponents.get(i)),
                             sortedProperties,
-                            nextProperty, defaultsOverridden, propertyComponentObjectBuilders, immediateParent));
+                            nextProperty, propertyComponentObjectBuilders, immediateParent);
                     // We don't want to keep looping as we'll end up adding stuff added in the recursed method call
                     // above
                     break;
@@ -401,39 +365,18 @@ public class CreateDockerContainerCommand implements AdminCommand {
                         // If we haven't found another property in the same namespace, add the current object builder to its parent
                         JsonObjectBuilder parentObjectBuilder = propertyComponentObjectBuilders.get(propertyComponents.get(i - 1));
                         parentObjectBuilder.add(propertyComponents.get(i), propertyComponentObjectBuilders.get(propertyComponents.get(i)));
+                        propertyComponentObjectBuilders.remove(propertyComponents.get(i));
                     }
                 }
             }
-        }
-
-        if (parent == null) {
-            // Check if any of the HostConfig.Mounts properties have been overridden and add any that haven't been
-            // Only check when not recursing as Mounts is a top-level (in HostConfig terms) property
-            if (defaultsOverridden != null && defaultsOverridden.get(DockerNodeConstants.DOCKER_MOUNTS_KEY)) {
-                JsonObjectBuilder mountsObjectBuilder = propertyComponentObjectBuilders.get(DockerNodeConstants.DOCKER_MOUNTS_KEY);
-                for (String defaultOverridden : defaultsOverridden.keySet()) {
-                    if (!defaultsOverridden.get(defaultOverridden)) {
-                        switch (defaultOverridden) {
-                            case DockerNodeConstants.DOCKER_MOUNTS_READONLY_KEY:
-                                mountsObjectBuilder.add("ReadOnly", true);
-                                break;
-                            case DockerNodeConstants.DOCKER_MOUNTS_SOURCE_KEY:
-                                mountsObjectBuilder.add("Source", nodes.getNode(nodeName).getDockerPasswordFile());
-                                break;
-                            case DockerNodeConstants.DOCKER_MOUNTS_TARGET_KEY:
-                                mountsObjectBuilder.add("Target", DockerNodeConstants.PAYARA_PASSWORD_FILE);
-                                break;
-                            case DockerNodeConstants.DOCKER_MOUNTS_TYPE_KEY:
-                                mountsObjectBuilder.add("Type", "bind");
-                                break;
-                        }
-                    }
-                }
+        } else {
+            // If there are no more properties, make sure to add the last object builder to its parent
+            // Only do so if it's more than two levels deep though, as otherwise we've already added it
+            if (propertyComponents.size() > 2) {
+                propertyComponentObjectBuilders.get(propertyComponents.get(0)).add(propertyComponents.get(1), propertyComponentObjectBuilders.get(propertyComponents.get(1)));
+                propertyComponentObjectBuilders.remove(propertyComponents.get(1));
             }
-            jsonObjectBuilder.add(propertyComponents.get(0), propertyComponentObjectBuilders.get(propertyComponents.get(0)));
         }
-
-        return propertiesToRemove;
     }
 
     private void addEnvProperties(JsonObjectBuilder jsonObjectBuilder, String dasHost, String dasPort) {
@@ -459,7 +402,8 @@ public class CreateDockerContainerCommand implements AdminCommand {
     }
 
     private void addPropertyToJson(JsonObjectBuilder jsonObjectBuilder, String property, String propertyValue) {
-        if (propertyValue.contains("|")) {
+        if (propertyValue.startsWith("[") && propertyValue.endsWith("]")) {
+            propertyValue = propertyValue.replaceAll("\\[", "").replaceAll("\\]", "");
             // If it is an array, check if there are objects in this array that we need to deal with
             if (propertyValue.contains(",")) {
                 // We have the split operator for an array and an object, the Docker Rest API does not currently have
@@ -489,14 +433,12 @@ public class CreateDockerContainerCommand implements AdminCommand {
         }
     }
 
-    private void addNestedProperties(JsonObjectBuilder jsonObjectBuilder, String originalProperty) {
+    private void addNestedProperties(JsonObjectBuilder rootObjectBuilder, String originalProperty) {
         JsonObjectBuilder nestedObjectBuilder = Json.createObjectBuilder();
         List<String> nestedProperties = new ArrayList<>();
         String topLevelProperty = originalProperty.substring(0, originalProperty.indexOf("."));
         for (String property : containerConfig.stringPropertyNames()) {
             if (property.startsWith(topLevelProperty)) {
-//                String nestedProperty = property.substring(property.indexOf(".") + 1);
-//                nestedProperties.add(nestedProperty);
                 nestedProperties.add(property);
             }
         }
@@ -504,28 +446,18 @@ public class CreateDockerContainerCommand implements AdminCommand {
         // Sort them into alphabetical order to group them all related properties together
         nestedProperties.sort(Comparator.comparing(String::toString));
 
-
         for (String property : nestedProperties) {
-
-            // Check if the property has any extra nested properties
-            if (property.contains(".")) {
-                List<String> propertiesAdded = recurseOverNested(nestedObjectBuilder, nestedProperties,
-                        property, null, null, null);
-                for (String addedProperty : propertiesAdded) {
-                    containerConfig.remove(addedProperty);
-                    if (!addedProperty.equals(property)) {
-                        nestedProperties.remove(addedProperty);
-                    }
-                }
-            } else {
-                // Not a nested property, add it as is
-                String propertyValue = containerConfig.getProperty(property);
-                addPropertyToJson(nestedObjectBuilder, property, propertyValue);
-                containerConfig.remove(property);
+            if (processedProperties.contains(property)) {
+                continue;
             }
+
+            Map<String, JsonObjectBuilder> propertyComponentObjectBuilders = new HashMap<>();
+            propertyComponentObjectBuilders.put(topLevelProperty, nestedObjectBuilder);
+            recurseOverNested(rootObjectBuilder, nestedProperties,
+                    property, propertyComponentObjectBuilders, null);
         }
 
-        jsonObjectBuilder.add(topLevelProperty, nestedObjectBuilder);
+        rootObjectBuilder.add(topLevelProperty, nestedObjectBuilder);
     }
 
 

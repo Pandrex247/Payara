@@ -10,10 +10,10 @@ public class DockerNodeConstants {
     public static final String PAYARA_INSTALL_DIR = "/opt/payara/payara5";
     public static final String DOCKER_HOST_CONFIG_KEY = "HostConfig";
     public static final String DOCKER_MOUNTS_KEY = "Mounts";
-    public static final String DOCKER_MOUNTS_TYPE_KEY = "Mounts.Type";
-    public static final String DOCKER_MOUNTS_SOURCE_KEY = "Mounts.Source";
-    public static final String DOCKER_MOUNTS_TARGET_KEY = "Mounts.Target";
-    public static final String DOCKER_MOUNTS_READONLY_KEY = "Mounts.ReadOnly";
+    public static final String DOCKER_MOUNTS_TYPE_KEY = "Type";
+    public static final String DOCKER_MOUNTS_SOURCE_KEY = "Source";
+    public static final String DOCKER_MOUNTS_TARGET_KEY = "Target";
+    public static final String DOCKER_MOUNTS_READONLY_KEY = "ReadOnly";
     public static final String DOCKER_NETWORK_MODE_KEY = "NetworkMode";
     public static final String PAYARA_PASSWORD_FILE = "/opt/payara/passwords/passwordfile.txt";
 
