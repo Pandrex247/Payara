@@ -37,11 +37,14 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2019] [Payara Foundation and/or its affiliates.]
 
 package org.glassfish.admin.amx.util.stringifier;
 
+import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
 import org.glassfish.admin.amx.util.StringUtil;
 
+import javax.security.auth.x500.X500Principal;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -90,8 +93,10 @@ public final class X509CertificateStringifier implements Stringifier
 		final StringBuffer	buf	= new StringBuffer();
 		final String		NL	= "\n";
 		
-		buf.append( "Issuer: " + cert.getIssuerDN().getName() + NL);
-		buf.append( "Issued to: " + cert.getSubjectDN().getName()  + NL);
+		buf.append( "Issuer: " + cert.getIssuerX500Principal().getName(
+				X500Principal.RFC2253, CertificateRealm.oidMap) + NL);
+		buf.append( "Issued to: " + cert.getSubjectX500Principal().getName(
+				X500Principal.RFC2253, CertificateRealm.oidMap)  + NL);
 		buf.append( "Version: " + cert.getVersion()  + NL);
 		buf.append( "Not valid before: " + cert.getNotBefore()  + NL);
 		buf.append( "Not valid after: " + cert.getNotAfter()  + NL);

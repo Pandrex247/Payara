@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright [2019] [Payara Foundation and/or its affiliates.]
 
 package com.sun.enterprise.security.auth.login;
 
@@ -50,14 +51,15 @@ import javax.security.auth.*;
 import javax.security.auth.callback.*;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
+import javax.security.auth.x500.X500Principal;
 //V3:Commented import com.sun.enterprise.config.clientbeans.Ssl;
+import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
 import com.sun.enterprise.security.ssl.SSLUtils;
 import com.sun.enterprise.security.integration.AppClientSSL;
 
 import org.glassfish.security.common.PrincipalImpl;
 import com.sun.enterprise.util.LocalStringManagerImpl;
 import java.util.logging.*;
-import com.sun.logging.*;
 import org.glassfish.internal.api.Globals;
 
 
@@ -166,7 +168,8 @@ public class ClientCertificateLoginModule implements LoginModule {
 	    Enumeration aliases = ks.aliases();
 	    for(int i = 0; i < ks.size(); i++) {
 	        aliasString[i] = (String) aliases.nextElement();
-	        as[i] = ((X509Certificate)ks.getCertificate(aliasString[i])).getSubjectDN().getName();
+	        as[i] = ((X509Certificate)ks.getCertificate(aliasString[i])).getSubjectX500Principal().getName(
+	                X500Principal.RFC2253, CertificateRealm.oidMap);
 	    }
 
 	    Callback[] callbacks = new Callback[1];

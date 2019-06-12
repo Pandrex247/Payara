@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2016] [Payara Foundation]
+// Portions Copyright [2016-2019] [Payara Foundation and/or its affiliates.]
 
 package com.sun.enterprise.security.web.integration;
 
@@ -46,20 +46,19 @@ import java.security.cert.X509Certificate;
 import java.util.Arrays;
 
 import com.sun.enterprise.security.SecurityContextProxy;
+import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
 import org.glassfish.security.common.PrincipalImpl;
 import com.sun.enterprise.security.SecurityContext;
+
+import javax.security.auth.x500.X500Principal;
 
 public class WebPrincipal extends PrincipalImpl implements SecurityContextProxy {
 
 
     private char[] password;
-
     private X509Certificate[] certs;
-
     private boolean useCertificate;
-
     private SecurityContext secCtx;
-
     private Principal customPrincipal;
 
     public WebPrincipal(Principal p, SecurityContext context) {
@@ -91,8 +90,12 @@ public class WebPrincipal extends PrincipalImpl implements SecurityContextProxy 
 
     public WebPrincipal(X509Certificate[] certs,
                         SecurityContext context) {
-        super(certs[0].getSubjectDN().getName());
-        this.certs = certs;
+        this(certs, context, false);
+    }
+
+    public WebPrincipal(X509Certificate[] certificates, SecurityContext context, boolean nameFromContext) {
+        super(getPrincipalName(certificates, context, nameFromContext));
+        this.certs = certificates;
         this.useCertificate = true;
         this.secCtx = context;
     }
@@ -148,6 +151,30 @@ public class WebPrincipal extends PrincipalImpl implements SecurityContextProxy 
 
     public Principal getCustomPrincipal() {
         return customPrincipal;
+    }
+
+    private static String getPrincipalName(X509Certificate[] certificates, SecurityContext context, boolean nameFromContext) {
+        if (nameFromContext) {
+            // Use the principal name from the security context, ensuring the context caller principal and
+            // the web principal have the same name.
+            //
+            // This will typically be an org.glassfish.security.common.PrincipalImpl which as its name has
+            // the name obtained from javax.security.auth.x500.X500Principal, which is obtained from
+            // certificates[0].getSubjectX500Principal().
+            //
+            // I.e. the internal principal in the security context is effectively created via:
+            //
+            // new PrincipalImpl(certificates[0].getSubjectX500Principal());
+            //
+            // The format of the X.500 distinguished name (DN) returned here will then be RFC 2253, e.g.
+            // C=UK,ST=lak,L=zak,O=kaz,OU=bar,CN=lfoo
+            return context.getCallerPrincipal().getName();
+        }
+
+        // Use the full DN name from the certificates. This should normally be the same as
+        // context.getCallerPrincipal(), but a realm could have decided to map the name in which
+        // case they will be different.
+        return certificates[0].getSubjectX500Principal().getName(X500Principal.RFC2253, CertificateRealm.oidMap);
     }
     
 }

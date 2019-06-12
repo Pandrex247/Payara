@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2018] [Payara Foundation and/or its affiliates]
+// Portions Copyright [2018-2019] [Payara Foundation and/or its affiliates]
 
 package com.sun.enterprise.iiop.security;
 
@@ -50,6 +50,7 @@ package com.sun.enterprise.iiop.security;
  * @author: Nithya Subramanian
  */
 
+import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import com.sun.enterprise.common.iiop.security.SecurityContext;
 import org.omg.CORBA.*;
@@ -322,7 +323,8 @@ public class SecServerRequestInterceptor
             for (int i = 0; i < certchain.length; i++) {
                 certchain[i] = new X509CertImpl(derval[i]);
                 if(logger.isLoggable(Level.FINE)){
-                logger.log(Level.FINE,"    " + certchain[i].getSubjectDN().getName());
+                logger.log(Level.FINE,"    " + certchain[i].getSubjectX500Principal()
+                        .getName(X500Principal.RFC2253, CertificateRealm.oidMap));
                 }
             }
             if(logger.isLoggable(Level.FINE)){
@@ -334,7 +336,8 @@ public class SecServerRequestInterceptor
              * 
              */
             X509CertificateCredential cred = 
-                new X509CertificateCredential(certchain, certchain[0].getSubjectDN().getName(), "default");
+                new X509CertificateCredential(certchain, certchain[0].getSubjectX500Principal()
+                        .getName(X500Principal.RFC2253, CertificateRealm.oidMap), "default");
             if(logger.isLoggable(Level.FINE)){
                 logger.log(Level.FINE,"Adding X509CertificateCredential to subject's PublicCredentials");
             }

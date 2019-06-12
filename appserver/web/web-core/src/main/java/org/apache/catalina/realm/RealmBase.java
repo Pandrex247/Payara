@@ -55,9 +55,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+// Portions Copyright [2019] [Payara Foundation and/or its affiliates.]
 
 package org.apache.catalina.realm;
 
+import com.sun.enterprise.security.auth.realm.certificate.CertificateRealm;
 import org.apache.catalina.*;
 import org.apache.catalina.authenticator.AuthenticatorBase;
 import org.apache.catalina.connector.Response;
@@ -68,9 +70,9 @@ import org.apache.catalina.deploy.SecurityConstraint;
 import org.apache.catalina.util.HexUtils;
 import org.apache.catalina.util.LifecycleSupport;
 import org.apache.catalina.util.MD5Encoder;
-import org.apache.catalina.util.StringManager;
 
 import javax.management.ObjectName;
+import javax.security.auth.x500.X500Principal;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.beans.PropertyChangeListener;
@@ -478,7 +480,8 @@ public abstract class RealmBase
             for (int i = 0; i < certs.length; i++) {
                 if (log.isLoggable(Level.FINE))
                     log.log(Level.FINE, "Checking validity for '" +
-                            certs[i].getSubjectDN().getName() + "'");
+                            certs[i].getSubjectX500Principal()
+                                    .getName(X500Principal.RFC2253, CertificateRealm.oidMap) + "'");
                 try {
                     certs[i].checkValidity();
                 } catch (Exception e) {
@@ -490,7 +493,7 @@ public abstract class RealmBase
         }
 
         // Check the existence of the client Principal in our database
-        return (getPrincipal(certs[0].getSubjectDN().getName()));
+        return (getPrincipal(certs[0].getSubjectX500Principal().getName(X500Principal.RFC2253, CertificateRealm.oidMap)));
 
     }
 

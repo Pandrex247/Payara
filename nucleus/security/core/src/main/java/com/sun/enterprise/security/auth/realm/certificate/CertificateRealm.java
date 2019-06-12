@@ -38,9 +38,13 @@
  * holder.
  */
 
+// Portions Copyright [2019] [Payara Foundation and/or its affiliates.]
+
 package com.sun.enterprise.security.auth.realm.certificate;
 
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
@@ -59,6 +63,7 @@ import com.sun.enterprise.security.auth.realm.IASRealm;
 
 import java.security.Principal;
 import javax.security.auth.callback.Callback;
+import javax.security.auth.x500.X500Principal;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedList;
@@ -66,6 +71,8 @@ import java.util.logging.Level;
 
 
 import org.jvnet.hk2.annotations.Service;
+import sun.security.pkcs.PKCS9Attribute;
+import sun.security.x509.X500Name;
 
 /**
  * Realm wrapper for supporting certificate authentication.
@@ -103,6 +110,32 @@ public final class CertificateRealm extends IASRealm
     // Descriptive string of the authentication type of this realm.
     public static final String AUTH_TYPE = "certificate";
     private LinkedList<String> defaultGroups = new LinkedList<>();
+
+    public static final Map<String, String> oidMap;
+    static {
+        Map<String, String> oidMapInitialiser = new HashMap<>();
+        oidMapInitialiser.put(X500Name.commonName_oid.toString(), "CN");
+        oidMapInitialiser.put(X500Name.countryName_oid.toString(), "C");
+        oidMapInitialiser.put(X500Name.localityName_oid.toString(), "L");
+        oidMapInitialiser.put(X500Name.stateName_oid.toString(), "S");
+        oidMapInitialiser.put(X500Name.stateName_oid.toString(), "ST");
+        oidMapInitialiser.put(X500Name.orgName_oid.toString(), "O");
+        oidMapInitialiser.put(X500Name.orgUnitName_oid.toString(), "OU");
+        oidMapInitialiser.put(X500Name.title_oid.toString(), "T");
+        oidMapInitialiser.put(X500Name.ipAddress_oid.toString(), "IP");
+        oidMapInitialiser.put(X500Name.streetAddress_oid.toString(), "STREET");
+        oidMapInitialiser.put(X500Name.DOMAIN_COMPONENT_OID.toString(), "DC");
+        oidMapInitialiser.put(X500Name.DNQUALIFIER_OID.toString(), "DNQUALIFIER");
+        oidMapInitialiser.put(X500Name.SURNAME_OID.toString(), "SURNAME");
+        oidMapInitialiser.put(X500Name.GIVENNAME_OID.toString(), "GIVENNAME");
+        oidMapInitialiser.put(X500Name.INITIALS_OID.toString(), "INITIALS");
+        oidMapInitialiser.put(X500Name.GENERATIONQUALIFIER_OID.toString(), "GENERATION");
+        oidMapInitialiser.put(PKCS9Attribute.EMAIL_ADDRESS_OID.toString(), "EMAIL");
+        oidMapInitialiser.put(PKCS9Attribute.EMAIL_ADDRESS_OID.toString(), "EMAILADDRESS");
+        oidMapInitialiser.put(X500Name.userid_oid.toString(), "UID");
+        oidMapInitialiser.put(X500Name.SERIALNUMBER_OID.toString(), "SERIALNUMBER");
+        oidMap = Collections.unmodifiableMap(oidMapInitialiser);
+    }
 
     // Optional link to a realm to verify group (possibly user, later)
     // public static final String PARAM_USEREALM = "use-realm";
@@ -213,17 +246,17 @@ public final class CertificateRealm extends IASRealm
      * Returns the name of all the groups that this user belongs to.
      *
      * @param subject The Subject object for the authentication request.
-     * @param principal The Principal object from the user certificate.
+     * @param callerPrincipal The Principal object from the user certificate.
      *
      */
-    public void authenticate(Subject subject, Principal principal) {
+    public void authenticate(Subject subject, X500Principal callerPrincipal) {
         // It is important to use x500name.getName() in order to be
         // consistent with web containers view of the name - see bug
         // 4646134 for reasons why this matters.
-        String name = principal.getName();
+        String callerPrincipalName = callerPrincipal.getName(X500Principal.RFC2253, oidMap);
 
         if (_logger.isLoggable(Level.FINEST)) {
-            _logger.log(Level.FINEST, "Certificate realm setting up security context for: {0}", name);
+            _logger.log(Level.FINEST, "Certificate realm setting up security context for: {0}", callerPrincipalName);
         }
 
         if (defaultGroups != null) {
@@ -234,10 +267,10 @@ public final class CertificateRealm extends IASRealm
 	}
 
         if (!subject.getPrincipals().isEmpty()) {
-            subject.getPublicCredentials().add(new DistinguishedPrincipalCredential(principal));
+            subject.getPublicCredentials().add(new DistinguishedPrincipalCredential(callerPrincipal));
         }
         
-        SecurityContext.setCurrent(new SecurityContext(name, subject));
+        SecurityContext.setCurrent(new SecurityContext(callerPrincipalName, subject));
     }
 
     /**
