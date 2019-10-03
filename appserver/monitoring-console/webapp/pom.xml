@@ -41,7 +41,7 @@
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd"> <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>fish.payara.monitoring-console</groupId>
+        <groupId>fish.payara.server.monitoring-console</groupId>
         <artifactId>monitoring-console</artifactId>
         <version>5.194-SNAPSHOT</version>
     </parent>
@@ -57,7 +57,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>fish.payara.monitoring-console</groupId>
+            <groupId>fish.payara.server.internal.monitoring-console</groupId>
             <artifactId>monitoring-console-core</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -88,10 +88,42 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.glassfish.main.security</groupId>
+            <groupId>fish.payara.server.internal.security</groupId>
             <artifactId>security-ee</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
+    
+    <build>
+        <plugins>
+            <plugin>
+              <groupId>com.bekioui.maven.plugin</groupId>
+              <artifactId>merge-maven-plugin</artifactId>
+              <version>1.2.0</version>
+              <executions>
+                <execution>
+                  <id>merge-files</id>
+                  <goals>
+                    <goal>merge</goal>
+                  </goals>
+                  <configuration>
+                    <merges>
+                      <merge>
+                        <override>true</override>
+                        <target>src/main/webapp/monitoring-console.js</target>
+                        <sources>
+                            <source>src/main/webapp/mc-main.js</source>
+                            <source>src/main/webapp/mc-model.js</source>
+                            <source>src/main/webapp/mc-line-chart.js</source>
+                            <source>src/main/webapp/mc-view.js</source>
+                        </sources>
+                      </merge>
+                    </merges>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>

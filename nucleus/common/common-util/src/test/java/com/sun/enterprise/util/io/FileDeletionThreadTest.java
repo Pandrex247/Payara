@@ -37,47 +37,46 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-package fish.payara.monitoring.web;
+package com.sun.enterprise.util.io;
 
-import java.math.BigInteger;
-import java.util.Collection;
+import org.junit.Before;
+import org.junit.Test;
 
-import fish.payara.monitoring.model.SeriesDataset;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-public final class SeriesStatistics {
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertThat;
 
-    public static SeriesStatistics[] from(Collection<SeriesDataset> sets) {
-        SeriesStatistics[] stats = new SeriesStatistics[sets.size()];
-        int i = 0;
-        for (SeriesDataset set : sets) {
-            stats[i++] = new SeriesStatistics(set);
-        }
-        return stats;
+public class FileDeletionThreadTest {
+
+    private Path dirToDelete;
+
+    @Before
+    public void setUpNonEmptyDirectoryStructure() throws Exception {
+        dirToDelete = Files.createTempDirectory("deletion-test");
+        final Path file = dirToDelete.resolve("file-l1.txt");
+        Files.createFile(file);
+
+        Path subDirectoryL2 = createNonEmptyDirectory(dirToDelete, "l2");
+        Path subDirectoryL3 = createNonEmptyDirectory(subDirectoryL2, "l3");
+        createNonEmptyDirectory(subDirectoryL3, "l4");
     }
 
-    public final String series;
-    public final String instance;
-    public final long[] points;
-    public final long observedMax;
-    public final long observedMin;
-    public final BigInteger observedSum;
-    public final int observedValues;
-    public final int observedValueChanges;
-    public final long observedSince;
-    public final int stableCount;
-    public final long stableSince;
+    private Path createNonEmptyDirectory(Path parent, String level) throws IOException {
+        final Path subDirectory = Files.createDirectory(parent.resolve("subDirectory" + level));
+        Files.createFile(subDirectory.resolve("file-" + level + ".txt"));
+        return subDirectory;
+    }
 
-    public SeriesStatistics(SeriesDataset set) {
-        this.instance = set.getInstance();
-        this.series = set.getSeries().toString();
-        this.points = set.points();
-        this.observedMax = set.getObservedMax();
-        this.observedMin = set.getObservedMin();
-        this.observedSum = set.getObservedSum();
-        this.observedValues = set.getObservedValues();
-        this.observedValueChanges = set.getObservedValueChanges();
-        this.observedSince = set.getObservedSince();
-        this.stableCount = set.getStableCount();
-        this.stableSince = set.getStableSince();
+    @Test
+    public void testDirectoryDeletion() {
+        FileDeletionThread fileDeletionThread = new FileDeletionThread();
+        fileDeletionThread.add(dirToDelete.toFile());
+
+        assertThat("Temp directory to delete does not exist.", Files.exists(dirToDelete), is(true));
+        fileDeletionThread.run();
+        assertThat("Temp directory still exists after deletion.", Files.exists(dirToDelete), is(false));
     }
 }
