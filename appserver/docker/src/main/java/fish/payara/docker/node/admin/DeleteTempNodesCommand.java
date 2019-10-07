@@ -2,6 +2,8 @@ package fish.payara.docker.node.admin;
 
 import com.sun.enterprise.config.serverbeans.Node;
 import com.sun.enterprise.config.serverbeans.Nodes;
+import com.sun.enterprise.config.serverbeans.Server;
+import com.sun.enterprise.config.serverbeans.Servers;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AdminCommandContext;
 import org.glassfish.api.admin.CommandRunner;
@@ -23,7 +25,7 @@ import static org.glassfish.api.admin.RestEndpoint.OpType.POST;
 @RestEndpoints({
         @RestEndpoint(configBean = Nodes.class,
                 opType = POST,
-                path = "delete-temp-nodes",
+                path = "_delete-temp-nodes",
                 description = "Deletes all temporary nodes not in use")
 })
 public class DeleteTempNodesCommand implements AdminCommand {
@@ -32,20 +34,43 @@ public class DeleteTempNodesCommand implements AdminCommand {
     private Nodes nodes;
 
     @Inject
+    private Servers servers;
+
+    @Inject
     private CommandRunner commandRunner;
 
     @Override
     public void execute(AdminCommandContext context) {
         for (Node node : nodes.getNode()) {
-            if (node.getType().equals("TEMP") && !node.nodeInUse() && commandRunner != null) {
+            if (node.getType().equals("TEMP") && commandRunner != null) {
                 ParameterMap parameterMap = new ParameterMap();
                 parameterMap.add("name", node.getName());
-                commandRunner.getCommandInvocation("_delete-node-temp",
-                        context.getActionReport(),
-                        context.getSubject())
-                        .parameters(parameterMap)
-                        .execute();
+
+                // If the node still has instances registered to it, delete them if they're not running
+                if (node.nodeInUse()) {
+                    deleteServersOnNode(node, context);
+                } else {
+                    commandRunner.getCommandInvocation("_delete-node-temp",
+                            context.getActionReport(),
+                            context.getSubject())
+                            .parameters(parameterMap)
+                            .execute();
+                }
             }
+        }
+    }
+
+    private void deleteServersOnNode(Node node, AdminCommandContext context) {
+        for (Server server : servers.getServersOnNode(node)) {
+            ParameterMap parameterMap = new ParameterMap();
+            parameterMap.add("instance_name", server.getName());
+
+            // delete-instance command deletes TEMP nodes if their last instance is deleted.
+            commandRunner.getCommandInvocation("delete-instance",
+                    context.getActionReport(),
+                    context.getSubject())
+                    .parameters(parameterMap)
+                    .execute();
         }
     }
 }

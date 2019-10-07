@@ -170,7 +170,6 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
 
         if (node.getType().equals("TEMP")) {
             deleteTempInstance(instanceName, context);
-            deleteTempNode(nodeName, context);
         }
 
         // If we've got any sub-command failures, log a warning
@@ -417,16 +416,6 @@ public class StopInstanceCommand extends StopServer implements AdminCommand, Pos
         CommandRunner commandRunner = habitat.getService(CommandRunner.class);
         commandRunner.getCommandInvocation(
                 "delete-instance", adminCommandContext.getActionReport().addSubActionsReport(),
-                adminCommandContext.getSubject()).parameters(parameterMap).execute();
-    }
-
-    private void deleteTempNode(String nodeName, AdminCommandContext adminCommandContext) {
-        ParameterMap parameterMap = new ParameterMap();
-        parameterMap.add("name", nodeName);
-
-        CommandRunner commandRunner = habitat.getService(CommandRunner.class);
-        commandRunner.getCommandInvocation(
-                "_delete-node-temp", adminCommandContext.getActionReport().addSubActionsReport(),
                 adminCommandContext.getSubject()).parameters(parameterMap).execute();
     }
 }

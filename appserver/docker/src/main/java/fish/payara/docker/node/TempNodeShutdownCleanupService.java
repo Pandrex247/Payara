@@ -32,7 +32,7 @@ public class TempNodeShutdownCleanupService implements EventListener {
             if (serviceLocator != null) {
                 CommandRunner commandRunner = serviceLocator.getService(CommandRunner.class);
                 if (commandRunner != null) {
-                    commandRunner.run("delete-temp-nodes");
+                    commandRunner.run("_delete-temp-nodes");
                 }
             }
         }
