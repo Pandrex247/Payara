@@ -19,7 +19,7 @@ import javax.inject.Inject;
 
 import static org.glassfish.api.admin.RestEndpoint.OpType.POST;
 
-@Service(name = "delete-temp-nodes")
+@Service(name = "_delete-temp-nodes")
 @PerLookup
 @ExecuteOn(RuntimeType.DAS)
 @RestEndpoints({
