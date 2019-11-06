@@ -549,4 +549,8 @@ public class HazelcastCore implements EventListener, ConfigListener {
     public UnprocessedChangeEvents changed(PropertyChangeEvent[] pces) {
         return null;
     }
+
+    public boolean isDatagridEncryptionEnabled() {
+        return configuration.getDatagridEncryptionEnabled().equalsIgnoreCase("true");
+    }
 }
