@@ -41,6 +41,7 @@ package fish.payara.nucleus.hazelcast;
 
 import com.hazelcast.config.SymmetricEncryptionConfig;
 import fish.payara.nucleus.hazelcast.encryption.SymmetricEncryptor;
+import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.JavaEEContextUtil;
 import com.hazelcast.internal.serialization.impl.JavaDefaultSerializers;
 import com.hazelcast.nio.ObjectDataInput;
@@ -74,6 +75,7 @@ public class PayaraHazelcastSerializer implements StreamSerializer<Object> {
 
     @Override
     public void write(ObjectDataOutput out, Object object) throws IOException {
+        lookupHazelcastCore();
         String invocationComponentId = ctxUtil.getInvocationComponentId();
         if (hazelcastCore.isDatagridEncryptionEnabled()) {
 //            invocationComponentId = SymmetricEncryptor.encode(invocationComponentId, secretKey);
@@ -86,6 +88,7 @@ public class PayaraHazelcastSerializer implements StreamSerializer<Object> {
 
     @Override
     public Object read(ObjectDataInput in) throws IOException {
+        lookupHazelcastCore();
         String componentId = (String) delegate.read(in);
         if (hazelcastCore.isDatagridEncryptionEnabled()) {
 //            componentId = SymmetricEncryptor.decode(componentId, secretKey);
@@ -110,5 +113,11 @@ public class PayaraHazelcastSerializer implements StreamSerializer<Object> {
     @Override
     public void destroy() {
         delegate.destroy();
+    }
+
+    private void lookupHazelcastCore() {
+        if (hazelcastCore == null) {
+            hazelcastCore = Globals.getDefaultBaseServiceLocator().getService(HazelcastCore.class);
+        }
     }
 }

@@ -1,12 +1,14 @@
-package fish.payara.nucleus.hazelcast.cli;
+package fish.payara.admin.servermgmt.cli;
 
 import com.sun.enterprise.admin.servermgmt.cli.ChangeMasterPasswordCommandDAS;
 import com.sun.enterprise.admin.servermgmt.cli.LocalDomainCommand;
 import com.sun.enterprise.admin.servermgmt.pe.PEDomainsManager;
 import com.sun.enterprise.universal.i18n.LocalStringsImpl;
 import com.sun.enterprise.util.HostAndPort;
+import com.sun.enterprise.util.net.NetUtils;
 import org.glassfish.api.admin.CommandException;
 import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.security.common.FileProtectionUtility;
 import org.jvnet.hk2.annotations.Service;
 
 import javax.crypto.SecretKey;
@@ -14,10 +16,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.attribute.PosixFilePermissions;
 import java.security.SecureRandom;
-
-import com.sun.enterprise.util.net.NetUtils;
 
 @Service(name = "generate-encryption-key")
 @PerLookup
@@ -78,8 +77,9 @@ public class GenerateEncryptionKey extends LocalDomainCommand {
 
     private void createDatagridEncryptionKeyFile(File datagridKeyFile) throws CommandException {
         try {
-            Files.createFile(datagridKeyFile.toPath(), PosixFilePermissions.asFileAttribute(
-                    PosixFilePermissions.fromString("rw-------")));
+            // Windows defaults to essentially "7" for current user, Admins, and System
+            FileProtectionUtility.chmod0600(datagridKeyFile);
+            Files.createFile(datagridKeyFile.toPath());
         } catch (IOException ioe) {
             throw new CommandException(ioe.getMessage(), ioe);
         }
