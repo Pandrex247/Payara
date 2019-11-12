@@ -39,20 +39,17 @@
  */
 package fish.payara.nucleus.hazelcast;
 
-import com.hazelcast.config.SymmetricEncryptionConfig;
-import fish.payara.nucleus.hazelcast.encryption.SymmetricEncryptor;
-import org.glassfish.internal.api.Globals;
-import org.glassfish.internal.api.JavaEEContextUtil;
 import com.hazelcast.internal.serialization.impl.JavaDefaultSerializers;
 import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
 import com.hazelcast.nio.serialization.StreamSerializer;
-
-import java.io.IOException;
-
+import fish.payara.nucleus.hazelcast.encryption.SymmetricEncryptor;
+import org.glassfish.internal.api.Globals;
+import org.glassfish.internal.api.JavaEEContextUtil;
 import org.glassfish.internal.api.JavaEEContextUtil.Context;
 
 import javax.inject.Inject;
+import java.io.IOException;
 
 /**
  * @author lprimak
@@ -78,8 +75,8 @@ public class PayaraHazelcastSerializer implements StreamSerializer<Object> {
         lookupHazelcastCore();
         String invocationComponentId = ctxUtil.getInvocationComponentId();
         if (hazelcastCore.isDatagridEncryptionEnabled()) {
-//            invocationComponentId = SymmetricEncryptor.encode(invocationComponentId, secretKey);
-//            object = SymmetricEncryptor.encode(object, secretKey);
+            invocationComponentId = SymmetricEncryptor.encode(invocationComponentId.getBytes());
+            object = SymmetricEncryptor.encode(SymmetricEncryptor.objectToByteArray(object));
         }
 
         delegate.write(out, invocationComponentId);
@@ -91,14 +88,15 @@ public class PayaraHazelcastSerializer implements StreamSerializer<Object> {
         lookupHazelcastCore();
         String componentId = (String) delegate.read(in);
         if (hazelcastCore.isDatagridEncryptionEnabled()) {
-//            componentId = SymmetricEncryptor.decode(componentId, secretKey);
+            componentId = SymmetricEncryptor.decode(componentId).toString();
         }
         ctxUtil.setInstanceComponentId(componentId);
 
         try (Context ctx = ctxUtil.setApplicationClassLoader()) {
             Object readObjectDataInput = delegate.read(in);
             if (hazelcastCore.isDatagridEncryptionEnabled()) {
-//                readObjectDataInput = SymmetricEncryptor.decode(componentId, secretKey);
+                readObjectDataInput = SymmetricEncryptor.decode(
+                        SymmetricEncryptor.objectToByteArray(componentId).toString());
             }
 
             return readObjectDataInput;

@@ -125,6 +125,7 @@ public class GetHazelcastConfiguration implements AdminCommand {
         columnFormatter.addRow(new Object[]{"MulticastPort",runtimeConfiguration.getMulticastPort(),"Domain"});
         columnFormatter.addRow(new Object[]{"Kubernetes Namespace",runtimeConfiguration.getKubernetesNamespace(),"Domain"});
         columnFormatter.addRow(new Object[]{"Kubernetes Service Name",runtimeConfiguration.getKubernetesServiceName(),"Domain"});
+        columnFormatter.addRow(new Object[]{"Encrypt Datagrid", runtimeConfiguration.getDatagridEncryptionEnabled(), "Domain"});
         columnFormatter.addRow(new Object[]{"Enabled",nodeConfiguration.getEnabled(),"Config"});
         columnFormatter.addRow(new Object[]{"JNDIName",nodeConfiguration.getJNDIName(),"Config"});
         columnFormatter.addRow(new Object[]{"Cache Manager JNDI Name",nodeConfiguration.getCacheManagerJNDIName(),"Config"});
@@ -170,6 +171,7 @@ public class GetHazelcastConfiguration implements AdminCommand {
         map.put("publicAddress", nodeConfiguration.getPublicAddress());
         map.put("kubernetesNamespace", runtimeConfiguration.getKubernetesNamespace());
         map.put("kubernetesServiceName", runtimeConfiguration.getKubernetesServiceName());
+        map.put("encryptDatagrid", runtimeConfiguration.getDatagridEncryptionEnabled());
         
         extraProps.put("getHazelcastConfiguration",map);
                 

@@ -203,6 +203,9 @@ public class SetHazelcastConfiguration implements AdminCommand, DeploymentTarget
 
     @Param(name = "autoIncrementPort", optional = true)
     private Boolean autoIncrementPort;
+
+    @Param(name = "encryptDatagrid", optional = true, alias = "encryptdatagrid")
+    private Boolean encryptDatagrid;
     
     @Inject
     ServiceLocator serviceLocator;
@@ -287,6 +290,9 @@ public class SetHazelcastConfiguration implements AdminCommand, DeploymentTarget
                         }
                         if (autoIncrementPort != null) {
                             hazelcastRuntimeConfigurationProxy.setAutoIncrementPort(autoIncrementPort.toString());
+                        }
+                        if (encryptDatagrid != null) {
+                            hazelcastRuntimeConfigurationProxy.setDatagridEncryptionEnabled(encryptDatagrid.toString());
                         }
                         actionReport.setActionExitCode(ActionReport.ExitCode.SUCCESS);
                         return null;

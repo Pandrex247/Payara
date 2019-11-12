@@ -1,21 +1,38 @@
 package fish.payara.nucleus.hazelcast.encryption;
 
 import com.hazelcast.core.HazelcastException;
+import com.sun.enterprise.security.ssl.impl.MasterPasswordImpl;
+import com.sun.enterprise.util.StringUtils;
+import org.glassfish.api.admin.ServerEnvironment;
+import org.glassfish.internal.api.Globals;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.PBEKeySpec;
+import javax.crypto.spec.SecretKeySpec;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.rmi.UnexpectedException;
 import java.security.AlgorithmParameters;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
 import java.util.Base64;
+import java.util.Random;
 
 /**
  * Class that encodes and decodes symmetric keys.
@@ -24,12 +41,24 @@ import java.util.Base64;
  * @author Rudy De Busscher <rudy.de.busscher@payara.fish>
  */
 public class SymmetricEncryptor {
-    private static final String AES_ALGORITHM = "AES/GCM/NoPadding";
 
-    public static String encode(byte[] value, SecretKey secretKey) {
+    private static final String DATAGRID_KEY_FILE = "datagrid-key";
+    private static final String AES_ALGORITHM = "AES/GCM/NoPadding";
+    private static final String PBKDF_ALGORITHM = "PBKDF2WithHmacSHA1";
+    private static final String AES = "AES";
+    private static final int ITERATION_COUNT = 65556;
+    private static final int KEYSIZE = 256;
+    private static Random random = new SecureRandom();
+    private static SecretKey secretKey;
+
+    static {
+        secretKey = readAndDecryptSecretKey();
+    }
+
+    public static String encode(byte[] value) {
         // Generate IV.
         byte[] saltBytes = new byte[20];
-        new SecureRandom().nextBytes(saltBytes);
+        random.nextBytes(saltBytes);
 
         try {
             // Encrypting the data
@@ -52,7 +81,7 @@ public class SymmetricEncryptor {
         }
     }
 
-    public static byte[] decode(String encryptedText, SecretKey secretKey) {
+    public static byte[] decode(String encryptedText) {
 
         byte[] decryptedTextBytes;
         try {
@@ -78,5 +107,79 @@ public class SymmetricEncryptor {
         }
 
         return decryptedTextBytes;
+    }
+
+    private static SecretKey readAndDecryptSecretKey() {
+        ServerEnvironment serverEnvironment = Globals.getDefaultBaseServiceLocator().getService(ServerEnvironment.class);
+        char[] masterPassword = Globals.getDefaultBaseServiceLocator().getService(MasterPasswordImpl.class).getMasterPassword();
+
+        String encryptedText = null;
+        try {
+            encryptedText = Files.readAllBytes(
+                    new File(serverEnvironment.getConfigDirPath() + DATAGRID_KEY_FILE).toPath())
+                    .toString();
+        } catch (IOException ioe) {
+            // blah
+        }
+
+        if (!StringUtils.ok(encryptedText)) {
+            // blah
+        }
+
+        try {
+            Cipher cipher = Cipher.getInstance(AES_ALGORITHM);
+
+            // Strip off the salt and IV
+            ByteBuffer buffer = ByteBuffer.wrap(Base64.getDecoder().decode(encryptedText));
+            byte[] saltBytes = new byte[20];
+            buffer.get(saltBytes, 0, saltBytes.length);
+            byte[] ivBytes = new byte[cipher.getBlockSize()];
+            buffer.get(ivBytes, 0, ivBytes.length);
+            byte[] encryptedTextBytes = new byte[buffer.capacity() - saltBytes.length - ivBytes.length];
+            buffer.get(encryptedTextBytes);
+
+            // Deriving the key
+            SecretKeyFactory factory = SecretKeyFactory.getInstance(PBKDF_ALGORITHM);
+            PBEKeySpec spec = new PBEKeySpec(masterPassword, saltBytes, ITERATION_COUNT, KEYSIZE);
+            return new SecretKeySpec(factory.generateSecret(spec).getEncoded(), AES);
+//            cipher.init(Cipher.DECRYPT_MODE, secretKey, new GCMParamterSpec(ivBytes));
+//            cipher.doFinal(encryptedTextBytes);
+//        } catch (BadPaddingException bpe) {
+//            throw new HazelcastException("BadPaddingException caught decrypting data from Datagrid " +
+//                    "- likely caused by an incorrect master password", bpe);
+//        } catch (IllegalBlockSizeException | NoSuchAlgorithmException | InvalidAlgorithmParameterException
+//                | InvalidKeyException | InvalidKeySpecException | NoSuchPaddingException exception) {
+//            throw new HazelcastException(exception);
+//        }
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException exception) {
+            throw new HazelcastException(exception);
+        }
+    }
+
+    public static byte[] objectToByteArray(Object object) {
+        byte[] bytes = null;
+        try (ByteArrayOutputStream bos = new ByteArrayOutputStream(); ObjectOutputStream out = new ObjectOutputStream(bos)) {
+            out.writeObject(object);
+            bytes = bos.toByteArray();
+        } catch (IOException ioe) {
+            // Blah
+        }
+        if (bytes == null) {
+            throw new HazelcastException("Error converting Object to Byte Array");
+        }
+        return bytes;
+    }
+
+    public static Object byteArrayToObject(byte[] bytes) {
+        Object object = null;
+        try (ByteArrayInputStream bis = new ByteArrayInputStream(bytes)) {
+            object = new ObjectInputStream(bis).readObject();
+        } catch (IOException | ClassNotFoundException exception) {
+            // Blah
+        }
+        if (object == null) {
+            throw new HazelcastException("Error converting Byte Array to Object");
+        }
+        return object;
     }
 }
