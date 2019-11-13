@@ -43,6 +43,7 @@ import com.hazelcast.internal.serialization.impl.JavaDefaultSerializers;
 import com.hazelcast.nio.ObjectDataInput;
 import com.hazelcast.nio.ObjectDataOutput;
 import com.hazelcast.nio.serialization.StreamSerializer;
+import com.sun.enterprise.util.StringUtils;
 import fish.payara.nucleus.hazelcast.encryption.SymmetricEncryptor;
 import org.glassfish.internal.api.Globals;
 import org.glassfish.internal.api.JavaEEContextUtil;
@@ -75,7 +76,9 @@ public class PayaraHazelcastSerializer implements StreamSerializer<Object> {
         lookupHazelcastCore();
         String invocationComponentId = ctxUtil.getInvocationComponentId();
         if (hazelcastCore.isDatagridEncryptionEnabled()) {
-            invocationComponentId = SymmetricEncryptor.encode(invocationComponentId.getBytes());
+            if (invocationComponentId != null) {
+                invocationComponentId = SymmetricEncryptor.encode(invocationComponentId.getBytes());
+            }
             object = SymmetricEncryptor.encode(SymmetricEncryptor.objectToByteArray(object));
         }
 
@@ -88,15 +91,16 @@ public class PayaraHazelcastSerializer implements StreamSerializer<Object> {
         lookupHazelcastCore();
         String componentId = (String) delegate.read(in);
         if (hazelcastCore.isDatagridEncryptionEnabled()) {
-            componentId = SymmetricEncryptor.decode(componentId).toString();
+            if (StringUtils.ok(componentId)) {
+                componentId = SymmetricEncryptor.decode(componentId).toString();
+            }
         }
         ctxUtil.setInstanceComponentId(componentId);
 
         try (Context ctx = ctxUtil.setApplicationClassLoader()) {
             Object readObjectDataInput = delegate.read(in);
             if (hazelcastCore.isDatagridEncryptionEnabled()) {
-                readObjectDataInput = SymmetricEncryptor.decode(
-                        SymmetricEncryptor.objectToByteArray(componentId).toString());
+                readObjectDataInput = SymmetricEncryptor.byteArrayToObject(SymmetricEncryptor.decode((String) readObjectDataInput));
             }
 
             return readObjectDataInput;

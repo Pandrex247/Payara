@@ -16,7 +16,6 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
-import javax.crypto.spec.GCMParameterSpec;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
@@ -44,7 +43,7 @@ public class GenerateEncryptionKey extends LocalDomainCommand {
     private static final int ITERATION_COUNT = 65556;
     private static final int KEYSIZE = 256;
     private static final String AES = "AES";
-    private static final String AES_ALGORITHM = "AES/GCM/NoPadding";
+    private static final String AES_ALGORITHM = "AES/CBC/PKCS5Padding";
 
     @Override
     protected int executeCommand() throws CommandException {
@@ -112,14 +111,13 @@ public class GenerateEncryptionKey extends LocalDomainCommand {
             // Derive the key
             SecretKeyFactory factory = SecretKeyFactory.getInstance(PBKDF_ALGORITHM);
             PBEKeySpec spec = new PBEKeySpec(masterpasswordChars, saltBytes, ITERATION_COUNT, KEYSIZE);
-            SecretKey secretKey = factory.generateSecret(spec);
-            SecretKeySpec secret = new SecretKeySpec(secretKey.getEncoded(), AES);
+            SecretKeySpec secret = new SecretKeySpec(factory.generateSecret(spec).getEncoded(), AES);
 
             // Encrypting the data
             Cipher cipher = Cipher.getInstance(AES_ALGORITHM);
             cipher.init(Cipher.ENCRYPT_MODE, secret);
             AlgorithmParameters params = cipher.getParameters();
-            byte[] ivBytes = params.getParameterSpec(GCMParameterSpec.class).getIV();
+            byte[] ivBytes = params.getParameterSpec(IvParameterSpec.class).getIV();
 
             byte[] keyBytes = new byte[KEYSIZE / 8];  // Key length is in bits !
             random.nextBytes(keyBytes);
