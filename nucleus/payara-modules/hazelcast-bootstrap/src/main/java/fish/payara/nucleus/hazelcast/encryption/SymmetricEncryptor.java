@@ -107,33 +107,6 @@ public class SymmetricEncryptor {
         return decryptedTextBytes;
     }
 
-    public static byte[] decode(byte[] encryptedBytes) {
-        byte[] decryptedTextBytes;
-        try {
-            Cipher cipher = Cipher.getInstance(AES_ALGORITHM);
-            // Strip off the salt and IV
-            ByteBuffer buffer = ByteBuffer.wrap(Base64.getDecoder().decode((encryptedBytes)));
-            byte[] saltBytes = new byte[20];
-            buffer.get(saltBytes, 0, saltBytes.length);
-            byte[] ivBytes = new byte[cipher.getBlockSize()];
-            buffer.get(ivBytes, 0, ivBytes.length);
-            byte[] encryptedTextBytes = new byte[buffer.capacity() - saltBytes.length - ivBytes.length];
-
-            buffer.get(encryptedTextBytes);
-            cipher.init(Cipher.DECRYPT_MODE, secretKey, new IvParameterSpec(ivBytes));
-            decryptedTextBytes = cipher.doFinal(encryptedTextBytes);
-        } catch (BadPaddingException exception) {
-            // BadPaddingException -> Wrong key
-            throw new HazelcastException("BadPaddingException caught decoding data, " +
-                    "this can be caused by an incorrect key: ", exception);
-        } catch (IllegalBlockSizeException | NoSuchAlgorithmException | InvalidAlgorithmParameterException
-                | InvalidKeyException | NoSuchPaddingException exception) {
-            throw new HazelcastException(exception);
-        }
-
-        return decryptedTextBytes;
-    }
-
     private static SecretKey readAndDecryptSecretKey() {
         ServerEnvironment serverEnvironment = Globals.getDefaultBaseServiceLocator().getService(ServerEnvironment.class);
         char[] masterPassword = Globals.getDefaultBaseServiceLocator().getService(MasterPasswordImpl.class).getMasterPassword();
