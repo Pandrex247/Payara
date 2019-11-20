@@ -77,7 +77,7 @@ public class PayaraHazelcastSerializer implements StreamSerializer<Object> {
         String invocationComponentId = ctxUtil.getInvocationComponentId();
         if (hazelcastCore.isDatagridEncryptionEnabled()) {
             if (invocationComponentId != null) {
-                invocationComponentId = SymmetricEncryptor.encode(invocationComponentId.getBytes());
+                invocationComponentId = SymmetricEncryptor.encode(SymmetricEncryptor.objectToByteArray(invocationComponentId));
             }
             object = SymmetricEncryptor.encode(SymmetricEncryptor.objectToByteArray(object));
         }
