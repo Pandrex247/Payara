@@ -86,7 +86,7 @@ import org.jvnet.hk2.config.TransactionFailure;
 @PerLookup
 @CommandLock(CommandLock.LockType.NONE)
 @I18n("set.hazelcast.configuration")
-@TargetType(value = {CommandTarget.CONFIG, CommandTarget.DOMAIN})
+@TargetType(value = {CommandTarget.CONFIG, CommandTarget.DOMAIN, CommandTarget.STANDALONE_INSTANCE, CommandTarget.CLUSTER, CommandTarget.CLUSTERED_INSTANCE})
 @ExecuteOn(value = {RuntimeType.ALL})
 @RestEndpoints({
     @RestEndpoint(configBean = Domain.class,
@@ -95,7 +95,7 @@ import org.jvnet.hk2.config.TransactionFailure;
             description = "Set Hazelcast Configuration")
 })
 public class SetHazelcastConfiguration implements AdminCommand, DeploymentTargetResolver {
-
+    
     @Inject
     protected Logger logger;
 
@@ -207,6 +207,9 @@ public class SetHazelcastConfiguration implements AdminCommand, DeploymentTarget
     @Param(name = "encryptDatagrid", optional = true, alias = "encryptdatagrid")
     private Boolean encryptDatagrid;
     
+    @Param(name = "configSpecificDataGridStartPort", optional = true, alias = "configspecificdatagridstartport")
+    private String configSpecificDataGridStartPort;
+
     @Inject
     ServiceLocator serviceLocator;
 
@@ -215,8 +218,6 @@ public class SetHazelcastConfiguration implements AdminCommand, DeploymentTarget
 
     @Override
     public void execute(AdminCommandContext context) {
-
-        final AdminCommandContext theContext = context;
         final ActionReport actionReport = context.getActionReport();
         Properties extraProperties = actionReport.getExtraProperties();
         if (extraProperties == null) {
@@ -236,22 +237,19 @@ public class SetHazelcastConfiguration implements AdminCommand, DeploymentTarget
                     public Object run(final HazelcastRuntimeConfiguration hazelcastRuntimeConfigurationProxy) throws PropertyVetoException, TransactionFailure {
                         if (startPort != null) {
                             hazelcastRuntimeConfigurationProxy.setStartPort(startPort);
-                        }
+                        }                        
                         if (multiCastGroup != null) {
                             hazelcastRuntimeConfigurationProxy.setMulticastGroup(multiCastGroup);
-                        }
+                        }                        
                         if (multicastPort != null) {
                             hazelcastRuntimeConfigurationProxy.setMulticastPort(multicastPort);
                         }
-
                         if (configFile != null) {
                             hazelcastRuntimeConfigurationProxy.setHazelcastConfigurationFile(configFile);
                         }
-
                         if (hostawarePartitioning != null) {
                             hazelcastRuntimeConfigurationProxy.setHostAwarePartitioning(hostawarePartitioning.toString());
                         }
-
                         if (hzClusterName != null) {
                             hazelcastRuntimeConfigurationProxy.setClusterGroupName(hzClusterName);
                         }
@@ -352,6 +350,11 @@ public class SetHazelcastConfiguration implements AdminCommand, DeploymentTarget
                             if (publicAddress != null) {
                                 hazelcastRuntimeConfigurationProxy.setPublicAddress(publicAddress);
                             }
+                            if (configSpecificDataGridStartPort != null) {
+                                if (!configToApply.isDas()) {
+                                    hazelcastRuntimeConfigurationProxy.setConfigSpecificDataGridStartPort(configSpecificDataGridStartPort);
+                                }
+                            }
                             actionReport.setActionExitCode(ActionReport.ExitCode.SUCCESS);
                             return null;
                         }
@@ -387,7 +390,7 @@ public class SetHazelcastConfiguration implements AdminCommand, DeploymentTarget
         }
 
     }
-
+    
     private void enableOnTarget(ActionReport actionReport, AdminCommandContext context, Boolean enabled) {
 
         // for all affected targets restart hazelcast. 

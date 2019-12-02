@@ -44,7 +44,7 @@
     <parent>
         <groupId>fish.payara.server.internal.payara-modules</groupId>
         <artifactId>payara-nucleus-modules</artifactId>
-        <version>5.194-SNAPSHOT</version>
+        <version>5.201-SNAPSHOT</version>
     </parent>
     <artifactId>notification-core</artifactId>
     <packaging>glassfish-jar</packaging>
@@ -102,8 +102,6 @@
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>${jakartaee.api.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <dependency>

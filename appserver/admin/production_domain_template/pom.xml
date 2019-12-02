@@ -46,7 +46,7 @@
     <parent>
         <groupId>fish.payara.server.internal.admin</groupId>
         <artifactId>admin</artifactId>
-        <version>5.194-SNAPSHOT</version>
+        <version>5.201-SNAPSHOT</version>
     </parent>
 
     <artifactId>production-domain</artifactId>
@@ -69,7 +69,7 @@
                 <executions>
                     <execution>
                         <id>unpack</id>
-                        <phase>validate</phase>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>unpack</goal>
                         </goals>

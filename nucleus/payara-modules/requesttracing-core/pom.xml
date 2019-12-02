@@ -44,7 +44,7 @@
     <parent>
         <groupId>fish.payara.server.internal.payara-modules</groupId>
         <artifactId>payara-nucleus-modules</artifactId>
-        <version>5.194-SNAPSHOT</version>
+        <version>5.201-SNAPSHOT</version>
     </parent>
     <artifactId>requesttracing-core</artifactId>
     <packaging>glassfish-jar</packaging>
@@ -115,13 +115,11 @@
         <dependency>
             <groupId>org.glassfish</groupId>
             <artifactId>jakarta.json</artifactId>
-            <version>${jsonp.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>jakarta.platform</groupId>
             <artifactId>jakarta.jakartaee-api</artifactId>
-            <version>${jakartaee.api.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
