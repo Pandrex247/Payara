@@ -354,7 +354,7 @@ public class HazelcastCore implements EventListener, ConfigListener {
                 config.setLicenseKey(configuration.getLicenseKey());
                 config.setLiteMember(Boolean.parseBoolean(nodeConfig.getLite()));
                 
-                
+
                 // set group config
                 GroupConfig gc = config.getGroupConfig();
                 gc.setName(configuration.getClusterGroupName());
