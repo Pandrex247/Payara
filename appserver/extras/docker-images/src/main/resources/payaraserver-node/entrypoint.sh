@@ -79,36 +79,73 @@ function createNewInstance {
     echo "Running command create-local-instance:"
     if [ -z "${PAYARA_INSTANCE_NAME}" ]; then
         if [ -z "${PAYARA_CONFIG_NAME}" ]; then
-            ASADMIN_COMMAND="./payara5/bin/asadmin -I false -T -a -H ${PAYARA_DAS_HOST} -p ${PAYARA_DAS_PORT} -W ${PAYARA_PASSWORD_FILE} create-local-instance --node ${PAYARA_NODE_NAME} --dockernode true --ip ${DOCKER_CONTAINER_IP}"
-            echo "${ASADMIN_COMMAND}"
-            PAYARA_INSTANCE_NAME="$(${ASADMIN_COMMAND})"
-        else
-            if [ "${PAYARA_CONFIG_NAME}" == "server-config" ] || [ "${PAYARA_CONFIG_NAME}" == "default-config" ]; then
-                echo "You cannot use 'server-config' or 'default-config', ignoring provided config name."
+            if [ -z "${PAYARA_DEPLOYMENT_GROUP}" ]; then
                 ASADMIN_COMMAND="./payara5/bin/asadmin -I false -T -a -H ${PAYARA_DAS_HOST} -p ${PAYARA_DAS_PORT} -W ${PAYARA_PASSWORD_FILE} create-local-instance --node ${PAYARA_NODE_NAME} --dockernode true --ip ${DOCKER_CONTAINER_IP}"
                 echo "${ASADMIN_COMMAND}"
                 PAYARA_INSTANCE_NAME="$(${ASADMIN_COMMAND})"
             else
-                ASADMIN_COMMAND="./payara5/bin/asadmin -I false -T -a -H ${PAYARA_DAS_HOST} -p ${PAYARA_DAS_PORT} -W ${PAYARA_PASSWORD_FILE} create-local-instance --node ${PAYARA_NODE_NAME} --config ${PAYARA_CONFIG_NAME} --dockernode true --ip ${DOCKER_CONTAINER_IP}"
+                ASADMIN_COMMAND="./payara5/bin/asadmin -I false -T -a -H ${PAYARA_DAS_HOST} -p ${PAYARA_DAS_PORT} -W ${PAYARA_PASSWORD_FILE} create-local-instance --node ${PAYARA_NODE_NAME} --dockernode true --ip ${DOCKER_CONTAINER_IP} --deploymentgroup ${PAYARA_DEPLOYMENT_GROUP}"
                 echo "${ASADMIN_COMMAND}"
                 PAYARA_INSTANCE_NAME="$(${ASADMIN_COMMAND})"
+            fi
+        else
+            if [ "${PAYARA_CONFIG_NAME}" == "server-config" ] || [ "${PAYARA_CONFIG_NAME}" == "default-config" ]; then
+                echo "You cannot use 'server-config' or 'default-config', ignoring provided config name."
+                if [ -z "${PAYARA_DEPLOYMENT_GROUP}" ]; then
+                    ASADMIN_COMMAND="./payara5/bin/asadmin -I false -T -a -H ${PAYARA_DAS_HOST} -p ${PAYARA_DAS_PORT} -W ${PAYARA_PASSWORD_FILE} create-local-instance --node ${PAYARA_NODE_NAME} --dockernode true --ip ${DOCKER_CONTAINER_IP}"
+                    echo "${ASADMIN_COMMAND}"
+                    PAYARA_INSTANCE_NAME="$(${ASADMIN_COMMAND})"
+                else
+                    ASADMIN_COMMAND="./payara5/bin/asadmin -I false -T -a -H ${PAYARA_DAS_HOST} -p ${PAYARA_DAS_PORT} -W ${PAYARA_PASSWORD_FILE} create-local-instance --node ${PAYARA_NODE_NAME} --dockernode true --ip ${DOCKER_CONTAINER_IP} --deploymentgroup ${PAYARA_DEPLOYMENT_GROUP}"
+                    echo "${ASADMIN_COMMAND}"
+                    PAYARA_INSTANCE_NAME="$(${ASADMIN_COMMAND})"
+                fi
+            else
+                if [ -z "${PAYARA_DEPLOYMENT_GROUP}" ]; then
+                    ASADMIN_COMMAND="./payara5/bin/asadmin -I false -T -a -H ${PAYARA_DAS_HOST} -p ${PAYARA_DAS_PORT} -W ${PAYARA_PASSWORD_FILE} create-local-instance --node ${PAYARA_NODE_NAME} --config ${PAYARA_CONFIG_NAME} --dockernode true --ip ${DOCKER_CONTAINER_IP}"
+                    echo "${ASADMIN_COMMAND}"
+                    PAYARA_INSTANCE_NAME="$(${ASADMIN_COMMAND})"
+                else
+                    ASADMIN_COMMAND="./payara5/bin/asadmin -I false -T -a -H ${PAYARA_DAS_HOST} -p ${PAYARA_DAS_PORT} -W ${PAYARA_PASSWORD_FILE} create-local-instance --node ${PAYARA_NODE_NAME} --config ${PAYARA_CONFIG_NAME} --dockernode true --ip ${DOCKER_CONTAINER_IP} --deploymentgroup ${PAYARA_DEPLOYMENT_GROUP}"
+                    echo "${ASADMIN_COMMAND}"
+                    PAYARA_INSTANCE_NAME="$(${ASADMIN_COMMAND})"
+                fi
             fi
         fi
     else
         if [ -z "${PAYARA_CONFIG_NAME}" ]; then
-            ASADMIN_COMMAND="./payara5/bin/asadmin -I false -T -a -H ${PAYARA_DAS_HOST} -p ${PAYARA_DAS_PORT} -W ${PAYARA_PASSWORD_FILE} create-local-instance --node ${PAYARA_NODE_NAME} --dockernode true --ip ${DOCKER_CONTAINER_IP} ${PAYARA_INSTANCE_NAME}"
-            echo "${ASADMIN_COMMAND}"
-            PAYARA_INSTANCE_NAME="$(${ASADMIN_COMMAND})"
-        else
-            if [ "${PAYARA_CONFIG_NAME}" == "server-config" ] || [ "${PAYARA_CONFIG_NAME}" == "default-config" ]; then
-                echo "You cannot use 'server-config' or 'default-config', ignoring provided config name."
+            if [ -z "${PAYARA_DEPLOYMENT_GROUP}" ]; then
                 ASADMIN_COMMAND="./payara5/bin/asadmin -I false -T -a -H ${PAYARA_DAS_HOST} -p ${PAYARA_DAS_PORT} -W ${PAYARA_PASSWORD_FILE} create-local-instance --node ${PAYARA_NODE_NAME} --dockernode true --ip ${DOCKER_CONTAINER_IP} ${PAYARA_INSTANCE_NAME}"
                 echo "${ASADMIN_COMMAND}"
                 PAYARA_INSTANCE_NAME="$(${ASADMIN_COMMAND})"
             else
-                ASADMIN_COMMAND="./payara5/bin/asadmin -I false -T -a -H ${PAYARA_DAS_HOST} -p ${PAYARA_DAS_PORT} -W ${PAYARA_PASSWORD_FILE} create-local-instance --node ${PAYARA_NODE_NAME} --config ${PAYARA_CONFIG_NAME} --dockernode true --ip ${DOCKER_CONTAINER_IP} ${PAYARA_INSTANCE_NAME}"
+                ASADMIN_COMMAND="./payara5/bin/asadmin -I false -T -a -H ${PAYARA_DAS_HOST} -p ${PAYARA_DAS_PORT} -W ${PAYARA_PASSWORD_FILE} create-local-instance --node ${PAYARA_NODE_NAME} --dockernode true --ip ${DOCKER_CONTAINER_IP} ${PAYARA_INSTANCE_NAME} --deploymentgroup ${PAYARA_DEPLOYMENT_GROUP}"
                 echo "${ASADMIN_COMMAND}"
                 PAYARA_INSTANCE_NAME="$(${ASADMIN_COMMAND})"
+            fi
+        else
+            if [ "${PAYARA_CONFIG_NAME}" == "server-config" ] || [ "${PAYARA_CONFIG_NAME}" == "default-config" ]; then
+                if [ -z "${PAYARA_DEPLOYMENT_GROUP}" ]; then
+                    echo "You cannot use 'server-config' or 'default-config', ignoring provided config name."
+                    ASADMIN_COMMAND="./payara5/bin/asadmin -I false -T -a -H ${PAYARA_DAS_HOST} -p ${PAYARA_DAS_PORT} -W ${PAYARA_PASSWORD_FILE} create-local-instance --node ${PAYARA_NODE_NAME} --dockernode true --ip ${DOCKER_CONTAINER_IP} ${PAYARA_INSTANCE_NAME}"
+                    echo "${ASADMIN_COMMAND}"
+                    PAYARA_INSTANCE_NAME="$(${ASADMIN_COMMAND})"
+                else
+                    echo "You cannot use 'server-config' or 'default-config', ignoring provided config name."
+                    ASADMIN_COMMAND="./payara5/bin/asadmin -I false -T -a -H ${PAYARA_DAS_HOST} -p ${PAYARA_DAS_PORT} -W ${PAYARA_PASSWORD_FILE} create-local-instance --node ${PAYARA_NODE_NAME} --dockernode true --ip ${DOCKER_CONTAINER_IP} ${PAYARA_INSTANCE_NAME} --deploymentgroup ${PAYARA_DEPLOYMENT_GROUP}"
+                    echo "${ASADMIN_COMMAND}"
+                    PAYARA_INSTANCE_NAME="$(${ASADMIN_COMMAND})"
+                fi
+            else
+                if [ -z "${PAYARA_DEPLOYMENT_GROUP}" ]; then
+                    ASADMIN_COMMAND="./payara5/bin/asadmin -I false -T -a -H ${PAYARA_DAS_HOST} -p ${PAYARA_DAS_PORT} -W ${PAYARA_PASSWORD_FILE} create-local-instance --node ${PAYARA_NODE_NAME} --config ${PAYARA_CONFIG_NAME} --dockernode true --ip ${DOCKER_CONTAINER_IP} ${PAYARA_INSTANCE_NAME}"
+                    echo "${ASADMIN_COMMAND}"
+                    PAYARA_INSTANCE_NAME="$(${ASADMIN_COMMAND})"
+                else
+                    ASADMIN_COMMAND="./payara5/bin/asadmin -I false -T -a -H ${PAYARA_DAS_HOST} -p ${PAYARA_DAS_PORT} -W ${PAYARA_PASSWORD_FILE} create-local-instance --node ${PAYARA_NODE_NAME} --config ${PAYARA_CONFIG_NAME} --dockernode true --ip ${DOCKER_CONTAINER_IP} ${PAYARA_INSTANCE_NAME} --deploymentgroup ${PAYARA_DEPLOYMENT_GROUP}"
+                    echo "${ASADMIN_COMMAND}"
+                    PAYARA_INSTANCE_NAME="$(${ASADMIN_COMMAND})"
+                fi
             fi
         fi
     fi
