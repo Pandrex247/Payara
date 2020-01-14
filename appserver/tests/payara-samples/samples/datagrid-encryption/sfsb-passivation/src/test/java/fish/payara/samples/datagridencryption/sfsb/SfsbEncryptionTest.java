@@ -44,15 +44,15 @@ public class SfsbEncryptionTest {
     @Test
     public void testStateRestoredAfterPassivation() {
         Client client = ClientBuilder.newClient();
-        Invocation endpoint1 = client.target(url + "TestEjb").request().buildGet();
+        WebTarget endpoint1 = client.target(url + "TestEjb");
         WebTarget endpoint2 = client.target(url + "TestEjb/2");
         WebTarget endpoint3 = client.target(url + "TestEjb/Lookup");
 
         // First, poke endpoint1 twice to store some state
-        Response response = endpoint1.invoke();
+        Response response = endpoint1.request().get();
         Assert.assertEquals("apple,pear", response.readEntity(String.class));
 
-        response = endpoint1.invoke();
+        response = endpoint1.request().get();
         Assert.assertEquals("apple,pear,apple,pear", response.readEntity(String.class));
 
         // Next, poke endpoint2 three times to store some state
@@ -66,7 +66,7 @@ public class SfsbEncryptionTest {
         endpoint3.request().get();
 
         // Check endpoint1  and endpoint2 have restored their state and added another set upon invocation
-        response = endpoint1.invoke();
+        response = endpoint1.request().get();
         Assert.assertEquals("apple,pear,apple,pear,apple,pear", response.readEntity(String.class));
 
         response = endpoint2.request().get();
