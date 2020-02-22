@@ -88,7 +88,7 @@
         <repository>
             <id>payara-patched-externals</id>
             <name>Payara Patched Externals</name>
-            <url>https://raw.github.com/payara/Payara_PatchedProjects/master</url>
+            <url>https://raw.github.com/Pandrex247/Payara_PatchedProjects/Monitoring-Console-Staging</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
