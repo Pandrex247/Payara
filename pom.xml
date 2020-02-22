@@ -96,7 +96,17 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-
+        <repository>
+            <id>payara-staging</id>
+            <name>Payara Staging</name>
+            <url>https://nexus.payara.fish/content/repositories/payara-staging</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <properties>
