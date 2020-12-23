@@ -94,9 +94,10 @@ public class StopDomainCommand extends LocalDomainCommand {
      */
     @Override
     protected void initDomain() throws CommandException {
-        // only initialize local domain information if it's a local operation
-
-        if (NetUtils.isThisHostLocal(programOpts.getHost())) {
+        // While we could perform NetUtils.isThisHostLocal or NetUtils.isThisMe, we specifically want to check
+        // for the default --host value of "localhost" - the current design is that if the user specifies a
+        // non-default value we want to use remote mode.
+        if (programOpts.getHost().equals(CLIConstants.DEFAULT_HOSTNAME)) {
             super.initDomain();
         } else if (userArgDomainName != null) {  // remote case
             throw new CommandException(Strings.get("StopDomain.noDomainNameAllowed"));
