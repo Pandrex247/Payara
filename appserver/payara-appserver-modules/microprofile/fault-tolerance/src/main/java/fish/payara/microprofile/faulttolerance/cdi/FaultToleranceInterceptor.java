@@ -41,6 +41,7 @@ package fish.payara.microprofile.faulttolerance.cdi;
 
 import java.io.Serializable;
 import java.lang.annotation.Annotation;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
@@ -60,11 +61,15 @@ import fish.payara.microprofile.faulttolerance.FaultToleranceConfig;
 import fish.payara.microprofile.faulttolerance.FaultToleranceService;
 import fish.payara.microprofile.faulttolerance.policy.FaultTolerancePolicy;
 import fish.payara.microprofile.faulttolerance.service.Stereotypes;
+import org.eclipse.microprofile.faulttolerance.CircuitBreaker;
+import org.eclipse.microprofile.faulttolerance.Retry;
+import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.eclipse.microprofile.faulttolerance.exceptions.FaultToleranceDefinitionException;
 import org.glassfish.internal.api.Globals;
 
 @Interceptor
 @FaultTolerance
+@Retry
 @Priority(Interceptor.Priority.PLATFORM_AFTER + 15)
 public class FaultToleranceInterceptor implements Stereotypes, Serializable {
 
@@ -78,8 +83,12 @@ public class FaultToleranceInterceptor implements Stereotypes, Serializable {
 
     private FaultToleranceService faultToleranceService;
 
+    protected static final String PAYARA_FAULT_TOLERANCE_INTERCEPTOR_EXECUTED =
+            "fish.payara.microprofile.faulttolerance.executed";
+
     @AroundInvoke
     public Object intercept(InvocationContext context) throws Exception {
+        context.getContextData().put(PAYARA_FAULT_TOLERANCE_INTERCEPTOR_EXECUTED, Boolean.TRUE);
         try {
             initialize();
             AtomicReference<FaultToleranceConfig> lazyConfig = new AtomicReference<>();
@@ -116,6 +125,17 @@ public class FaultToleranceInterceptor implements Stereotypes, Serializable {
     @Override
     public Set<Annotation> getStereotypeDefinition(Class<? extends Annotation> stereotype) {
         return beanManager.getStereotypeDefinition(stereotype);
+    }
+
+    protected boolean shouldIntercept(InvocationContext invocationContext) throws Exception {
+        Map<String, Object> contextData = invocationContext.getContextData();
+
+        if (contextData.get(PAYARA_FAULT_TOLERANCE_INTERCEPTOR_EXECUTED) != null &&
+                (Boolean) contextData.get(PAYARA_FAULT_TOLERANCE_INTERCEPTOR_EXECUTED)) {
+            return false;
+        }
+
+        return true;
     }
 
 }

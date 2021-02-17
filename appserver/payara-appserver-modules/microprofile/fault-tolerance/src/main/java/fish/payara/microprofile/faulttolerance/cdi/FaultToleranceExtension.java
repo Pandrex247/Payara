@@ -49,6 +49,8 @@ import java.util.Optional;
 
 import javax.annotation.Priority;
 import javax.enterprise.event.Observes;
+import javax.enterprise.inject.spi.AfterBeanDiscovery;
+import javax.enterprise.inject.spi.AfterTypeDiscovery;
 import javax.enterprise.inject.spi.Annotated;
 import javax.enterprise.inject.spi.AnnotatedMethod;
 import javax.enterprise.inject.spi.AnnotatedType;
@@ -86,6 +88,17 @@ public class FaultToleranceExtension implements Extension {
 
     void beforeBeanDiscovery(@Observes BeforeBeanDiscovery beforeBeanDiscovery, BeanManager beanManager) {
         beforeBeanDiscovery.addAnnotatedType(beanManager.createAnnotatedType(FaultToleranceInterceptor.class), "MP-FT");
+
+//        beforeBeanDiscovery.addInterceptorBinding(Asynchronous.class);
+//        beforeBeanDiscovery.addAnnotatedType(beanManager.createAnnotatedType(AsynchronousInterceptor.class), "MP-FT-Asynchronous");
+        beforeBeanDiscovery.addInterceptorBinding(Bulkhead.class);
+        beforeBeanDiscovery.addAnnotatedType(beanManager.createAnnotatedType(BulkheadInterceptor.class), "MP-FT-Bulkhead");
+        beforeBeanDiscovery.addInterceptorBinding(CircuitBreaker.class);
+        beforeBeanDiscovery.addAnnotatedType(beanManager.createAnnotatedType(CircuitBreakerInterceptor.class), "MP-FT-CircuitBreaker");
+        beforeBeanDiscovery.addInterceptorBinding(Retry.class);
+        beforeBeanDiscovery.addAnnotatedType(beanManager.createAnnotatedType(RetryInterceptor.class), "MP-FT-Retry");
+        beforeBeanDiscovery.addInterceptorBinding(Timeout.class);
+        beforeBeanDiscovery.addAnnotatedType(beanManager.createAnnotatedType(TimeoutInterceptor.class), "MP-FT-Timeout");
     }
 
     /**
