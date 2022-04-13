@@ -38,10 +38,12 @@
  * holder.
  */
 
+// Portions Copyright 2022 Payara Foundation and/or its affiliates
+
 package com.sun.enterprise.web;
 
-import org.apache.catalina.Request;
-import org.apache.catalina.Response;
+import org.apache.catalina.connector.Request;
+import org.apache.catalina.connector.Response;
 import org.apache.catalina.core.StandardPipeline;
 
 import jakarta.servlet.ServletException;
@@ -111,18 +113,14 @@ public class VirtualServerPipeline extends StandardPipeline {
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, msg);
             }
-            ((HttpServletResponse) response.getResponse()).sendError(
-                                            HttpServletResponse.SC_NOT_FOUND,
-                                            msg);
+            response.getResponse().sendError(HttpServletResponse.SC_NOT_FOUND, msg);
         } else if (isDisabled) {
             String msg = rb.getString(LogFacade.VS_VALVE_DISABLED);
             msg = MessageFormat.format(msg, new Object[] { vs.getName() });
             if (logger.isLoggable(Level.FINE)) {
                 logger.log(Level.FINE, msg);
             }
-            ((HttpServletResponse) response.getResponse()).sendError(
-                                            HttpServletResponse.SC_FORBIDDEN,
-                                            msg);
+            response.getResponse().sendError(HttpServletResponse.SC_FORBIDDEN, msg);
         } else {
             boolean redirect = false;
             if (redirects != null) {
@@ -285,7 +283,7 @@ public class VirtualServerPipeline extends StandardPipeline {
                         locationCC.append(":");
                         locationCC.append(String.valueOf(url.getPort()));
                     }
-                    locationCC.append(response.encode(url.getPath()));
+                    locationCC.append(response.encodeURL(url.getPath()));
                     if (queryString != null) {
                         locationCC.append("?");
                         locationCC.append(url.getQuery());
