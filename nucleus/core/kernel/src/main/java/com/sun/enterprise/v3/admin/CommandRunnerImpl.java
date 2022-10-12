@@ -1789,8 +1789,6 @@ public class CommandRunnerImpl implements CommandRunner {
             }
             ((AdminCommandInstanceImpl) job).setEventBroker(eventBroker);
             ((AdminCommandInstanceImpl) job).setState(revert ? AdminCommandState.State.REVERTING : AdminCommandState.State.RUNNING_RETRYABLE);
-            JobManager jobManager = habitat.getService(JobManagerService.class);
-            jobManager.registerJob(job);
             //command
             AdminCommand command = checkpoint.getCommand();
             if (command == null) {
@@ -1835,10 +1833,8 @@ public class CommandRunnerImpl implements CommandRunner {
                 isManagedJob = AnnotationUtil.presentTransitive(ManagedJob.class, command.getClass());
             }
             JobCreator jobCreator = null;
-            JobManager jobManager = null;
 
             jobCreator = habitat.getService(JobCreator.class,scope+"job-creator");
-            jobManager = habitat.getService(JobManagerService.class);
 
             if (jobCreator == null ) {
                 jobCreator = habitat.getService(JobCreatorService.class);
@@ -1846,20 +1842,14 @@ public class CommandRunnerImpl implements CommandRunner {
             }
 
             Job job = null;
-            if (isManagedJob) {
-                job = jobCreator.createJob(jobManager.getNewId(), scope(), name(), subject, isManagedJob, parameters());
-            }  else {
-                job = jobCreator.createJob(null, scope(), name(), subject, isManagedJob, parameters());
-            }
+            job = jobCreator.createJob(null, scope(), name(), subject, isManagedJob, parameters());
+
 
             //Register the brokers  else the detach functionality will not work
             for (NameListerPair nameListerPair : nameListerPairs) {
                 job.getEventBroker().registerListener(nameListerPair.nameRegexp, nameListerPair.listener);
             }
 
-            if (isManagedJob)  {
-                jobManager.registerJob(job);
-            }
             CommandRunnerImpl.this.doCommand(this, command, subject, job);
             job.complete(report(), outboundPayload());
             if (progressStatusChild != null) {
