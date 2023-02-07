@@ -1,45 +1,14 @@
 ![#badassfish](payara-logo-blue.png)
 
-# Payara Platform Community Edition
+# Payara Platform Enterprise Edition
 
-**Create. Innovate. Elevate.**
+Payara Platform Enterprise is stable, supported software for enterprise designed for mission critical production systems and containerized Jakarta EE (Java EE) and MicroProfile applications. Quickly and easily deliver Jakarta EE (Java EE)  apps in any environment: on premise, in the cloud, or hybrid with enterprise-grade security. A 10-year software lifecycle lets you decide when to migrate from one release to the next and a choice of 24x7 or 10x5 production support ensures you're fully covered when you need it.
 
-Payara Platform Community Edition features open source server runtimes for development projects and containerized Jakarta&nbsp;EE and MicroProfile applications.
+Choose Payara Server for reliable and secure deployments of Jakarta EE and MicroProfile applications in any environment, or Payara Micro for containerized microservices deployments with no installation, configuration, or code rewrites required.
 
-**Payara Server Community** is a cloud-native, innovative open source middleware platform for development projects that supports Jakarta&nbsp;EE (Java&nbsp;EE) applications in any environment: on premise, in the cloud or hybrid.
+Visit [www.payara.fish](http://www.payara.fish) for more information.
 
-**Payara Micro Community** is the open source, lightweight middleware platform of choice for containerized Jakarta&nbsp;EE (Java&nbsp;EE) microservices deployments in development. Less than 70MB, Payara Micro requires no installation, configuration or code rewrites.
+--------------------------------
 
-Visit [www.payara.fish](http://www.payara.fish/ "http://www.payara.fish/") for free resources and information about the stable and fully supported [Payara Enterprise Edition](https://www.payara.fish/enterprise/ "https://www.payara.fish/enterprise/"), designed for mission critical systems in production including 24x7, 10x5, and Migration&nbsp;&&nbsp;Project Support options.
-
-Access the complete Payara&nbsp;Server and Payara&nbsp;Micro documentation:
-
-[https://docs.payara.fish](https://docs.payara.fish/ "https://docs.payara.fish/")
-
-## Payara Platform Community
-
-**Helps you Innovate:**
-
--   Rapid access to new features
-
--   Regular & frequent releases
-
--   Software experimentation
-
--   Suitable for development projects
-
-**Offers Community-based Support:**
-
--   Get assistance on Payara Forum
-
--   Raise bugs on GitHub
-
--   Tech Blog
-
--   User guides & datasheets
-
------------------------
-
-Payara<sup>&reg;</sup> is a trademark of the Payara Foundation.
-
-GlassFish<sup>&reg;</sup> is a trademark of the Eclipse Foundation.
+Payara is a trademark of the Payara Foundation.
+GlassFish is a trademark of the Eclipse Foundation.
