@@ -180,7 +180,7 @@ public class WebappClassLoader
     extends org.apache.catalina.loader.WebappClassLoader
     implements Reloader, ResourceClassLoader,
         InstrumentableClassLoader, PreDestroy,
-        DDPermissionsLoader, JarFileResourcesProvider
+        DDPermissionsLoader
 {
     // ------------------------------------------------------- Static Variables
 
@@ -745,15 +745,6 @@ public class WebappClassLoader
      */
     public void setAntiJARLocking(boolean antiJARLocking) {
         this.antiJARLocking = antiJARLocking;
-    }
-
-
-    @Override
-    public JarFile[] getJarFiles() {
-        if (!openJARs()) {
-            return null;
-        }
-        return jarFiles;
     }
 
 
@@ -2722,39 +2713,6 @@ public class WebappClassLoader
 
     // ------------------------------------------------------ Protected Methods
 
-
-    /**
-     * Used to periodically signal to the classloader to release JAR resources.
-     */
-    protected boolean openJARs() {
-        if (started && (jarFiles.length > 0)) {
-            synchronized (jarFilesLock) {
-                lastJarAccessed = System.currentTimeMillis();
-                if (jarFiles[0] == null) {
-                    for (int i = 0; i < jarFiles.length; i++) {
-                        try {
-                            jarFiles[i] = newJarFile(jarRealFiles[i]);
-                        } catch (IOException e) {
-                            if (logger.isLoggable(Level.FINE)) {
-                                logger.log(Level.FINE, "Failed to open JAR", e);
-                            }
-                            for (int j = 0; j < i; j++) {
-                                try {
-                                    jarFiles[j].close();
-                                } catch (Throwable t) {
-                                    // Ignore
-                                }
-                            }
-                            return false;
-                        }
-                    }
-                }
-            }
-        }
-        return true;
-    }
-
-
     /**
      * Find specified class in local repositories.
      *
@@ -2961,10 +2919,6 @@ public class WebappClassLoader
         JarEntry jarEntry = null;
         int contentLength = -1;
         InputStream binaryStream = null;
-
-        if (!openJARs()) {
-            return null;
-        }
 
         int jarFilesLength = jarFiles.length;
 
