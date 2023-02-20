@@ -68,12 +68,6 @@ import com.sun.enterprise.glassfish.bootstrap.MainHelper.HotSwapHelper;
 import com.sun.enterprise.security.integration.DDPermissionsLoader;
 import com.sun.enterprise.security.integration.PermsHolder;
 import com.sun.enterprise.util.io.FileUtils;
-import org.apache.naming.JndiPermission;
-import org.apache.naming.resources.DirContextURLStreamHandler;
-import org.apache.naming.resources.ProxyDirContext;
-import org.apache.naming.resources.Resource;
-import org.apache.naming.resources.ResourceAttributes;
-import org.apache.naming.resources.WebDirContext;
 import org.glassfish.api.deployment.GeneratedResourceEntry;
 import org.glassfish.api.deployment.InstrumentableClassLoader;
 import org.glassfish.api.deployment.ResourceClassLoader;
@@ -183,7 +177,7 @@ import java.util.zip.ZipFile;
  * @version $Revision: 1.1.2.1 $ $Date: 2007/08/17 15:46:27 $
  */
 public class WebappClassLoader
-    extends URLClassLoader
+    extends org.apache.catalina.loader.WebappClassLoader
     implements Reloader, ResourceClassLoader,
         InstrumentableClassLoader, PreDestroy,
         DDPermissionsLoader, JarFileResourcesProvider
