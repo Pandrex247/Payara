@@ -460,7 +460,7 @@ public class WebappClassLoader
      * @param application
      */
     public WebappClassLoader(Application application) {
-        super(new URL[0]);
+        super();
         this.application = application;
         init();
     }
@@ -473,7 +473,7 @@ public class WebappClassLoader
      * @param application
      */
     public WebappClassLoader(ClassLoader parent, Application application) {
-        super(new URL[0], parent);
+        super(parent);
         this.application = application;
         init();
     }
@@ -487,7 +487,7 @@ public class WebappClassLoader
      * @param hotDeploy
      */
     public WebappClassLoader(ClassLoader parent, Application application, boolean hotDeploy) {
-        super(new URL[0], parent);
+        super(parent);
         this.application = application;
         this.hotDeploy = hotDeploy;
         init();
@@ -512,7 +512,7 @@ public class WebappClassLoader
      * @param application
      */
     public WebappClassLoader(URL[] urls, ClassLoader parent, Application application) {
-        super(new URL[0], parent);
+        super(parent);
         this.application = application;
 
         if (urls != null && urls.length > 0) {
