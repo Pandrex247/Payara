@@ -68,7 +68,7 @@
         <jna.version>5.12.1</jna.version>
 
         <!-- Application Server / Implementation -->
-        <product.name>Payara Server</product.name>
+        <product.name>Payara Server Enterprise</product.name>
         <brief_product_name>Payara Server</brief_product_name>
         <abbrev_product_name>Payara</abbrev_product_name>
         <admin_client_command_name>asadmin</admin_client_command_name>
@@ -618,13 +618,4 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
-    <profiles>
-        <profile>
-            <id>enterprise</id>
-            <properties>
-                <product.name>Payara Server Enterprise</product.name>
-            </properties>
-        </profile>
-    </profiles>
 </project>
