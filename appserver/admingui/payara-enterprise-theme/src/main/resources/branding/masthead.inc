@@ -38,8 +38,12 @@
     only if the new code is made subject to such option by the copyright
     holder.
 
-   Portions Copyright [2020] [Payara Foundation and/or its affiliates]
+   Portions Copyright [2020-2023] [Payara Foundation and/or its affiliates]
 -->
+
+<!initPage
+    setResourceBundle(key="theme" bundle="fish.payara.admingui.enterprise-theme.Strings");
+/>
 
 <sun:masthead id="Masthead" productImageURL="#{request.contextPath}/resource/payara-enterprise-theme/images/masthead-product_name_open-new.png"
               style="border-width: 0px"
@@ -60,43 +64,30 @@
     </h:panelGroup>
 
     <!facet utilityBar>
-            <sun:panelGroup id="utilityBar">
-                <sun:staticText
-                    style="flex: 1 1 auto; padding: 12px 15px;"
-                    text="Version #{sessionScope.appServerMajorVersion}">
-                </sun:staticText>
-                <sun:hyperlink id="homeLink" toolTip="$resource{i18n.homeLinkTooltip}" target="_top" text="$resource{i18n.masthead.Home}" url="#{request.contextPath}/common/index.jsf" />
-                <sun:hyperlink id="versionLink" toolTip="$resource{i18n.versionTooltip}" text="$resource{i18n.masthead.Version}"
-                    onClick="javascript: var versionWin = window.open('#{request.contextPath}/common/version.jsf','VersionWindow','scrollbars,resizable,width=800,height=740,top='+((screen.height - (screen.height/1.618)) - (500/2))+',left='+((screen.width-650)/2) ); versionWin.focus(); return false;" onKeyPress="javascript: return true;" />
-                <sun:button id="help" toolTip="$resource{i18n.helpWindowTooltip}" target="_top" text="$resource{i18n.masthead.Help}" onClick="admingui.help.launchHelp(this); return false;" />
-                <sun:button id="onlineHelp" toolTip="$resource{i18n.onlineHelpWindowTooltip}" target="_top" text="$resource{i18n.masthead.OnlineHelp}" onClick="admingui.help.launchHelp(); return false;" />
-                <sun:button id="logoutLink" rendered="#{showLogoutButton}" toolTip="$resource{i18n.logoutTooltip}" target="_top" text="$resource{i18n.masthead.Logout}"
-                    onClick="if (!confirm('$resource{i18n.msg.JS.confirmLogout}')) return false;" onKeyPress="javascript: return true;" url="/" >
-                        <!command
-                            logout();
-                            redirect("#{request.contextPath}/common/index.jsf");
-                        />
-                </sun:button>
-                <sun:button id="enableAsadminRecorderLink" rendered="#{showEnableAsadminRecorderButton}" toolTip="$resource{i18n.enableAsadminRecorderToolTip}" target="_top" text="$resource{i18n.masthead.enableAsadminRecorder}"
-                            onClick="if (!confirm('$resource{i18n.msg.JS.confirmEnableAsadminRecorder}')) {return false;} else {this.value='$resource{i18n.button.Processing}';}" onKeyPress="javascript: return true;">
+        <sun:panelGroup id="utilityBar">
+            <sun:staticText
+                style="flex: 1 1 auto; padding: 12px 15px;"
+                text="Version #{sessionScope.appServerMajorVersion}">
+            </sun:staticText>
+            <sun:hyperlink id="home" toolTip="$resource{i18n.homeLinkTooltip}" target="_top" text="$resource{i18n.masthead.Home}" url="#{request.contextPath}/common/index.jsf" />
+            <sun:hyperlink id="versionLink" toolTip="$resource{i18n.versionTooltip}" text="$resource{i18n.masthead.Version}"
+                onClick="javascript: var versionWin = window.open('#{request.contextPath}/common/version.jsf','VersionWindow','scrollbars,resizable,width=800,height=740,top='+((screen.height - (screen.height/1.618)) - (500/2))+',left='+((screen.width-650)/2) ); versionWin.focus(); return false;" onKeyPress="javascript: return true;" />
+            <sun:button id="help" toolTip="$resource{i18n.helpWindowTooltip}" target="_top" text="$resource{i18n.masthead.Help}" onClick="admingui.help.launchHelp(this); return false;" />
+            <sun:hyperlink id="docs" toolTip="$resource{theme.masthead.docsTooltip}" text="$resource{theme.masthead.docsLabel}" url="https://docs.payara.fish/enterprise/" target="_blank" />
+            <sun:hyperlink id="support" toolTip="$resource{theme.masthead.supportTooltip}" text="$resource{theme.masthead.supportLabel}" url="https://support.payara.fish/" target="_blank" />
+            <sun:hyperlink id="kb" toolTip="$resource{theme.masthead.kbTooltip}" text="$resource{theme.masthead.kbLabel}" url="https://support.payara.fish/hc/" target="_blank" />
+            <sun:hyperlink id="supportguides" toolTip="$resource{theme.masthead.supportGuidesTooltip}" text="$resource{theme.masthead.supportGuidesLabel}" url="https://support.payara.fish/hc/en-gb/articles/360011576077-Payara-Enterprise-Customer-Support-Guides" target="_blank" />
+            <sun:hyperlink id="downloads" toolTip="$resource{theme.masthead.downloadsTooltip}" text="$resource{theme.masthead.downloadsLabel}" url="https://nexus.payara.fish/#browse/browse:payara-enterprise-downloadable-artifacts" target="_blank" />
+            <sun:hyperlink id="website" toolTip="$resource{theme.masthead.websiteTooltip}" text="$resource{theme.masthead.websiteLabel}" url="https://payara.fish/" target="_blank" />
+            <sun:button id="logoutLink" rendered="#{showLogoutButton}" toolTip="$resource{i18n.logoutTooltip}" target="_top" text="$resource{i18n.masthead.Logout}"
+                onClick="if (!confirm('$resource{i18n.msg.JS.confirmLogout}')) return false;" onKeyPress="javascript: return true;" url="/" >
                     <!command
-                    setSessionAttribute(key="showEnableAsadminRecorderButton", value="false");
-                    setSessionAttribute(key="showDisableAsadminRecorderButton", value="true");
-                    gf.restRequest(endpoint="#{sessionScope.REST_URL}/enable-asadmin-recorder" method="POST");
-                    redirect("#{request.contextPath}/common/index.jsf");
+                        logout();
+                        redirect("#{request.contextPath}/common/index.jsf");
                     />
-                </sun:button>
-                <sun:button id="disableAsadminRecorderLink" rendered="#{showDisableAsadminRecorderButton}" toolTip="$resource{i18n.disableAsadminRecorderToolTip}" target="_top" text="$resource{i18n.masthead.disableAsadminRecorder}"
-                            onClick="if (!confirm('$resource{i18n.msg.JS.confirmDisableAsadminRecorder}')) {return false;} else {this.value='$resource{i18n.button.Processing}';}" onKeyPress="javascript: return true;">
-                    <!command
-                    setSessionAttribute(key="showEnableAsadminRecorderButton", value="true");
-                    setSessionAttribute(key="showDisableAsadminRecorderButton", value="false");
-                    gf.restRequest(endpoint="#{sessionScope.REST_URL}/disable-asadmin-recorder" method="POST");
-                    redirect("#{request.contextPath}/common/index.jsf");
-                    />
-                </sun:button>
-            </sun:panelGroup>
-        </facet>
+            </sun:button>
+        </sun:panelGroup>
+    </facet>
     <!facet statusArea>
         <sun:panelGroup id="statusPanel" separator="">
             "<span style="margin: 5px 5px 0px 5px">
@@ -117,4 +108,27 @@
             />
         </sun:panelGroup>
     </facet>
+    <!facet userInfoExtras>
+        <sun:panelGroup id="asadminRecorderPanel">
+            <sun:button id="enableAsadminRecorderLink" rendered="#{showEnableAsadminRecorderButton}" toolTip="$resource{i18n.enableAsadminRecorderToolTip}" target="_top" text="$resource{i18n.masthead.enableAsadminRecorder}"
+                onClick="if (!confirm('$resource{i18n.msg.JS.confirmEnableAsadminRecorder}')) {return false;} else {this.value='$resource{i18n.button.Processing}';}" onKeyPress="javascript: return true;">
+                    <!command
+                        setSessionAttribute(key="showEnableAsadminRecorderButton", value="false");
+                        setSessionAttribute(key="showDisableAsadminRecorderButton", value="true");
+                        gf.restRequest(endpoint="#{sessionScope.REST_URL}/enable-asadmin-recorder" method="POST");
+                        redirect("#{request.contextPath}/common/index.jsf");
+                    />
+            </sun:button>
+            <sun:button id="disableAsadminRecorderLink" rendered="#{showDisableAsadminRecorderButton}" toolTip="$resource{i18n.disableAsadminRecorderToolTip}" target="_top" text="$resource{i18n.masthead.disableAsadminRecorder}"
+                onClick="if (!confirm('$resource{i18n.msg.JS.confirmDisableAsadminRecorder}')) {return false;} else {this.value='$resource{i18n.button.Processing}';}" onKeyPress="javascript: return true;">
+                    <!command
+                        setSessionAttribute(key="showEnableAsadminRecorderButton", value="true");
+                        setSessionAttribute(key="showDisableAsadminRecorderButton", value="false");
+                        gf.restRequest(endpoint="#{sessionScope.REST_URL}/disable-asadmin-recorder" method="POST");
+                        redirect("#{request.contextPath}/common/index.jsf");
+                    />
+            </sun:button>
+        </sun:panelGroup>
+    </facet>
 </sun:masthead>
+
