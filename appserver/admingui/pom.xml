@@ -153,6 +153,7 @@
         <module>microprofile-console-plugin</module>
         <module>microprofile-console-plugin-l10n</module>
         <module>faces-compat</module>
+        <module>payara-insight-console-plugin</module>
     </modules>
 
     <properties>
