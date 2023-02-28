@@ -3,7 +3,7 @@
 <!--
    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 
-   Copyright (c) [2017-2022] Payara Foundation and/or its affiliates. All rights reserved.
+   Copyright (c) [2017-2023] Payara Foundation and/or its affiliates. All rights reserved.
 
    The contents of this file are subject to the terms of either the GNU
    General Public License Version 2 only ("GPL") or the Common Development
@@ -95,12 +95,12 @@
       <iiop-service>
         <orb use-thread-pool-ids="thread-pool-1" />
         <iiop-listener address="0.0.0.0" port="%%%ORB_LISTENER_PORT%%%" id="orb-listener-1" lazy-init="true" />
-        <ssl />
+        <ssl ssl3-enabled="false" />
         <iiop-listener security-enabled="true" address="0.0.0.0" port="%%%ORB_SSL_PORT%%%" id="SSL">
-          <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" />
+          <ssl ssl3-enabled="false" classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" />
         </iiop-listener>
         <iiop-listener security-enabled="true" address="0.0.0.0" port="%%%ORB_MUTUALAUTH_PORT%%%" id="SSL_MUTUALAUTH">
-          <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" client-auth-enabled="true" />
+          <ssl ssl3-enabled="false" classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" client-auth-enabled="true" />
         </iiop-listener>
       </iiop-service>
       <admin-service auth-realm-name="admin-realm" type="das-and-server" system-jmx-connector-name="system">
@@ -254,13 +254,13 @@
             <http default-virtual-server="server" max-connections="250">
               <file-cache enabled="true"></file-cache>
             </http>
-            <ssl />
+            <ssl ssl3-enabled="false" />
           </protocol>
           <protocol security-enabled="true" name="http-listener-2">
             <http default-virtual-server="server" max-connections="250">
               <file-cache enabled="true"></file-cache>
             </http>
-            <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as"></ssl>
+            <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" ssl3-enabled="false" cert-nickname="s1as"></ssl>
           </protocol>
           <protocol name="admin-listener">
             <http default-virtual-server="__asadmin" max-connections="250" encoded-slash-enabled="true">
@@ -300,12 +300,12 @@
       <iiop-service>
         <orb use-thread-pool-ids="thread-pool-1" />
         <iiop-listener port="${IIOP_LISTENER_PORT}" id="orb-listener-1" address="0.0.0.0" />
-        <ssl />
+        <ssl ssl3-enabled="false" />
         <iiop-listener port="${IIOP_SSL_LISTENER_PORT}" id="SSL" address="0.0.0.0" security-enabled="true">
-          <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" />
+          <ssl ssl3-enabled="false" classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" />
         </iiop-listener>
         <iiop-listener port="${IIOP_SSL_MUTUALAUTH_PORT}" id="SSL_MUTUALAUTH" address="0.0.0.0" security-enabled="true">
-          <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" client-auth-enabled="true" />
+          <ssl ssl3-enabled="false" classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" client-auth-enabled="true" />
         </iiop-listener>
       </iiop-service>
       <admin-service system-jmx-connector-name="system" type="server">
@@ -455,13 +455,13 @@
             <http default-virtual-server="server">
               <file-cache enabled="true" />
             </http>
-            <ssl />
+            <ssl ssl3-enabled="false" />
           </protocol>
           <protocol security-enabled="true" name="http-listener-2">
             <http default-virtual-server="server">
               <file-cache enabled="true" />
             </http>
-            <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" />
+            <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" ssl3-enabled="false" cert-nickname="s1as" />
           </protocol>
           <protocol name="admin-listener">
             <http default-virtual-server="__asadmin" max-connections="250">
@@ -472,7 +472,7 @@
             <http default-virtual-server="__asadmin" encoded-slash-enabled="true">
               <file-cache></file-cache>
             </http>
-            <ssl client-auth="want" classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="glassfish-instance" renegotiate-on-client-auth-want="false"></ssl>
+            <ssl client-auth="want" ssl3-enabled="false" classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="glassfish-instance" renegotiate-on-client-auth-want="false"></ssl>
           </protocol>
           <protocol name="admin-http-redirect">
             <http-redirect secure="true"></http-redirect>

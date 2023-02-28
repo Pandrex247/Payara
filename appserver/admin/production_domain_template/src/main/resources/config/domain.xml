@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 
 <!--
- * Copyright (c) 2016-2022 Payara Foundation. All rights reserved.
+ * Copyright (c) 2016-2023 Payara Foundation. All rights reserved.
  *
  * The contents of this file are subject to the terms of the Common Development
  * and Distribution License("CDDL") (collectively, the "License").  You
@@ -38,6 +38,7 @@
       </security-provider>
     </authorization-service>
   </security-configurations>
+  <monitoring-console-configuration enabled="true"></monitoring-console-configuration>
   <system-applications />
   <resources>
     <jdbc-resource pool-name="__TimerPool" jndi-name="jdbc/__TimerPool" object-type="system-all" />
@@ -51,6 +52,7 @@
   </resources>
   <servers>
     <server name="%%%SERVER_ID%%%" config-ref="%%%CONFIG_MODEL_NAME%%%">
+      <application-ref ref="__monitoringconsole" virtual-servers="server"></application-ref>
       <resource-ref ref="jdbc/__TimerPool" />
       <resource-ref ref="jdbc/__default" />
     </server>
@@ -71,12 +73,12 @@
       <iiop-service>
         <orb use-thread-pool-ids="thread-pool-1" />
         <iiop-listener address="0.0.0.0" port="%%%ORB_LISTENER_PORT%%%" id="orb-listener-1" lazy-init="true" />
-        <ssl />
+        <ssl ssl3-enabled="false" />
         <iiop-listener security-enabled="true" address="0.0.0.0" port="%%%ORB_SSL_PORT%%%" id="SSL">
-          <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" />
+          <ssl ssl3-enabled="false" classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" />
         </iiop-listener>
         <iiop-listener security-enabled="true" address="0.0.0.0" port="%%%ORB_MUTUALAUTH_PORT%%%" id="SSL_MUTUALAUTH">
-          <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" client-auth-enabled="true" />
+          <ssl ssl3-enabled="false" classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" client-auth-enabled="true" />
         </iiop-listener>
       </iiop-service>
       <admin-service auth-realm-name="admin-realm" type="das-and-server" system-jmx-connector-name="system">
@@ -231,13 +233,13 @@
             <http default-virtual-server="server" max-connections="250">
               <file-cache enabled="true"></file-cache>
             </http>
-            <ssl />
+            <ssl ssl3-enabled="false" />
           </protocol>
           <protocol security-enabled="true" name="http-listener-2">
             <http default-virtual-server="server" max-connections="250">
               <file-cache enabled="true"></file-cache>
             </http>
-            <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as"></ssl>
+            <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" ssl3-enabled="false" cert-nickname="s1as"></ssl>
           </protocol>
           <protocol name="admin-listener">
             <http default-virtual-server="__asadmin" max-connections="250" encoded-slash-enabled="true">
@@ -259,6 +261,9 @@
         <thread-pool max-thread-pool-size="250" name="thread-pool-1"></thread-pool>
         <thread-pool name="admin-thread-pool" max-thread-pool-size="15" min-thread-pool-size="1" max-queue-size="256"></thread-pool>
       </thread-pools>
+      <monitoring-service>
+        <module-monitoring-levels http-service="HIGH" web-container="HIGH"></module-monitoring-levels>
+      </monitoring-service>
       <system-property name="fish.payara.classloading.delegate" value="false" />
       <system-property name="jersey.config.client.readTimeout" value="300000" />
       <system-property name="jersey.config.client.connectTimeout" value="300000" />
@@ -279,12 +284,12 @@
       <iiop-service>
         <orb use-thread-pool-ids="thread-pool-1" />
         <iiop-listener port="${IIOP_LISTENER_PORT}" id="orb-listener-1" address="0.0.0.0" />
-        <ssl />
+        <ssl ssl3-enabled="false" />
         <iiop-listener port="${IIOP_SSL_LISTENER_PORT}" id="SSL" address="0.0.0.0" security-enabled="true">
-          <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" />
+          <ssl ssl3-enabled="false" classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" />
         </iiop-listener>
         <iiop-listener port="${IIOP_SSL_MUTUALAUTH_PORT}" id="SSL_MUTUALAUTH" address="0.0.0.0" security-enabled="true">
-          <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" client-auth-enabled="true" />
+          <ssl ssl3-enabled="false" classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" client-auth-enabled="true" />
         </iiop-listener>
       </iiop-service>
       <admin-service system-jmx-connector-name="system" type="server">
@@ -404,6 +409,7 @@
         <jvm-options>[17|]--add-exports=java.base/sun.security.util=ALL-UNNAMED</jvm-options>
         <jvm-options>[17|]--add-opens=java.base/java.lang.invoke=ALL-UNNAMED</jvm-options>
         <jvm-options>[17|]--add-opens=java.desktop/java.beans=ALL-UNNAMED</jvm-options>
+        <jvm-options>[17|]--add-exports=jdk.naming.dns/com.sun.jndi.dns=ALL-UNNAMED</jvm-options>
         <jvm-options>-Xmx2g</jvm-options>
         <jvm-options>-Xms2g</jvm-options>
         <jvm-options>-XX:+UseG1GC</jvm-options>
@@ -439,13 +445,13 @@
             <http default-virtual-server="server">
               <file-cache enabled="true" />
             </http>
-            <ssl />
+            <ssl ssl3-enabled="false" />
           </protocol>
           <protocol security-enabled="true" name="http-listener-2">
             <http default-virtual-server="server">
               <file-cache enabled="true" />
             </http>
-            <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="s1as" />
+            <ssl classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" ssl3-enabled="false" cert-nickname="s1as" />
           </protocol>
           <protocol name="admin-listener">
             <http default-virtual-server="__asadmin" max-connections="250">
@@ -456,7 +462,7 @@
             <http default-virtual-server="__asadmin" encoded-slash-enabled="true">
               <file-cache></file-cache>
             </http>
-            <ssl client-auth="want" classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="glassfish-instance" renegotiate-on-client-auth-want="false"></ssl>
+            <ssl client-auth="want" ssl3-enabled="false" classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="glassfish-instance" renegotiate-on-client-auth-want="false"></ssl>
           </protocol>
           <protocol name="admin-http-redirect">
             <http-redirect secure="true"></http-redirect>
@@ -484,6 +490,9 @@
         <thread-pool name="admin-thread-pool" max-thread-pool-size="15" min-thread-pool-size="1" max-queue-size="256"></thread-pool>
       </thread-pools>
       <group-management-service />
+      <monitoring-service>
+        <module-monitoring-levels http-service="HIGH" web-container="HIGH"></module-monitoring-levels>
+      </monitoring-service>
       <!--%%%DEFAULT_TOKENS_HERE%%%-->
       <system-property name="ASADMIN_LISTENER_PORT" value="24848" />
       <system-property name="HTTP_LISTENER_PORT" value="28080" />
@@ -506,4 +515,18 @@
     <secure-admin-principal dn="%%%ADMIN_CERT_DN%%%"></secure-admin-principal>
     <secure-admin-principal dn="%%%INSTANCE_CERT_DN%%%"></secure-admin-principal>
   </secure-admin>
+
+  <applications>
+    <application context-root="/monitoring-console" object-type="user" name="__monitoringconsole" directory-deployed="true" location="${com.sun.aas.installRootURI}/lib/install/applications/__monitoringconsole/">
+      <property name="archiveType" value="war"></property>
+      <property name="cdiDevModeEnabled" value="false"></property>
+      <property name="appLocation" value="${com.sun.aas.installRootURI}/lib/install/applications/__monitoringconsole/"></property>
+      <property name="defaultAppName" value="__monitoringconsole"></property>
+      <module name="__monitoringconsole">
+        <engine sniffer="cdi"></engine>
+        <engine sniffer="security"></engine>
+        <engine sniffer="web"></engine>
+      </module>
+    </application>
+  </applications>
 </domain>
