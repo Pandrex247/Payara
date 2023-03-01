@@ -3,7 +3,7 @@
 
     DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 
-    Copyright (c) 2021-2022 Payara Foundation and/or its affiliates. All rights reserved.
+    Copyright (c) 2021-2023 Payara Foundation and/or its affiliates. All rights reserved.
 
     The contents of this file are subject to the terms of either the GNU
     General Public License Version 2 only ("GPL") or the Common Development
@@ -60,7 +60,7 @@
         <docker.jdk11.tag>11.0.17</docker.jdk11.tag>
         <docker.jdk17.tag>17.0.5</docker.jdk17.tag>
 
-        <docker.payara.domainName>domain1</docker.payara.domainName>
+        <docker.payara.domainName>production</docker.payara.domainName>
         <docker.payara.rootDirectoryName>payara6</docker.payara.rootDirectoryName>
 
         <docker.payara.repository>payara/${project.artifactId}</docker.payara.repository>
