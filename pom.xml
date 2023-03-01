@@ -275,8 +275,8 @@
         <osgi.version>7.0.0</osgi.version>
         <osgi.dto.version>1.1.1</osgi.dto.version>
         <payara.notifiers.version>2.0-enterprise</payara.notifiers.version>
-        <smack.version>4.1.9</smack.version>
-        <jxmpp.version>0.4.2</jxmpp.version>
+        <smack.version>4.3.4</smack.version>
+        <jxmpp.version>0.6.4</jxmpp.version>
         <xpp3.version>1.1.4c_7</xpp3.version>
         <snmp4j.version>2.5.3-payara.p1</snmp4j.version>
         <minidns.version>0.3.4</minidns.version>
