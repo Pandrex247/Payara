@@ -462,7 +462,7 @@
             <http default-virtual-server="__asadmin" encoded-slash-enabled="true">
               <file-cache></file-cache>
             </http>
-            <ssl client-auth="want"  classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="glassfish-instance" renegotiate-on-client-auth-want="false"></ssl>
+            <ssl client-auth="want" classname="com.sun.enterprise.security.ssl.GlassfishSSLImpl" cert-nickname="glassfish-instance" renegotiate-on-client-auth-want="false"></ssl>
           </protocol>
           <protocol name="admin-http-redirect">
             <http-redirect secure="true"></http-redirect>
