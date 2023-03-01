@@ -115,5 +115,11 @@
                 <module>docker-images</module>
             </modules>
         </profile>
+        <profile>
+            <id>BuildEnterpriseNotifiers</id>
+            <modules>
+                <module>notifiers</module>
+            </modules>
+        </profile>
     </profiles>
 </project>
