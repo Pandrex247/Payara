@@ -37,13 +37,15 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2016-2019] [Payara Foundation and/or its affiliates]
+// Portions Copyright [2016-2023] [Payara Foundation and/or its affiliates]
 /**
  *
  * @author anilam
  */
 package org.glassfish.admingui.common.handlers;
 
+import com.sun.enterprise.config.serverbeans.Application;
+import com.sun.enterprise.config.serverbeans.Applications;
 import com.sun.jsftemplating.annotation.HandlerInput;
 import com.sun.jsftemplating.annotation.HandlerOutput;
 import com.sun.jsftemplating.annotation.Handler;
@@ -71,6 +73,7 @@ import org.glassfish.admingui.common.util.DeployUtil;
 import org.glassfish.admingui.common.util.RestUtil;
 import org.glassfish.admingui.common.util.TargetUtil;
 import org.glassfish.admingui.common.util.AppUtil;
+import org.glassfish.internal.api.Globals;
 
 
 public class ApplicationHandlers {
@@ -80,6 +83,17 @@ public class ApplicationHandlers {
     private static final String NAME_CONFIG_NAME = "configName";
     private static final String NAME_RESULT = "result";
 
+    @Handler(id = "py.getContextRoot",
+            input = {
+                    @HandlerInput(name = "appName", type = String.class, required = true)},
+            output = {
+                    @HandlerOutput(name = NAME_RESULT, type = String.class)})
+    public static void getContextRoot(HandlerContext handlerCtx) {
+        Applications applications = Globals.getDefaultBaseServiceLocator().getService(Applications.class);
+        String appName = (String) handlerCtx.getInputValue("appName");
+        Application app = applications.getApplication(appName);
+        handlerCtx.setOutputValue(NAME_RESULT, app == null ? null : app.getContextRoot());
+    }
 
     /**
      *	<p> This handler returns the list of applications for populating the table.

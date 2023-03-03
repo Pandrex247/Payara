@@ -40,7 +40,7 @@
     holder.
 
 -->
-<!-- Portions Copyright [2016-2021] [Payara Foundation and/or affiliates] -->
+<!-- Portions Copyright [2016-2023] [Payara Foundation and/or affiliates] -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -55,6 +55,9 @@
 
     <properties>
         <dependencies.extra.directory>${project.build.directory}/extra-dependencies</dependencies.extra.directory>
+
+        <!-- Workaround until we pull out all branding from this external artefact -->
+        <enterprise.theme.classifier>-enterprise</enterprise.theme.classifier>
     </properties>
 
     <build>
@@ -154,38 +157,12 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
-    </dependencies>
 
-    <!-- Workaround until we pull out all branding from this external artefact -->
-    <profiles>
-        <profile>
-            <id>community</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>org.glassfish.woodstock</groupId>
-                    <artifactId>woodstock-webui-jsf-suntheme</artifactId>
-                </dependency>
-            </dependencies>
-            <properties>
-                <!-- Set to empty so that the replacement is done correctly in sun-web.xml -->
-                <enterprise.theme.classifier></enterprise.theme.classifier>
-            </properties>
-        </profile>
-        <profile>
-            <id>enterprise</id>
-            <dependencies>
-                <dependency>
-                    <groupId>org.glassfish.woodstock</groupId>
-                    <artifactId>woodstock-webui-jsf-suntheme</artifactId>
-                    <classifier>enterprise</classifier>
-                </dependency>
-            </dependencies>
-            <properties>
-                <enterprise.theme.classifier>-enterprise</enterprise.theme.classifier>
-            </properties>
-        </profile>
-    </profiles>
+        <!-- Workaround until we pull out all branding from this external artefact -->
+        <dependency>
+            <groupId>org.glassfish.woodstock</groupId>
+            <artifactId>woodstock-webui-jsf-suntheme</artifactId>
+            <classifier>enterprise</classifier>
+        </dependency>
+    </dependencies>
 </project>
