@@ -132,10 +132,5 @@
             <artifactId>newrelic-notifier-core</artifactId>
             <version>${payara.notifiers.version}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>fish.payara.extensions.notifiers</groupId>-->
-<!--            <artifactId>newrelic-notifier-backwards-compatibility</artifactId>-->
-<!--            <version>${payara.notifiers.version}</version>-->
-<!--        </dependency>-->
     </dependencies>
 </project>

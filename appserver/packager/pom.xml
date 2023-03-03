@@ -167,7 +167,6 @@
         <module>notification-teams</module>
         <module>notification-xmpp</module>
         <module>notification-xmpp-l10n</module>
-        <module>notification-admin-audit-backwards-compat</module>
         <module>asadmin-recorder</module>
         <module>JMX-Monitoring</module>
         <module>payara-micro</module>

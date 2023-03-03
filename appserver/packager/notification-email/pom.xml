@@ -133,11 +133,6 @@
             <version>${payara.notifiers.version}</version>
             <optional>true</optional>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>fish.payara.extensions.notifiers</groupId>-->
-<!--            <artifactId>email-notifier-backwards-compatibility</artifactId>-->
-<!--            <version>${payara.notifiers.version}</version>-->
-<!--        </dependency>-->
     </dependencies>
 </project>
 
