@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2020] Payara Foundation and/or affiliates
+// Portions Copyright 2020-2023 Payara Foundation and/or affiliates
 package com.sun.enterprise.v3.admin;
 
 import com.sun.appserv.server.util.Version;
@@ -58,7 +58,7 @@ import org.jvnet.hk2.config.NotProcessed;
 import org.jvnet.hk2.config.ObservableBean;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import java.beans.PropertyChangeEvent;
 import java.io.File;
 import java.util.*;

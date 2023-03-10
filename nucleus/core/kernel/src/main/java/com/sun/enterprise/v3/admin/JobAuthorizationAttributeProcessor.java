@@ -37,13 +37,14 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright 2023 Payara Foundation and/or affiliates
 package com.sun.enterprise.v3.admin;
 
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import jakarta.inject.Inject;
+import jakarta.inject.Singleton;
 import javax.security.auth.Subject;
 import org.glassfish.api.admin.AdminCommand;
 import org.glassfish.api.admin.AuthorizationPreprocessor;

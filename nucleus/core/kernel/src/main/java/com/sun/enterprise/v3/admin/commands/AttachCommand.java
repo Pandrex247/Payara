@@ -37,12 +37,12 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-
+// Portions Copyright 2023 Payara Foundation and/or affiliates
 package com.sun.enterprise.v3.admin.commands;
 
 import com.sun.enterprise.admin.remote.AdminCommandStateImpl;
 import com.sun.enterprise.util.LocalStringManagerImpl;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 import com.sun.enterprise.v3.admin.JobManagerService;
 import org.glassfish.api.ActionReport;
