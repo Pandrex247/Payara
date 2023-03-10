@@ -74,6 +74,7 @@
         <module>libpam4j</module>
         <module>jersey-container-grizzly2-http-transition</module>
         <module>jakarta-ee9-shim</module>
+        <module>snmp4j-repackaged</module>
     </modules>
     <build>
         <plugins>
