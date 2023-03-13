@@ -40,7 +40,7 @@
     holder.
 
 -->
-<!-- Portions Copyright [2017-2019] [Payara Foundation and/or its affiliates] -->
+<!-- Portions Copyright [2017-2023] [Payara Foundation and/or its affiliates] -->
 
 <!--
   External repackaging modules.
@@ -74,6 +74,7 @@
         <module>libpam4j</module>
         <module>jersey-container-grizzly2-http-transition</module>
         <module>jakarta-ee9-shim</module>
+        <module>snmp4j-repackaged</module>
     </modules>
     <build>
         <plugins>
