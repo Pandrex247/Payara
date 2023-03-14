@@ -127,12 +127,10 @@
         <dependency>
             <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>
-            <!--<version>${org.apache.santuario.version}</version>-->
-        </dependency>    
+        </dependency>
         <dependency>
             <groupId>org.glassfish.metro</groupId>
             <artifactId>webservices-extra-xmlsec</artifactId>
-            <!--<version>${webservices.version}</version>-->
         </dependency>
     </dependencies>
 </project>
