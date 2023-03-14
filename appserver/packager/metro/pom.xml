@@ -154,6 +154,10 @@
            <groupId>jakarta.xml.bind</groupId>
            <artifactId>jakarta.xml.bind-api</artifactId>
         </dependency>
+        
+        <!-- Replace santuario xmlsec and metro webservices-extra-xmlsec with
+        repackaged version, needed to remove export of SLF4 -->
+        <!--
         <dependency>
             <groupId>org.apache.santuario</groupId>
             <artifactId>xmlsec</artifactId>
@@ -162,6 +166,14 @@
             <groupId>org.glassfish.metro</groupId>
             <artifactId>webservices-extra-xmlsec</artifactId>
         </dependency>
+        -->
+        <dependency>
+            <groupId>fish.payara.server.core.packager</groupId>
+            <artifactId>metro-xmlsec-repackaged</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        
+        
         <dependency>
            <groupId>com.fasterxml.woodstox</groupId>
            <artifactId>woodstox-core</artifactId>
