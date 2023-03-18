@@ -46,7 +46,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>fish.payara.server</groupId>
     <artifactId>payara-aggregator</artifactId>
-    <version>6.0.0-SNAPSHOT</version>
+    <version>6.0.0</version>
     <packaging>pom</packaging>
 
     <name>Payara Project</name>
@@ -276,7 +276,7 @@
         <payara.deployment.transformer.version>1.2</payara.deployment.transformer.version>
         <osgi.version>7.0.0</osgi.version>
         <osgi.dto.version>1.1.1</osgi.dto.version>
-        <payara.notifiers.version>2.0-enterprise-SNAPSHOT</payara.notifiers.version>
+        <payara.notifiers.version>2.0-enterprise</payara.notifiers.version>
         <smack.version>4.3.4</smack.version>
         <jxmpp.version>0.6.4</jxmpp.version>
         <xpp3.version>1.1.4c_7</xpp3.version>
