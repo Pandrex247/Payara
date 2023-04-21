@@ -74,6 +74,9 @@ import java.util.logging.Logger;
 @RunLevel(StartupRunLevel.VAL)
 public class JaccProviderCompatibilityStartup implements PostConstruct {
 
+    public static final String OLD_POLICY_WRAPPER = "com.sun.enterprise.security.provider.PolicyWrapper";
+    public static final String OLD_POLICY_CONFIGURATION_FACTORY_IMPL =
+            "com.sun.enterprise.security.provider.PolicyConfigurationFactoryImpl";
     @Inject
     private Configs configs;
 
@@ -83,12 +86,14 @@ public class JaccProviderCompatibilityStartup implements PostConstruct {
             SecurityService securityService = config.getSecurityService();
             List<JaccProvider> jaccProviders = securityService.getJaccProvider();
             for (JaccProvider jaccProvider : jaccProviders) {
-                if (jaccProvider.getPolicyProvider().contains("com.sun.enterprise.security.provider.PolicyWrapper")
-                        || jaccProvider.getPolicyConfigurationFactoryProvider().contains(
-                            "com.sun.enterprise.security.provider.PolicyConfigurationFactoryImpl")) {
+                String policyProvider = jaccProvider.getPolicyProvider();
+                String policyConfigurationFactoryProvider = jaccProvider.getPolicyConfigurationFactoryProvider();
+                if ((policyProvider != null && policyProvider.contains(OLD_POLICY_WRAPPER)) ||
+                        (policyConfigurationFactoryProvider != null && policyConfigurationFactoryProvider.contains(
+                                OLD_POLICY_CONFIGURATION_FACTORY_IMPL))) {
                     upgradeJaccProvider(jaccProvider, PolicyProviderImpl.class.getCanonicalName(),
                             PolicyConfigurationFactoryImpl.class.getCanonicalName());
-                } else if (jaccProvider.getName().equals("simple")) {
+                } else if ("simple".equals(jaccProvider.getName())) {
                     removeJaccProvider(securityService, jaccProvider);
                 }
             }
