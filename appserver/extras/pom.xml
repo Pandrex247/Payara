@@ -122,5 +122,11 @@
                 <module>notifiers</module>
             </modules>
         </profile>
+        <profile>
+            <id>BuildUpgradeTool</id>
+            <modules>
+                <module>upgrade-tool</module>
+            </modules>
+        </profile>
     </profiles>
 </project>
