@@ -77,6 +77,11 @@ public class JaccProviderCompatibilityStartup implements PostConstruct {
     public static final String OLD_POLICY_WRAPPER = "com.sun.enterprise.security.provider.PolicyWrapper";
     public static final String OLD_POLICY_CONFIGURATION_FACTORY_IMPL =
             "com.sun.enterprise.security.provider.PolicyConfigurationFactoryImpl";
+
+    public static final String OLD_SIMPLE_POLICY_WRAPPER = "com.sun.enterprise.security.jacc.provider.SimplePolicyProvider";
+    public static final String OLD_SIMPLE_POLICY_CONFIGURATION_FACTORY_IMPL =
+            "com.sun.enterprise.security.jacc.provider.SimplePolicyConfigurationFactory";
+
     @Inject
     private Configs configs;
 
@@ -88,13 +93,21 @@ public class JaccProviderCompatibilityStartup implements PostConstruct {
             for (JaccProvider jaccProvider : jaccProviders) {
                 String policyProvider = jaccProvider.getPolicyProvider();
                 String policyConfigurationFactoryProvider = jaccProvider.getPolicyConfigurationFactoryProvider();
-                if ((policyProvider != null && policyProvider.contains(OLD_POLICY_WRAPPER)) ||
-                        (policyConfigurationFactoryProvider != null && policyConfigurationFactoryProvider.contains(
-                                OLD_POLICY_CONFIGURATION_FACTORY_IMPL))) {
-                    upgradeJaccProvider(jaccProvider, PolicyProviderImpl.class.getCanonicalName(),
-                            PolicyConfigurationFactoryImpl.class.getCanonicalName());
-                } else if ("simple".equals(jaccProvider.getName())) {
-                    removeJaccProvider(securityService, jaccProvider);
+
+                String newPolicyProvider = policyProvider;
+                String newPolicyConfigurationFactoryProvider = policyConfigurationFactoryProvider;
+                if (policyProvider.contains(OLD_POLICY_WRAPPER) ||
+                        policyProvider.contains(OLD_SIMPLE_POLICY_WRAPPER)) {
+                    newPolicyProvider = PolicyProviderImpl.class.getCanonicalName();
+                }
+                if (policyConfigurationFactoryProvider.contains(OLD_POLICY_CONFIGURATION_FACTORY_IMPL) ||
+                        policyConfigurationFactoryProvider.contains(OLD_SIMPLE_POLICY_CONFIGURATION_FACTORY_IMPL)) {
+                    newPolicyConfigurationFactoryProvider = PolicyConfigurationFactoryImpl.class.getCanonicalName();
+                }
+
+                if (!newPolicyProvider.equals(policyProvider) ||
+                        !newPolicyConfigurationFactoryProvider.equals(policyConfigurationFactoryProvider)) {
+                    upgradeJaccProvider(jaccProvider, newPolicyProvider, newPolicyConfigurationFactoryProvider);
                 }
             }
         }
@@ -115,18 +128,4 @@ public class JaccProviderCompatibilityStartup implements PostConstruct {
         }
     }
 
-    private void removeJaccProvider(SecurityService securityService, JaccProvider jaccProvider) {
-        try {
-            ConfigSupport.apply(new SingleConfigCode<SecurityService>() {
-                public Object run(SecurityService param) throws PropertyVetoException, TransactionFailure {
-                    List<JaccProvider> jaccProviders = param.getJaccProvider();
-                    jaccProviders.remove(jaccProvider);
-                    return param;
-                }
-            }, securityService);
-        } catch (TransactionFailure tf) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, "Failure while removing old jacc provider ", tf);
-            throw new RuntimeException(tf);
-        }
-    }
 }
