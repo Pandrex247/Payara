@@ -100,8 +100,8 @@ public class JaccProviderCompatibilityStartup implements PostConstruct {
                         policyProvider.equals(OLD_SIMPLE_POLICY_WRAPPER)) {
                     newPolicyProvider = PolicyProviderImpl.class.getCanonicalName();
                 }
-                if (policyConfigurationFactoryProvider.contains(OLD_POLICY_CONFIGURATION_FACTORY_IMPL) ||
-                        policyConfigurationFactoryProvider.contains(OLD_SIMPLE_POLICY_CONFIGURATION_FACTORY_IMPL)) {
+                if (policyConfigurationFactoryProvider.equals(OLD_POLICY_CONFIGURATION_FACTORY_IMPL) ||
+                        policyConfigurationFactoryProvider.equals(OLD_SIMPLE_POLICY_CONFIGURATION_FACTORY_IMPL)) {
                     newPolicyConfigurationFactoryProvider = PolicyConfigurationFactoryImpl.class.getCanonicalName();
                 }
 
