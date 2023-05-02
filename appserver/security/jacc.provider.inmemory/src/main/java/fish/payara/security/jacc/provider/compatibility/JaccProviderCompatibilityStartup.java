@@ -106,23 +106,30 @@ public class JaccProviderCompatibilityStartup implements PostConstruct {
 
                 if (!newPolicyProvider.equals(policyProvider) ||
                         !newPolicyConfigurationFactoryProvider.equals(policyConfigurationFactoryProvider)) {
-                    upgradeJaccProvider(jaccProvider, newPolicyProvider, newPolicyConfigurationFactoryProvider);
+                    renameJaccProvider(jaccProvider, newPolicyProvider, newPolicyConfigurationFactoryProvider);
                 }
             }
         }
     }
 
-    private void upgradeJaccProvider(JaccProvider jaccProvider, String policyProvider, String policyConfigurationFactoryProvider) {
+    private void renameJaccProvider(JaccProvider jaccProvider, String policyProvider, String policyConfigurationFactoryProvider) {
+        Logger logger = Logger.getAnonymousLogger();
         try {
             ConfigSupport.apply(new SingleConfigCode<JaccProvider>() {
                 public Object run(JaccProvider param) throws PropertyVetoException, TransactionFailure {
+                    logger.log(Level.INFO, "Renaming jacc policy provider from " +
+                            param.getPolicyProvider() + " to " + policyProvider);
                     param.setPolicyProvider(policyProvider);
+
+                    logger.log(Level.INFO, "Renaming jacc policy configuration factory provider from " +
+                            param.getPolicyConfigurationFactoryProvider() + " to " + policyConfigurationFactoryProvider);
                     param.setPolicyConfigurationFactoryProvider(policyConfigurationFactoryProvider);
+
                     return param;
                 }
             }, jaccProvider);
         } catch (TransactionFailure tf) {
-            Logger.getAnonymousLogger().log(Level.SEVERE, "Failure while upgrading jacc provider ", tf);
+            logger.log(Level.SEVERE, "Failure while upgrading jacc provider ", tf);
             throw new RuntimeException(tf);
         }
     }
