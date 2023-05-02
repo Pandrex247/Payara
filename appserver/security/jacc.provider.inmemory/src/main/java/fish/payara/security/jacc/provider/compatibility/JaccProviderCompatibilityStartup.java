@@ -65,8 +65,7 @@ import java.util.logging.Logger;
  *
  * This service checks if any domain.xml configuration has
  * jacc provider values incompatibles with Payara since
- * version 6. It replaces the default jacc provider and
- * removes the old 'simple' one
+ * version 6.
  *
  * @author luisneto
  */
