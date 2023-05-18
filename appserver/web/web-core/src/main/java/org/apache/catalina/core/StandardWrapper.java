@@ -55,7 +55,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-// Portions Copyright [2016-2022] [Payara Foundation and/or its affiliates]
+// Portions Copyright [2016-2023] [Payara Foundation and/or its affiliates]
 
 package org.apache.catalina.core;
 
@@ -92,6 +92,7 @@ import static org.apache.catalina.LogFacade.WAITING_INSTANCE_BE_DEALLOCATED;
 import static org.apache.catalina.LogFacade.WRAPPER_CONTAINER_NO_CHILD_EXCEPTION;
 import static org.apache.catalina.core.Constants.JSP_SERVLET_CLASS;
 import static org.apache.catalina.core.Constants.JSP_SERVLET_NAME;
+import static org.apache.catalina.core.Constants.OLD_JSP_SERVLET_CLASS;
 import static org.apache.catalina.security.SecurityUtil.doAsPrivilege;
 import static org.apache.catalina.security.SecurityUtil.executeUnderSubjectDoAs;
 import static org.apache.catalina.security.SecurityUtil.isPackageProtectionEnabled;
@@ -668,6 +669,10 @@ public class StandardWrapper extends ContainerBase implements ServletConfig, Wra
             throw new IllegalStateException(
                 "Wrapper already initialized with servlet instance, " +
                 "class, or name");
+        }
+
+        if (OLD_JSP_SERVLET_CLASS.equals(className)) {
+            className = JSP_SERVLET_CLASS;
         }
 
         servletClassName = className;
