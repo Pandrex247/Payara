@@ -100,9 +100,6 @@
     </developers>
 
     <modules>
-        <module>dataprovider</module>
-        <module>plugin-service</module>
-        <module>common</module>
         <module>core</module>
         <module>concurrent</module>
         <module>cluster</module>
@@ -110,7 +107,6 @@
         <module>payara-theme</module>
         <module>payara-enterprise-theme</module>
         <module>web</module>
-        <module>gf-admingui-connector</module>
         <module>jts</module>
         <module>jdbc</module>
         <module>jca</module>
@@ -152,7 +148,6 @@
         <module>rest-monitoring-plugin</module>
         <module>microprofile-console-plugin</module>
         <module>microprofile-console-plugin-l10n</module>
-        <module>faces-compat</module>
         <module>payara-insight-console-plugin</module>
     </modules>
 
