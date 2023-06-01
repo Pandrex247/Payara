@@ -136,7 +136,7 @@ public class PayaraConfig implements Config {
                         configuredCacheDurationSeconds = defaultCacheDurationMilliSeconds;
                     }
                     configuredCacheDurationSecondsExpires = currentTimeMillis + configuredCacheDurationSeconds;
-                    Logger.getLogger(PayaraConfig.class.getName()).log(Level.SEVERE, "getCacheDurationSeconds took about {0} ms", currentTimeMillis() - currentTimeMillis);
+                    Logger.getLogger(PayaraConfig.class.getName()).log(Level.FINER, "getCacheDurationSeconds took about {0} ms", currentTimeMillis() - currentTimeMillis);
                     return configuredCacheDurationSeconds;
                 }
             }
