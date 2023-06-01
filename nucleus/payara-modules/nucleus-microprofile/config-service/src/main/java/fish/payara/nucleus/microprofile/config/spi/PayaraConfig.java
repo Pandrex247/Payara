@@ -104,10 +104,10 @@ public class PayaraConfig implements Config {
     
     private final String profile;
 
-    public PayaraConfig(List<ConfigSource> sources, Map<Class<?>, Converter<?>> converters, long defaultCacheDurationSeconds) {
+    public PayaraConfig(List<ConfigSource> sources, Map<Class<?>, Converter<?>> converters, long defaultCacheDurationMilliSeconds) {
         this.sources = sources;
         this.converters = new ConcurrentHashMap<>(converters);
-        this.defaultCacheDurationMilliSeconds = defaultCacheDurationSeconds;
+        this.defaultCacheDurationMilliSeconds = defaultCacheDurationMilliSeconds;
         Collections.sort(sources, new ConfigSourceComparator());
 
         profile = getConfigValue(MP_CONFIG_PROFILE_NAME_STRING).getValue();
