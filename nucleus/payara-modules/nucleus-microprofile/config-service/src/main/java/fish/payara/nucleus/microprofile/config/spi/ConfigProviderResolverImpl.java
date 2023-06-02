@@ -203,7 +203,7 @@ public class ConfigProviderResolverImpl extends ConfigProviderResolver implement
 
     long getCacheDurationSeconds() {
         if (serverLevelConfig != null) {
-            return serverLevelConfig.getCacheDurationMilliSeconds();
+            return serverLevelConfig.getCacheDurationMilliSeconds() / 1_000;
         }
         return Integer.parseInt(getMPConfig().getCacheDurationSeconds());
     }
