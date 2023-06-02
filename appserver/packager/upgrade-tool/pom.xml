@@ -56,6 +56,7 @@
 
     <properties>
         <temp.dir>${project.build.directory}/dependency</temp.dir>
+        <payara.core.version>6.2.0</payara.core.version>
     </properties>
 
     <build>
@@ -130,6 +131,12 @@
             <groupId>fish.payara.extras</groupId>
             <artifactId>payara-upgrade-tool</artifactId>
             <version>${upgrade.tool.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>
