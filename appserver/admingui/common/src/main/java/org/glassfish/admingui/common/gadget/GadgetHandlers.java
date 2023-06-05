@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2018-2019] Payara Foundation and/or affiliates
+// Portions Copyright [2018-2023] Payara Foundation and/or affiliates
 
 package org.glassfish.admingui.common.gadget;
 
@@ -60,8 +60,8 @@ import java.util.Map;
 import java.util.StringTokenizer;
 
 import org.glassfish.admingui.common.util.GuiUtil;
+import org.glassfish.admingui.common.util.JsonUtil;
 import org.glassfish.admingui.connector.GadgetModule;
-import org.glassfish.admin.rest.utils.JsonUtil;
 
 import org.jvnet.hk2.config.ConfigParser;
 import org.jvnet.hk2.config.DomDocument;

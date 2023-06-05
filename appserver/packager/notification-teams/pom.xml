@@ -128,11 +128,23 @@
             <artifactId>teams-notifier-console-plugin</artifactId>
             <version>${payara.notifiers.version}</version>
             <optional>true</optional>
+            <exclusions>
+                <exclusion>
+                    <groupId>fish.payara.server.core.common</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>fish.payara.extensions.notifiers</groupId>
             <artifactId>teams-notifier-core</artifactId>
             <version>${payara.notifiers.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>fish.payara.server.core.common</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>
