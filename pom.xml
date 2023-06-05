@@ -179,7 +179,7 @@
         <eclipselink.version>4.0.1.payara-p1</eclipselink.version>
         <eclipselink.asm.version>9.4.0</eclipselink.asm.version>
         <jms-api.version>3.1.0</jms-api.version>
-        <mq.version>6.4.0-SNAPSHOT.payara-p2</mq.version>
+        <mq.version>6.3.0.payara-p2</mq.version>
         <com.ibm.jbatch.container.version>2.1.1</com.ibm.jbatch.container.version>
         <com.ibm.jbatch.spi.version>2.1.1</com.ibm.jbatch.spi.version>
         <jaxws-api.version>4.0.0</jaxws-api.version>
