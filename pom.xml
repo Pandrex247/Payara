@@ -71,11 +71,6 @@
         <tag>payara-enterprise-6.4.0-SNAPSHOT</tag>
     </scm>
 
-    <issueManagement>
-        <system>Github</system>
-        <url>https://github.com/payara/Payara/issues</url>
-    </issueManagement>
-
     <developers>
         <developer>
             <name>Payara Team</name>
