@@ -69,7 +69,7 @@
         <connection>scm:git:git@github.com:payara/payara-enterprise.git</connection>
         <url>scm:git:git@github.com:payara/payara-enterprise.git</url>
         <developerConnection>scm:git:git@github.com:payara/payara-enterprise.git</developerConnection>
-        <tag>payara-enterprise-6.2.0-SNAPSHOT</tag>
+        <tag>payara-enterprise-6.4.0-SNAPSHOT</tag>
     </scm>
 
     <issueManagement>
