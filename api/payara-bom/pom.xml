@@ -54,10 +54,12 @@
 
     <!-- Override to stop flatten plugin resolving it to an incorrect URL using parent artifact IDs -->
     <url>https://github.com/payara/Payara-Enterprise/</url>
+
+    <!-- Don't inherit SCM from parent since flatten resolves it incorrectly in a similar manner to the URL -->
     <scm>
-        <connection>scm:git:git@github.com:payara/payara-enterprise.git</connection>
-        <url>scm:git:git@github.com:payara/payara-enterprise.git</url>
-        <developerConnection>scm:git:git@github.com:payara/payara-enterprise.git</developerConnection>
+        <url>https://github.com/payara/Payara-Enterprise</url>
+        <connection>scm:git:git://github.com/payara/payara-enterprise.git</connection>
+        <developerConnection>scm:git:ssh://github.com:payara/payara-enterprise.git</developerConnection>
     </scm>
 
     <dependencyManagement>
