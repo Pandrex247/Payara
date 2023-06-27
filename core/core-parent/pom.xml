@@ -76,7 +76,7 @@
             <dependency>
                 <groupId>fish.payara.server.core</groupId>
                 <artifactId>core-bom</artifactId>
-                <version>${project.version}</version>
+                <version>${payara.core.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
