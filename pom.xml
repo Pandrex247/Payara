@@ -156,7 +156,6 @@
 
         <osgi-resource-locator.version>1.0.3</osgi-resource-locator.version>
         <snakeyaml.version>2.0</snakeyaml.version>
-        <jstl-api.version>3.0.0</jstl-api.version>
         <jstl-impl.version>3.0.0</jstl-impl.version>
         <mojarra.version>4.0.0.payara-p2</mojarra.version>
         <jaxb-extra-osgi.version>2.3.0</jaxb-extra-osgi.version>
@@ -164,12 +163,9 @@
         <yasson.version>3.0.2</yasson.version>
         <eclipselink.version>4.0.1.payara-p1</eclipselink.version>
         <eclipselink.asm.version>9.5.0</eclipselink.asm.version>
-        <jms-api.version>3.1.0</jms-api.version>
         <mq.version>6.3.0.payara-p2</mq.version>
         <com.ibm.jbatch.container.version>2.1.1</com.ibm.jbatch.container.version>
         <com.ibm.jbatch.spi.version>2.1.1</com.ibm.jbatch.spi.version>
-        <jaxws-api.version>4.0.0</jaxws-api.version>
-        <jakarta.jws-api.version>3.0.0</jakarta.jws-api.version>
         <webservices.version>4.0.1</webservices.version>
         <org.apache.santuario.version>3.0.0</org.apache.santuario.version>
         <woodstox.version>6.4.0</woodstox.version>
@@ -181,9 +177,7 @@
         <microprofile-release.version>6.0</microprofile-release.version>
         <payara-arquillian-container.version>3.0.alpha6</payara-arquillian-container.version>
         <h2db.version>2.1.212</h2db.version>
-        <concurrent-api.version>3.0.2</concurrent-api.version>
         <concurrent.version>3.0.2.payara-p1</concurrent.version>
-        <asm.version>9.5</asm.version>
         <monitoring-console-process.version>2.0.1</monitoring-console-process.version>
         <monitoring-console-webapp.version>2.0.1</monitoring-console-webapp.version>
         <validation.xml.root>${project.build.outputDirectory}</validation.xml.root>
