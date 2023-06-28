@@ -58,7 +58,6 @@
     <name>Payara Project</name>
 
     <modules>
-<!--        <module>core</module>-->
         <module>nucleus</module>
         <module>appserver</module>
         <module>api</module>
@@ -156,6 +155,20 @@
     </properties>
 
     <profiles>
+        <profile>
+            <id>BuildCore</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>payara.build.core</name>
+                    <value>true</value>
+                </property>
+            </activation>
+            <modules>
+                <module>core</module>
+            </modules>
+        </profile>
+
         <profile>
             <id>source</id>
             <activation>
