@@ -39,7 +39,9 @@
 # holder.
 #
 
-AS_INSTALL=`dirname "$0"`/..
+AS_INSTALL_PARENT=`dirname "$0"`
+AS_INSTALL=`realpath --relative-to . $AS_INSTALL_PARENT/..`
+echo "Server installation path: ${AS_INSTALL}"
 
 case "`uname`" in
   CYGWIN*) AS_INSTALL=`cygpath --windows $AS_INSTALL`
@@ -74,12 +76,7 @@ for i in $(echo ${PAYARA_UPGRADE_DIRS} | sed "s/,/ /g")
 do
     echo "Moving ${i} to old"
     if [ -d "${AS_INSTALL}/${i}" ]; then
-        mkdir ${AS_INSTALL}/${i}.old
-        if [ ! $? -eq 0 ]; then
-            WARN=true
-        fi
-
-        mv ${AS_INSTALL}/${i}/* ${AS_INSTALL}/${i}.old/
+        mv ${AS_INSTALL}/${i}/ ${AS_INSTALL}/${i}.old/
         if [ ! $? -eq 0 ]; then
             # Check if the warning was an empty MQ or h2db directory
             if [[ ! "${i}" == *"mq"* ]]; then
@@ -110,7 +107,7 @@ do
 
     echo "Moving staged ${i} to expected location"
     if [ -d "${AS_INSTALL}/${i}.new" ]; then
-        mv ${AS_INSTALL}/${i}.new/* ${AS_INSTALL}/${i}/
+        mv ${AS_INSTALL}/${i}.new ${AS_INSTALL}/${i}/
         if [ ! $? -eq 0 ]; then
             # Check if the warning was an empty MQ directory or h2db directory
             if [[ ! "${i}" == *"mq"* ]]; then
@@ -138,8 +135,6 @@ do
             fi
         fi
     fi
-  
-    rm -rf ${AS_INSTALL}/${i}.new
 done
 
 if [ ! -z "$WARN" ]; then
