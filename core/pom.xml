@@ -53,6 +53,12 @@
 
     <description>All of Payara Core modules</description>
 
+    <scm>
+        <url>https://github.com/payara/Payara/tree/master</url>
+        <connection>scm:git:git://github.com/payara/payara.git</connection>
+        <developerConnection>scm:git:ssh://github.com:payara/payara.git</developerConnection>
+    </scm>
+
     <properties>
         <payara.core.version>6.2023.8-SNAPSHOT</payara.core.version>
         <!-- BOM dependencies versions -->
