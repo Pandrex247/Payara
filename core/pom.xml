@@ -57,7 +57,6 @@
         <url>https://github.com/payara/Payara/tree/master</url>
         <connection>scm:git:git://github.com/payara/payara.git</connection>
         <developerConnection>scm:git:ssh://github.com:payara/payara.git</developerConnection>
-        <tag>payara-core-6.2023.8-SNAPSHOT</tag>
     </scm>
 
     <properties>
