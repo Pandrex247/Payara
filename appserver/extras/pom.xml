@@ -61,7 +61,6 @@
         <module>javaee</module>
         <module>appserv-rt</module>
         <module>payara-micro</module>
-        <module>certificate-management</module>
     </modules>
 
     <build>
@@ -111,6 +110,18 @@
             <id>BuildUpgradeTool</id>
             <modules>
                 <module>upgrade-tool</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>BuildCertificateManagement</id>
+            <activation>
+                <property>
+                    <name>BuildCertificateManagement</name>
+                    <value>!false</value>
+                </property>
+            </activation>
+            <modules>
+                <module>certificate-management</module>
             </modules>
         </profile>
     </profiles>
