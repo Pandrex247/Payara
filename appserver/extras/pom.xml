@@ -99,18 +99,6 @@
                 <module>docker-images</module>
             </modules>
         </profile>
-        <!-- Profile to build Certificate Management modules-->
-        <profile>
-            <id>BuildCertificateManagement</id>
-            <activation>
-                <property>
-                    <name>BuildCertificateManagement</name>
-                </property>
-            </activation>
-            <modules>
-                <module>certificate-management</module>
-            </modules>
-        </profile>
         <!-- Profile to build all optional modules under extras -->
         <profile>
             <id>BuildExtras</id>
@@ -122,7 +110,6 @@
             <modules>
                 <module>embedded</module>
                 <module>docker-images</module>
-                <module>certificate-management</module>
             </modules>
         </profile>
     </profiles>
