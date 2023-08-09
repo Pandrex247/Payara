@@ -938,6 +938,12 @@ Parent is ${project.parent}</echo>
                 <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
+
+            <dependency>
+                <groupId>fish.payara.deployment.transformer</groupId>
+                <artifactId>deployment-transformer-impl</artifactId>
+                <version>${payara.deployment.transformer.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
