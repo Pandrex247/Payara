@@ -136,6 +136,8 @@
                 <module>embedded</module>
                 <module>docker-images</module>
                 <module>certificate-management</module>
+                <module>notifiers</module>
+                <module>upgrade-tool</module>
             </modules>
         </profile>
     </profiles>
