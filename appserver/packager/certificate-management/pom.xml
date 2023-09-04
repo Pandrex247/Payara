@@ -126,24 +126,24 @@
 
     <dependencies>
         <dependency>
-            <groupId>fish.payara.extras.certificate-management</groupId>
+            <groupId>fish.payara.extensions.certificate-management</groupId>
             <artifactId>certificate-management-cli</artifactId>
-            <version>${project.version}</version>
+            <version>${certificate-management.version}</version>
         </dependency>
         <dependency>
-            <groupId>fish.payara.extras.certificate-management</groupId>
+            <groupId>fish.payara.extensions.certificate-management</groupId>
             <artifactId>certificate-management-admin</artifactId>
-            <version>${project.version}</version>
+            <version>${certificate-management.version}</version>
         </dependency>
         <dependency>
-            <groupId>fish.payara.extras.certificate-management</groupId>
+            <groupId>fish.payara.extensions.certificate-management</groupId>
             <artifactId>certificate-management-common</artifactId>
-            <version>${project.version}</version>
+            <version>${certificate-management.version}</version>
         </dependency>
         <dependency>
-            <groupId>fish.payara.extras.certificate-management</groupId>
+            <groupId>fish.payara.extensions.certificate-management</groupId>
             <artifactId>certificate-management-console-plugin</artifactId>
-            <version>${project.version}</version>
+            <version>${certificate-management.version}</version>
         </dependency>
     </dependencies>
 </project>
