@@ -1,4 +1,0 @@
-[submodule "appserver/extras/upgrade-tool"]
-	path = appserver/extras/upgrade-tool
-	url = https://github.com/payara/upgrade-tool
-	branch = Payara6
