@@ -475,11 +475,5 @@
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <id>deploy-internals</id>
-            <properties>
-                <deploy.skip>true</deploy.skip>
-            </properties>
-        </profile>
     </profiles>
 </project>
