@@ -100,18 +100,6 @@
                 <module>docker-images</module>
             </modules>
         </profile>
-        <profile>
-            <id>BuildEnterpriseNotifiers</id>
-            <modules>
-                <module>notifiers</module>
-            </modules>
-        </profile>
-        <profile>
-            <id>BuildUpgradeTool</id>
-            <modules>
-                <module>upgrade-tool</module>
-            </modules>
-        </profile>
         <!-- Profile to build all optional modules under extras -->
         <profile>
             <id>BuildExtras</id>
@@ -123,8 +111,6 @@
             <modules>
                 <module>embedded</module>
                 <module>docker-images</module>
-                <module>notifiers</module>
-                <module>upgrade-tool</module>
             </modules>
         </profile>
     </profiles>
