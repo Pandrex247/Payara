@@ -117,6 +117,16 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>payara-nexus-snapshots</id>
+            <url>https://nexus.payara.fish/repository/payara-snapshots</url>
+            <releases>
+                <enabled>false</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
     </repositories>
 
     <!-- Some of these are duplicated from core-bom because it isn't deployed to Maven Central so we need to tell
