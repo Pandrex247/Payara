@@ -4,10 +4,8 @@ def pom
 def DOMAIN_NAME
 def payaraBuildNumber
 pipeline {
-    agent any
-    environment {
-        MP_METRICS_TAGS='tier=integration'
-        MP_CONFIG_CACHE_DURATION=0
+    agent {
+        label 'ubuntu'
     }
     tools {
         jdk "zulu-11"
@@ -29,7 +27,7 @@ pipeline {
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Building SRC  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 withCredentials([usernameColonPassword(credentialsId: 'JenkinsNexusUser', variable: 'NEXUS_USER')]) {
-                sh """mvn -B -V -ff -e clean install --strict-checksums -PQuickBuild,BuildEmbedded \
+                    sh """mvn -B -V -ff -e clean install -PQuickBuild,BuildEmbedded \
                     -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                     -Djavax.xml.accessExternalSchema=all -Dbuild.number=${payaraBuildNumber}"""
                 }
@@ -54,7 +52,7 @@ pipeline {
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 sh """rm  ~/test\\|sa.mv.db  || true"""
-                sh """mvn -B -V -ff -e clean test --strict-checksums -Pall \
+                sh """mvn -B -V -ff -e clean test -Pall \
                 -Dglassfish.home=\"${pwd()}/appserver/distributions/payara/target/stage/payara6/glassfish\" \
                 -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                 -Djavax.xml.accessExternalSchema=all \
@@ -63,7 +61,6 @@ pipeline {
             }
             post {
                 always {
-                    junit 'appserver/tests/quicklook/test-output/QuickLookTests/*.xml'
                     processReportAndStopDomain()
                 }
                 cleanup {
@@ -83,6 +80,7 @@ pipeline {
                 -Dpayara.version=${pom.version} \
                 -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                 -Djavax.xml.accessExternalSchema=all \
+                -Dpayara.home=\"${pwd()}/appserver/distributions/payara/target/stage/payara6/glassfish\" \
                 -f appserver/tests/payara-samples """
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
             }
@@ -99,8 +97,8 @@ pipeline {
             steps{
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
-                                                              branches: [[name: "*/microprofile-6.0"]],
-                                                              userRemoteConfigs: [[url: "https://github.com/payara/MicroProfile-TCK-Runners.git"]]]
+                    branches: [[name: "*/microprofile-6.0"]],
+                    userRemoteConfigs: [[url: "https://github.com/payara/MicroProfile-TCK-Runners.git"]]]
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checked out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
             }
         }
@@ -132,8 +130,8 @@ pipeline {
             steps{
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out EE8 tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
-                                                              branches: [[name: "*/Payara6"]],
-                                                              userRemoteConfigs: [[url: "https://github.com/payara/patched-src-javaee8-samples.git"]]]
+                    branches: [[name: "*/Payara6"]],
+                    userRemoteConfigs: [[url: "https://github.com/payara/patched-src-javaee8-samples.git"]]]
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checked out EE8 tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
             }
         }
@@ -145,10 +143,10 @@ pipeline {
         stage('Run EE8 Tests') {
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
-                sh "mvn -B -V -ff -e clean install --strict-checksums -Dsurefire.useFile=false \
-                 -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
-                 -Djavax.xml.accessExternalSchema=all -Dpayara.version=${pom.version} \
-                 -Ppayara-server-remote,stable"
+                sh "mvn -B -V -ff -e clean install -Dsurefire.useFile=false \
+                -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
+                -Djavax.xml.accessExternalSchema=all -Dpayara.version=${pom.version} \
+                -Ppayara-server-remote,stable"
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
             }
             post {
@@ -164,8 +162,8 @@ pipeline {
             steps{
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out cargoTracker tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
-                                                              branches: [[name: "*/Payara6"]],
-                                                              userRemoteConfigs: [[url: "https://github.com/payara/cargoTracker.git"]]]
+                    branches: [[name: "*/Payara6"]],
+                    userRemoteConfigs: [[url: "https://github.com/payara/cargoTracker.git"]]]
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checked out cargoTracker tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
             }
         }
@@ -183,7 +181,7 @@ pipeline {
                 sh """mvn -B -V -ff -e clean install --strict-checksums -Dsurefire.useFile=false \
                 -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                 -Djavax.xml.accessExternalSchema=all -Dpayara.version=${pom.version} \
-                -Ppayara-server-remote -DtrimStackTrace=false"""
+                -Ppayara-server-remote,payara6"""
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
             }
             post {
@@ -199,8 +197,8 @@ pipeline {
             steps{
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out EE7 tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                 checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
-                                                              branches: [[name: "*/Payara6"]],
-                                                              userRemoteConfigs: [[url: "https://github.com/payara/patched-src-javaee7-samples.git"]]]
+                    branches: [[name: "*/Payara6"]],
+                    userRemoteConfigs: [[url: "https://github.com/payara/patched-src-javaee7-samples.git"]]]
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checked out EE7 tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
             }
         }
