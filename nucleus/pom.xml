@@ -145,8 +145,8 @@
         <source-annotation-processor.version>1.0</source-annotation-processor.version>
         <copyright-plugin.version>1.39</copyright-plugin.version>
         <nucleus.install.dir.name>nucleus</nucleus.install.dir.name>
-        <ant.version>1.10.12</ant.version>
-        <ant-launcher.version>1.10.12</ant-launcher.version>
+        <ant.version>1.10.14</ant.version>
+        <ant-launcher.version>1.10.14</ant-launcher.version>
 
         <!-- Debug / analysis -->
         <findbugs.skip>true</findbugs.skip>
