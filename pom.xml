@@ -197,8 +197,8 @@
         <payara-arquillian-container.version>3.0.alpha6</payara-arquillian-container.version>
         <h2db.version>2.2.220</h2db.version>
         <concurrent.version>3.0.2.payara-p1</concurrent.version>
-        <monitoring-console-process.version>2.0.1</monitoring-console-process.version>
-        <monitoring-console-webapp.version>2.0.1</monitoring-console-webapp.version>
+        <monitoring-console-process.version>2.0.2</monitoring-console-process.version>
+        <monitoring-console-webapp.version>2.0.2</monitoring-console-webapp.version>
         <validation.xml.root>${project.build.outputDirectory}</validation.xml.root>
         <upgrade.tool.version>2.1</upgrade.tool.version>
         <payara.notifiers.version>2.0-enterprise</payara.notifiers.version>
