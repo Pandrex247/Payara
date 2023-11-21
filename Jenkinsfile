@@ -5,10 +5,11 @@ def DOMAIN_NAME
 def payaraBuildNumber
 pipeline {
     agent {
-        label 'ubuntu'
+        label 'general-purpose'
     }
     tools {
         jdk "zulu-11"
+        maven "maven-3.6.3"
     }
     stages {
         stage('Report') {
