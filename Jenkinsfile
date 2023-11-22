@@ -5,10 +5,11 @@ def DOMAIN_NAME
 def payaraBuildNumber
 pipeline {
     agent {
-        label 'ubuntu'
+        label 'general-purpose'
     }
     tools {
         jdk "zulu-11"
+        maven "maven-3.6.3"
     }
     stages {
         stage('Report') {
@@ -26,7 +27,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Building SRC  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
-                withCredentials([usernameColonPassword(credentialsId: 'JenkinsNexusUser', variable: 'NEXUS_USER')]) {
+                withCredentials([usernameColonPassword(credentialsId: 'engineering-jenkins-nexus', variable: 'NEXUS_USER')]) {
                     sh """mvn -B -V -ff -e -U clean install -PQuickBuild,BuildEmbedded \
                     -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                     -Djavax.xml.accessExternalSchema=all -Dbuild.number=${payaraBuildNumber}"""
