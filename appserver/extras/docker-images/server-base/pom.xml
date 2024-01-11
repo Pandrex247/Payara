@@ -53,7 +53,7 @@
 
     <properties>
         <docker.noCache>false</docker.noCache>
-        <docker.payara.repository>payara/server-base</docker.payara.repository>
+        <docker.payara.repository>${docker.payara.registry}/payara/server-base</docker.payara.repository>
 
         <docker.payara.tag>${docker.payara.server.base.tag}</docker.payara.tag>
     </properties>

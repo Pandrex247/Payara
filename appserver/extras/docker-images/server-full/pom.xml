@@ -52,7 +52,7 @@
     <name>Payara Docker Images - Server Full</name>
 
     <properties>
-        <docker.payara.repository>payara/server-full</docker.payara.repository>
+        <docker.payara.repository>${docker.payara.registry}/payara/server-full</docker.payara.repository>
     </properties>
 
     <dependencies>

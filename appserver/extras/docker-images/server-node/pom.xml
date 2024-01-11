@@ -52,7 +52,7 @@
     <name>Payara Docker Images - Server Node</name>
 
     <properties>
-        <docker.payara.repository>payara/server-node</docker.payara.repository>
+        <docker.payara.repository>${docker.payara.registry}/payara/server-node</docker.payara.repository>
     </properties>
 
     <dependencies>

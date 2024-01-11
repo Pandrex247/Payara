@@ -73,8 +73,9 @@
         <docker.payara.domainName>production</docker.payara.domainName>
         <docker.payara.rootDirectoryName>payara6</docker.payara.rootDirectoryName>
 
+        <docker.payara.registry>nexus.dev.payara.fish:5000</docker.payara.registry>
         <!-- This is a placeholder to aid with property resolution, it gets overridden in each submodule -->
-        <docker.payara.repository>payara/${project.artifactId}</docker.payara.repository>
+        <docker.payara.repository>${docker.payara.registry}/payara/${project.artifactId}</docker.payara.repository>
         <docker.payara.tag>${payara.version}</docker.payara.tag>
 
         <docker.payara.server.base.tag>${install.dir.name}</docker.payara.server.base.tag>
