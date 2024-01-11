@@ -82,7 +82,7 @@ public class PayaraMicroTest {
     private static final String WEBAPP_CONTEXT = "/" + WAR_FILE.getName().substring(0, WAR_FILE.getName().length() - 4);
 
     @Container
-    private final PayaraContainer container = new PayaraContainer("payara/micro") //
+    private final PayaraContainer container = new PayaraContainer("nexus.dev.payara.fish:5000/payara/micro") //
         .withExposedPorts(8080)
         .withLogConsumer(new Slf4jLogConsumer(LOG))
         .withFileSystemBind(WAR_FILE.getAbsolutePath(), "/opt/payara/deployments/" + WAR_FILE.getName(), READ_ONLY)

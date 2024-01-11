@@ -75,7 +75,7 @@ public class PayaraServerFullTest {
     private static final Logger LOG = LoggerFactory.getLogger(PayaraServerFullTest.class);
 
     @Container
-    private static final PayaraContainer CONTAINER = new PayaraContainer("payara/server-full") //
+    private static final PayaraContainer CONTAINER = new PayaraContainer("nexus.dev.payara.fish:5000/payara/server-full") //
         .withExposedPorts(4848, 8080);
 
 

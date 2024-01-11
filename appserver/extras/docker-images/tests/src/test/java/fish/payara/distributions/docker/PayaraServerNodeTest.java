@@ -78,11 +78,11 @@ public class PayaraServerNodeTest {
     private static final Logger NODELOG = LoggerFactory.getLogger("NODE");
 
     @Container
-    private static final PayaraContainer DAS = new PayaraContainer("payara/server-full") //
+    private static final PayaraContainer DAS = new PayaraContainer("nexus.dev.payara.fish:5000/payara/server-full") //
         .withExposedPorts(4848, 8080);
 
     @Container
-    private final PayaraContainer node = new PayaraContainer("payara/server-node").withExposedPorts(NODE_HTTP_PORT) //
+    private final PayaraContainer node = new PayaraContainer("nexus.dev.payara.fish:5000/payara/server-node").withExposedPorts(NODE_HTTP_PORT) //
         .withEnv("PAYARA_DAS_HOST", "host.testcontainers.internal")
         .withEnv("PAYARA_DAS_PORT", Integer.toString(DAS.getMappedPort(DAS_ADMIN_PORT)))
         .withEnv("DOCKER_CONTAINER_IP", "host.testcontainers.internal") //
