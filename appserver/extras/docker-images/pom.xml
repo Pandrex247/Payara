@@ -158,6 +158,7 @@
                                         <copy file="src/main/docker/Dockerfile" toFile="target/antrun/Dockerfile.jdk11">
                                             <filterset>
                                                 <filter token="docker.java.image" value="${docker.java.repository}:${docker.jdk11.tag}"/>
+                                                <filter token="docker.payara.registry" value="${docker.payara.registry}"/>
                                                 <filter token="docker.payara.server.base.tag" value="${docker.payara.server.base.tag}"/>
                                                 <filter token="docker.payara.domainName" value="${docker.payara.domainName}"/>
                                                 <filter token="docker.payara.rootDirectoryName" value="${docker.payara.rootDirectoryName}"/>
@@ -166,6 +167,7 @@
                                         <copy file="src/main/docker/Dockerfile" toFile="target/antrun/Dockerfile.jdk17">
                                             <filterset>
                                                 <filter token="docker.java.image" value="${docker.java.repository}:${docker.jdk17.tag}"/>
+                                                <filter token="docker.payara.registry" value="${docker.payara.registry}"/>
                                                 <filter token="docker.payara.server.base.tag" value="${docker.payara.server.base.tag}-jdk17"/>
                                                 <filter token="docker.payara.domainName" value="${docker.payara.domainName}"/>
                                                 <filter token="docker.payara.rootDirectoryName" value="${docker.payara.rootDirectoryName}"/>
@@ -326,6 +328,7 @@
                                         <copy file="src/main/docker/Dockerfile" toFile="target/antrun/Dockerfile.jdk21">
                                             <filterset>
                                                 <filter token="docker.java.image" value="${docker.java.repository}:${docker.jdk21.tag}"/>
+                                                <filter token="docker.payara.registry" value="${docker.payara.registry}"/>
                                                 <filter token="docker.payara.server.base.tag" value="${docker.payara.server.base.tag}-jdk21"/>
                                                 <filter token="docker.payara.domainName" value="${docker.payara.domainName}"/>
                                                 <filter token="docker.payara.rootDirectoryName" value="${docker.payara.rootDirectoryName}"/>
