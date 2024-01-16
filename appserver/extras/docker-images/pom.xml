@@ -129,7 +129,7 @@
             </modules>
         </profile>
         <profile>
-            <id>generate-docker-images</id>
+            <id>generate-jdk-11-and-17-docker-images</id>
             <activation>
                 <file>
                     <!-- Essentially - Skip this aggregator pom -->
@@ -143,7 +143,7 @@
                         <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>filter-dockerfiles</id>
+                                <id>filter-jdk-11-and-17-dockerfiles</id>
                                 <phase>package</phase>
                                 <goals>
                                     <goal>run</goal>
@@ -174,7 +174,7 @@
                         <artifactId>docker-maven-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>build-docker-image</id>
+                                <id>build-jdk-11-and-17-docker-images</id>
                                 <goals>
                                     <goal>build</goal>
                                 </goals>
@@ -232,7 +232,7 @@
                             </execution>
 
                             <execution>
-                                <id>deploy-docker-image</id>
+                                <id>deploy-jdk-11-and-17-docker-images</id>
                                 <goals>
                                     <goal>push</goal>
                                 </goals>
@@ -309,7 +309,7 @@
                         <artifactId>maven-antrun-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>filter-dockerfiles-jdk21</id>
+                                <id>filter-jdk21-dockerfile</id>
                                 <phase>package</phase>
                                 <goals>
                                     <goal>run</goal>
@@ -333,7 +333,7 @@
                         <artifactId>docker-maven-plugin</artifactId>
                         <executions>
                             <execution>
-                                <id>build-docker-image-jdk21</id>
+                                <id>build-jdk21-docker-image</id>
                                 <goals>
                                     <goal>build</goal>
                                 </goals>
@@ -368,7 +368,7 @@
                             </execution>
 
                             <execution>
-                                <id>deploy-docker-image-jdk21</id>
+                                <id>deploy-jdk21-docker-image</id>
                                 <goals>
                                     <goal>push</goal>
                                 </goals>
