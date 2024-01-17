@@ -83,7 +83,7 @@ pipeline {
                         setupDomain()
                     
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
-                        sh """mvn -V -B -ff clean install --strict-checksums -Ppayara-server-remote \
+                        sh """mvn -V -B -ff clean install --strict-checksums -Ppayara-server-remote,playwright \
                         -Dpayara.version=${pom.version} \
                         -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                         -Djavax.xml.accessExternalSchema=all \
