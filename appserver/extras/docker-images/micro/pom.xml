@@ -3,7 +3,7 @@
 
     DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 
-    Copyright (c) 2023 Payara Foundation and/or its affiliates. All rights reserved.
+    Copyright (c) 2023-2024 Payara Foundation and/or its affiliates. All rights reserved.
 
     The contents of this file are subject to the terms of either the GNU
     General Public License Version 2 only ("GPL") or the Common Development
@@ -52,7 +52,7 @@
     <name>Payara Docker Images - Micro</name>
 
     <properties>
-        <docker.payara.repository>payara/micro</docker.payara.repository>
+        <docker.payara.repository>${docker.payara.registry}/payara/micro</docker.payara.repository>
         <docker.java.repository>azul/zulu-openjdk-alpine</docker.java.repository>
     </properties>
 
