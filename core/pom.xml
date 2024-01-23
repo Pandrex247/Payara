@@ -46,7 +46,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>fish.payara.server.core</groupId>
     <artifactId>core-aggregator</artifactId>
-    <version>6.12.0-SNAPSHOT</version>
+    <version>6.11.1</version>
 
     <packaging>pom</packaging>
     <name>Payara Core Aggregator</name>
@@ -54,7 +54,7 @@
     <description>All of Payara Core modules</description>
 
     <properties>
-        <payara.core.version>6.12.0-SNAPSHOT</payara.core.version>
+        <payara.core.version>6.11.1</payara.core.version>
         <!-- BOM dependencies versions -->
         <payara.security-connectors.version>3.0.alpha8</payara.security-connectors.version>
         <hk2.version>3.0.1.payara-p3</hk2.version>
@@ -75,7 +75,7 @@
         <jakarta.validation.version>3.0.2</jakarta.validation.version>
         <hibernate.validator.version>8.0.0.Final</hibernate.validator.version>
         <hibernate.validator-cdi.version>8.0.0.Final</hibernate.validator-cdi.version>
-        <jaxb-impl.version>4.0.4.payara-p1</jaxb-impl.version>
+        <jaxb-impl.version>4.0.1</jaxb-impl.version>
         <jsonp-api.version>2.1.0</jsonp-api.version>
         <jakarta.security.auth.message-api.version>3.0.0</jakarta.security.auth.message-api.version>
         <jakarta.security.jacc-api.version>2.1.0</jakarta.security.jacc-api.version>
