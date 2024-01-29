@@ -571,8 +571,6 @@ public class MainHelper {
         Constants.Platform p = Constants.Platform.valueOf(platform);
         switch (p) {
             case Felix:
-            case Knopflerfish:
-            case Equinox:
                 return true;
         }
         return false;
@@ -649,12 +647,6 @@ public class MainHelper {
             switch (platform) {
                 case Felix:
                     platformHelper = new FelixHelper();
-                    break;
-                case Knopflerfish:
-                    platformHelper = new KnopflerfishHelper();
-                    break;
-                case Equinox:
-                    platformHelper = new EquinoxHelper();
                     break;
                 case Static:
                     platformHelper = new StaticHelper();
@@ -751,83 +743,6 @@ public class MainHelper {
             return platformConfig;
         }
 
-    }
-
-    static class EquinoxHelper extends PlatformHelper {
-
-        /* if equinox is installed under glassfish/eclipse this would be the
-         *  glassfish/eclipse/plugins dir that contains the equinox jars
-         *  can be null
-         * */
-        private static final File pluginsDir = null;
-
-        protected void setFwDir() {
-            String fwPath = System.getenv("EQUINOX_HOME");
-            if (fwPath == null) {
-                fwPath = new File(glassfishDir, "osgi/equinox").getAbsolutePath();
-            }
-            fwDir = new File(fwPath);
-            if (!fwDir.exists()) {
-                throw new RuntimeException("Can't locate Equinox at " + fwPath);
-            }
-        }
-
-        @Override
-        protected void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
-            // Add all the jars to classpath for the moment, since the jar name
-            // is not a constant.
-            if (pluginsDir != null) {
-                cpb.addGlob(pluginsDir, "org.eclipse.osgi_*.jar");
-            } else {
-                cpb.addJarFolder(fwDir);
-            }
-        }
-
-        @Override
-        protected Properties readPlatformConfiguration() throws IOException {
-            // GlassFish filesystem layout does not recommend use of upper case char in file names.
-            // So, we can't use ${GlassFish_Platform} to generically set the cache dir.
-            // Hence, we set it here.
-            Properties platformConfig = super.readPlatformConfiguration();
-            platformConfig.setProperty(org.osgi.framework.Constants.FRAMEWORK_STORAGE, new File(domainDir, "osgi-cache/equinox/").getAbsolutePath());
-            return platformConfig;
-        }
-    }
-
-    static class KnopflerfishHelper extends PlatformHelper {
-
-        /**
-         * Home of fw installation relative to Glassfish root installation.
-         */
-        public static final String GF_KF_HOME = "osgi/knopflerfish.org/osgi/";
-        private static final String KF_HOME = "KNOPFLERFISH_HOME";
-
-        protected void setFwDir() {
-            String fwPath = System.getenv(KF_HOME);
-            if (fwPath == null) {
-                fwPath = new File(glassfishDir, GF_KF_HOME).getAbsolutePath();
-            }
-            fwDir = new File(fwPath);
-            if (!fwDir.exists()) {
-                throw new RuntimeException("Can't locate KnopflerFish at " + fwPath);
-            }
-        }
-
-        @Override
-        protected void addFrameworkJars(ClassPathBuilder cpb) throws IOException {
-            cpb.addJar(new File(fwDir, "framework.jar"));
-        }
-
-        @Override
-        protected Properties readPlatformConfiguration() throws IOException {
-            // GlassFish filesystem layout does not recommend use of upper case char in file names.
-            // So, we can't use ${GlassFish_Platform} to generically set the cache dir.
-            // Hence, we set it here.
-            Properties platformConfig = super.readPlatformConfiguration();
-            platformConfig.setProperty(org.osgi.framework.Constants.FRAMEWORK_STORAGE,
-                    new File(domainDir, "osgi-cache/knopflerfish/").getAbsolutePath());
-            return platformConfig;
-        }
     }
 
     static class StaticHelper extends PlatformHelper {

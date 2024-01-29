@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright 2024 Payara Foundation and/or its affiliates.
 
 package com.sun.enterprise.glassfish.bootstrap.osgi;
 
@@ -46,8 +47,6 @@ import org.glassfish.embeddable.BootstrapProperties;
 import org.glassfish.embeddable.GlassFishException;
 import org.glassfish.embeddable.GlassFishRuntime;
 import org.glassfish.embeddable.spi.RuntimeBuilder;
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleException;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.launch.Framework;
 
@@ -69,9 +68,7 @@ import com.sun.enterprise.glassfish.bootstrap.LogFacade;
 /**
  * This RuntimeBuilder can only handle GlassFish_Platform of following types:
  * <p/>
- * {@link Constants.Platform#Felix},
- * {@link Constants.Platform#Equinox},
- * and {@link Constants.Platform#Knopflerfish}.
+ * {@link Constants.Platform#Felix}
  * <p/>
  * <p/>It can't handle GenericOSGi platform,
  * because it reads framework configuration from a framework specific file when it calls
@@ -187,8 +184,6 @@ public final class OSGiGlassFishRuntimeBuilder implements RuntimeBuilder {
                 Constants.Platform platform = Constants.Platform.valueOf(platformStr);
                 switch (platform) {
                     case Felix:
-                    case Equinox:
-                    case Knopflerfish:
                         return true;
                 }
             } catch (IllegalArgumentException ex) {
