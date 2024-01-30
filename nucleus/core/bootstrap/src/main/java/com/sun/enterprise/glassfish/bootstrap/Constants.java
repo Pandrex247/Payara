@@ -68,5 +68,5 @@ public final class Constants {
 
 
     // Supported platform we know about, not limited to.
-    public enum Platform {Felix, Knopflerfish, Equinox, Static, PayaraMicro}
+    public enum Platform {Felix, Static, PayaraMicro}
 }
