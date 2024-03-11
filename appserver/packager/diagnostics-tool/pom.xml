@@ -49,7 +49,7 @@
     </parent>
 
     <artifactId>diagnostics-tool</artifactId>
-    <name>Payara Enterprise Upgrade Tool Package</name>
+    <name>Payara Enterprise Diagnostics Tool Package</name>
     <packaging>distribution-fragment</packaging>
     <description>This pom describes how to assemble the Payara Enterprise Diagnostic Tool package</description>
 
