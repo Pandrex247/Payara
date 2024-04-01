@@ -218,7 +218,7 @@
         <snmp4j.version>2.5.3-payara.p1</snmp4j.version>
         <minidns.version>0.3.4</minidns.version>
         <certificate-management.version>2.0.0</certificate-management.version>
-        <diagnostics-tool.version>2.0.0-SNAPSHOT</diagnostics-tool.version>
+        <diagnostics-tool.version>2.0.0</diagnostics-tool.version>
 
         <deploy.skip>true</deploy.skip>
         <license-maven-plugin.version>2.3.0</license-maven-plugin.version>
