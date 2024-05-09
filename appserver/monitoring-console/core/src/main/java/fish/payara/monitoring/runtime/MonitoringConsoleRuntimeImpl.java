@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) 2020-2021 Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2020-2024 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -176,6 +176,11 @@ public class MonitoringConsoleRuntimeImpl
             return;
         }
         try {
+            MonitoringConsoleFactory monitoringConsoleFactory = MonitoringConsoleFactory.getInstance();
+            if (monitoringConsoleFactory == null) {
+                LOGGER.log(Level.INFO, "No monitoring console factory found, skipping init...");
+                return;
+            }
             LOGGER.info("Bootstrapping Monitoring Console Runtime");
             boolean isDas = serverEnv.isDas();
             config = domain.getExtensionByType(MonitoringConsoleConfiguration.class);
@@ -185,7 +190,7 @@ public class MonitoringConsoleRuntimeImpl
             }
             Supplier<List<MonitoringDataSource>> dataSources = () -> serviceLocator.getAllServices(MonitoringDataSource.class);
             Supplier<List<MonitoringWatchSource>> watchSources = () -> serviceLocator.getAllServices(MonitoringWatchSource.class);
-            console = MonitoringConsoleFactory.getInstance().create(serverEnv.getInstanceName(), isDas, this, dataSources, watchSources);
+            console = monitoringConsoleFactory.create(serverEnv.getInstanceName(), isDas, this, dataSources, watchSources);
             setEnabled(parseBoolean(serverConfig.getMonitoringService().getMonitoringEnabled()));
         } catch (Exception ex) {
             LOGGER.log(Level.WARNING, "Failed to init monitoring console runtime", ex);
