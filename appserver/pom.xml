@@ -579,16 +579,6 @@
                 <scope>compile</scope>
             </dependency>
 
-            <!--
-                only used to satisfy findbugs,
-                can be removed once GLASSFISH-20835 is resolved
-            -->
-            <dependency>
-                <groupId>org.netbeans.external</groupId>
-                <artifactId>ddl</artifactId>
-                <version>RELEASE210</version>
-            </dependency>
-
             <dependency>
                 <groupId>org.jboss.logging</groupId>
                 <artifactId>jboss-logging</artifactId>
