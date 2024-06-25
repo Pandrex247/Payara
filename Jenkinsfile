@@ -57,6 +57,9 @@ pipeline {
                     agent {
                         label 'general-purpose'
                     }
+                    options {
+                        retry(3)
+                    }
                     steps {
                         setupDomain()
                         
@@ -82,6 +85,9 @@ pipeline {
                     agent {
                         label 'general-purpose'
                     }
+                    options {
+                        retry(3)
+                    }
                     steps {
                         setupDomain()
                     
@@ -106,6 +112,9 @@ pipeline {
                 stage('MP TCK Runners') {
                     agent {
                         label 'general-purpose'
+                    }
+                    options {
+                        retry(3)
                     }
                     steps{
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
@@ -137,6 +146,9 @@ pipeline {
                     agent {
                         label 'general-purpose'
                     }
+                    options {
+                        retry(3)
+                    }
                     steps{
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out EE8 tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
@@ -165,6 +177,9 @@ pipeline {
                 stage('CargoTracker Tests') {
                     agent {
                         label 'general-purpose'
+                    }
+                    options {
+                        retry(3)
                     }
                     steps{
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out cargoTracker tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
@@ -198,6 +213,9 @@ pipeline {
                     agent {
                         label 'general-purpose'
                     }
+                    options {
+                        retry(3)
+                    }
                     steps{
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out EE7 tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
@@ -228,6 +246,9 @@ pipeline {
                 stage('Payara Functional Tests') {
                     agent {
                         label 'general-purpose'
+                    }
+                    options {
+                        retry(3)
                     }
                     steps {
                         setupM2RepositoryOnly()
