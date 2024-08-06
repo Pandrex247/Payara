@@ -47,7 +47,7 @@
     <parent>
 	<groupId>fish.payara.server.internal.persistence</groupId>
     	<artifactId>persistence</artifactId>
-        <version>6.17.0</version>
+        <version>6.18.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>gf-jpa-connector</artifactId>
