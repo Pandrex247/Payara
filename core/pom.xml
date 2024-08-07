@@ -609,7 +609,7 @@
             <dependency>
                 <groupId>org.glassfish.jersey</groupId>
                 <artifactId>jersey-bom</artifactId>
-                <version>${jersey.version}</version>
+                <version>4.0.0-M1</version>
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
