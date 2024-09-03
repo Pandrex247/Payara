@@ -43,7 +43,7 @@
     <parent>
         <groupId>fish.payara.server.internal.payara-appserver-modules</groupId>
         <artifactId>payara-appserver-modules</artifactId>
-        <version>6.18.0</version>
+        <version>6.19.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>jaxrs-client-tracing</artifactId>
