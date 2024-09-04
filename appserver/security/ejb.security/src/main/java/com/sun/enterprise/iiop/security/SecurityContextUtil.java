@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2018-2024] [Payara Foundation and/or its affiliates]
+// Portions Copyright [2018-2021] [Payara Foundation and/or its affiliates]
 package com.sun.enterprise.iiop.security;
 
 import static com.sun.corba.ee.spi.presentation.rmi.StubAdapter.isLocal;
@@ -46,15 +46,21 @@ import static com.sun.enterprise.security.common.AppservAccessController.privile
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
 
+import java.net.MalformedURLException;
 import java.net.Socket;
-import jakarta.security.jacc.Policy;
+import java.net.URL;
+import java.security.CodeSource;
+import java.security.Policy;
+import java.security.Principal;
+import java.security.ProtectionDomain;
+import java.security.cert.Certificate;
+import java.util.Set;
 import java.util.logging.Level;
 
 import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import javax.security.auth.Subject;
 
-import jakarta.security.jacc.PolicyFactory;
 import org.glassfish.enterprise.iiop.api.GlassFishORBHelper;
 import org.glassfish.enterprise.iiop.api.ProtocolManager;
 import org.glassfish.hk2.api.PostConstruct;
@@ -94,7 +100,7 @@ public class SecurityContextUtil implements PostConstruct {
 
     @Override
     public void postConstruct() {
-        privilegedAlways(() -> policy = PolicyFactory.getPolicyFactory().getPolicy());
+        privilegedAlways(() -> policy = Policy.getPolicy());
     }
 
     /**
@@ -226,17 +232,33 @@ public class SecurityContextUtil implements PostConstruct {
         if (protocolManager.getEjbDescriptor(objectId) != null) {
             return true; // an EJB object
         }
+        
+        // Create a ProtectionDomain for principal on current thread.
+        ProtectionDomain principalsDomain = createPrincipalDomain(getPrincipalArray(com.sun.enterprise.security.SecurityContext.getCurrent()));
+
         // Create the permission we want to check for
         CORBAObjectPermission permission = new CORBAObjectPermission("*", method);
         
         // Check if policy gives principal the permissions
-        boolean result = policy.implies(permission, com.sun.enterprise.security.SecurityContext.getCurrent().getPrincipalSet());
+        boolean result = policy.implies(principalsDomain, permission);
 
         if (_logger.isLoggable(FINE)) {
             _logger.log(FINE, "CORBA Object permission evaluation result=" + result + " for method=" + method);
         }
         
         return result;
+    }
+    
+    private ProtectionDomain createPrincipalDomain(Principal[] principals) throws MalformedURLException {
+        return new ProtectionDomain(
+                new CodeSource(new URL("file://"), (Certificate[]) null), 
+                null, null,
+                principals);
+    }
+    
+    private Principal[] getPrincipalArray(com.sun.enterprise.security.SecurityContext securityContext) {
+        Set<Principal> principalSet = securityContext.getPrincipalSet();
+        return principalSet == null ? null : principalSet.toArray(new Principal[principalSet.size()]);
     }
 
     /**

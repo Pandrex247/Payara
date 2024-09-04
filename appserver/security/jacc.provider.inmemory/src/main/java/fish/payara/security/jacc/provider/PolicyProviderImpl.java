@@ -41,12 +41,12 @@ package fish.payara.security.jacc.provider;
 
 import fish.payara.jacc.ContextProvider;
 import fish.payara.jacc.JaccConfigurationFactory;
-import org.glassfish.exousia.modules.def.DefaultPolicy;
+import org.glassfish.exousia.modules.locked.SimplePolicyProvider;
 
 /**
  * Implementation of jacc PolicyProvider class
  */
-public class PolicyProviderImpl extends DefaultPolicy {
+public class PolicyProviderImpl extends SimplePolicyProvider {
     
 
     private static final ThreadLocal<Object> contextProviderReentry = new ThreadLocal<Object>() {

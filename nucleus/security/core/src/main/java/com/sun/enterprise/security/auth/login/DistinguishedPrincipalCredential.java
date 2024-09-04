@@ -37,16 +37,13 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2018-2024] [Payara Foundation and/or its affiliates]
+// Portions Copyright [2018-2021] [Payara Foundation and/or its affiliates]
 
 package com.sun.enterprise.security.auth.login;
 
-import com.sun.enterprise.security.common.UserPrincipal;
-
-import java.io.Serializable;
 import java.security.Principal;
 
-public class DistinguishedPrincipalCredential implements UserPrincipal, Serializable {
+public class DistinguishedPrincipalCredential {
 
     private final Principal principal;
 
@@ -61,14 +58,5 @@ public class DistinguishedPrincipalCredential implements UserPrincipal, Serializ
     @Override
     public String toString() {
         return "DistingushedPrincipal: " + principal;
-    }
-
-    @Override
-    public String getName() {
-        if (principal == null) {
-            return null;
-        }
-
-        return principal.getName();
     }
 }

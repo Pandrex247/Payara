@@ -59,32 +59,12 @@ import com.sun.enterprise.security.jacc.cache.CachedPermission;
 import com.sun.enterprise.security.jacc.cache.CachedPermissionImpl;
 import com.sun.enterprise.security.jacc.cache.PermissionCache;
 import com.sun.enterprise.security.jacc.cache.PermissionCacheFactory;
-import com.sun.enterprise.security.web.integration.GlassFishPrincipalMapper;
-import com.sun.enterprise.security.web.integration.GlassFishToExousiaConverter;
 import com.sun.enterprise.security.web.integration.WebPrincipal;
 import com.sun.enterprise.security.web.integration.WebSecurityManagerFactory;
 import com.sun.logging.LogDomains;
-import fish.payara.jacc.JaccConfigurationFactory;
-import jakarta.security.enterprise.CallerPrincipal;
-import jakarta.security.jacc.Policy;
-import jakarta.security.jacc.PolicyConfiguration;
-import jakarta.security.jacc.PolicyConfigurationFactory;
-import jakarta.security.jacc.PolicyContext;
-import jakarta.security.jacc.PolicyContextException;
-import jakarta.security.jacc.PolicyFactory;
-import jakarta.security.jacc.WebResourcePermission;
-import jakarta.security.jacc.WebRoleRefPermission;
-import jakarta.security.jacc.WebUserDataPermission;
-import jakarta.servlet.http.HttpServletRequest;
-import org.glassfish.deployment.common.SecurityRoleMapperFactory;
-import org.glassfish.exousia.AuthorizationService;
-import org.glassfish.exousia.mapping.DefaultPrincipalMapper;
-import org.glassfish.internal.api.ServerContext;
-import org.glassfish.security.common.Group;
-import org.glassfish.security.common.PrincipalImpl;
-import org.glassfish.security.common.Role;
 
-import javax.security.auth.Subject;
+import fish.payara.jacc.JaccConfigurationFactory;
+
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -92,24 +72,37 @@ import java.net.URL;
 import java.security.AccessControlException;
 import java.security.CodeSource;
 import java.security.Permission;
+import java.security.Policy;
 import java.security.Principal;
 import java.security.PrivilegedActionException;
 import java.security.ProtectionDomain;
 import java.security.cert.Certificate;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
+
+import jakarta.security.jacc.PolicyConfiguration;
+import jakarta.security.jacc.PolicyConfigurationFactory;
+import jakarta.security.jacc.PolicyContext;
+import jakarta.security.jacc.PolicyContextException;
+import jakarta.security.jacc.WebResourcePermission;
+import jakarta.security.jacc.WebRoleRefPermission;
+import jakarta.security.jacc.WebUserDataPermission;
+import jakarta.servlet.http.HttpServletRequest;
+
+import org.glassfish.internal.api.ServerContext;
+import org.glassfish.security.common.Group;
+import org.glassfish.security.common.PrincipalImpl;
+import org.glassfish.security.common.Role;
 
 import static com.sun.enterprise.security.common.AppservAccessController.privilegedException;
+import java.util.HashSet;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.SEVERE;
+import jakarta.security.enterprise.CallerPrincipal;
 import static org.glassfish.api.web.Constants.ADMIN_VS;
 
 /**
@@ -156,7 +149,7 @@ public class JaccWebAuthorizationManager {
 
     // The JACC policy provider. This is the pluggable lower level authorization module
     // to which this class delegates all authorization queries.
-    protected Policy policy = PolicyFactory.getPolicyFactory().getPolicy();
+    protected Policy policy = Policy.getPolicy();
     protected PolicyConfigurationFactory policyConfigurationFactory;
     protected PolicyConfiguration policyConfiguration;
     protected CodeSource codesource;
@@ -182,9 +175,6 @@ public class JaccWebAuthorizationManager {
     private final WebSecurityDeployerProbeProvider probeProvider = new WebSecurityDeployerProbeProvider();
     private boolean register = true;
 
-    private final ThreadLocal<HttpServletRequest> currentRequest = new ThreadLocal<>();
-    private AuthorizationService authorizationService;
-
     public JaccWebAuthorizationManager(WebBundleDescriptor webBundleDescriptor, ServerContext serverContext, WebSecurityManagerFactory webSecurityManagerFactory, boolean register) throws PolicyContextException {
         this.register = register;
         this.webBundleDescriptor = webBundleDescriptor;
@@ -193,32 +183,8 @@ public class JaccWebAuthorizationManager {
         this.webSecurityManagerFactory = webSecurityManagerFactory;
 
         String appname = getAppId();
-        SecurityRoleMapperFactory securityRoleMapperFactory = SecurityRoleMapperFactoryGen.getSecurityRoleMapperFactory();
-        securityRoleMapperFactory.setAppNameForContext(getAppId(), CONTEXT_ID);
+        SecurityRoleMapperFactoryGen.getSecurityRoleMapperFactory().setAppNameForContext(getAppId(), CONTEXT_ID);
         initialise(appname);
-
-        Collection<String> roles = new ArrayList<>();
-
-        while (securityRoleMapperFactory.getRoleMapper(getAppId()).getRoles().hasNext()){
-            roles.add((String) securityRoleMapperFactory.getRoleMapper(getAppId()).getRoles().next());
-        }
-
-        authorizationService = new AuthorizationService(
-                CONTEXT_ID,
-                () -> SecurityContext.getCurrent().getSubject(),
-                () -> new GlassFishPrincipalMapper(CONTEXT_ID)
-        );
-
-        authorizationService.setConstrainedUriRequestAttribute(CONSTRAINT_URI);
-        authorizationService.setRequestSupplier(CONTEXT_ID, currentRequest::get);
-        authorizationService.addConstraintsToPolicy(
-                GlassFishToExousiaConverter.getConstraintsFromBundle(webBundleDescriptor),
-                webBundleDescriptor.getRoles()
-                        .stream()
-                        .map(PrincipalImpl::getName)
-                        .collect(Collectors.toSet()),
-                webBundleDescriptor.isDenyUncoveredHttpMethods(),
-                GlassFishToExousiaConverter.getSecurityRoleRefsFromBundle(webBundleDescriptor));
     }
 
     // fix for CR 6155144
@@ -283,16 +249,17 @@ public class JaccWebAuthorizationManager {
      *
      */
     public int hasUserDataPermission(HttpServletRequest servletRequest, String uri, String httpMethod) {
-        setSecurityInfo(servletRequest);
+        setServletRequestForJACC(servletRequest);
 
-
-        boolean isGranted;
+        WebUserDataPermission dataPermission;
+        boolean requestIsSecure = servletRequest.isSecure();
         if (uri == null) {
-            isGranted = authorizationService.checkWebUserDataPermission(servletRequest);
+            dataPermission = new WebUserDataPermission(servletRequest);
         } else {
-            isGranted = authorizationService.checkWebUserDataPermission(uri, httpMethod, servletRequest.isSecure());
+            dataPermission = new WebUserDataPermission(uri, httpMethod == null ? null : new String[] { httpMethod }, requestIsSecure ? "CONFIDENTIAL" : null);
         }
 
+        boolean isGranted = checkPermission(dataPermission, defaultPrincipalSet);
         int result = 0;
 
         if (isGranted) {
@@ -300,19 +267,22 @@ public class JaccWebAuthorizationManager {
         }
 
         if (logger.isLoggable(FINE)) {
+            logger.log(FINE, "[Web-Security] hasUserDataPermission permission: {0}", dataPermission);
             logger.log(FINE, "[Web-Security] hasUserDataPermission isGranted: {0}", isGranted);
         }
 
         // Audit the grant
         recordWebInvocation(servletRequest, USERDATA, isGranted);
 
-        if (!isGranted && !servletRequest.isSecure()) {
+        if (!isGranted && !requestIsSecure) {
 
             if (uri == null) {
                 httpMethod = servletRequest.getMethod();
             }
 
-            isGranted = authorizationService.checkWebUserDataPermission(uri, httpMethod, true, defaultPrincipalSet);
+            dataPermission = new WebUserDataPermission(dataPermission.getName(), httpMethod == null ? null : new String[] { httpMethod }, "CONFIDENTIAL");
+
+            isGranted = checkPermission(dataPermission, defaultPrincipalSet);
 
             if (isGranted) {
                 result = -1;
@@ -323,16 +293,19 @@ public class JaccWebAuthorizationManager {
     }
 
     public boolean isPermitAll(HttpServletRequest request) {
-        setSecurityInfo(request);
-        return authorizationService.checkWebResourcePermission(request, (Subject) null);
-    }
+        boolean isPermitAll = false;
 
-    public void setSecurityInfo(HttpServletRequest httpRequest) {
-        if (httpRequest != null) {
-            currentRequest.set(httpRequest);
+        WebResourcePermission webResourcePermission = createWebResourcePermission(request);
+
+        if (uncheckedPermissionCache != null) {
+            isPermitAll = uncheckedPermissionCache.checkPermission(webResourcePermission);
         }
 
-        AuthorizationService.setThreadContextId(CONTEXT_ID);
+        if (isPermitAll == false) {
+            isPermitAll = checkPermissionWithoutCache(webResourcePermission, null);
+        }
+
+        return isPermitAll;
     }
 
     /**
@@ -342,14 +315,18 @@ public class JaccWebAuthorizationManager {
      * @return true is the resource is granted, false if denied
      */
     public boolean hasResourcePermission(HttpServletRequest servletRequest) {
-        setSecurityInfo(servletRequest);
-        SecurityContext.setCurrent(getSecurityContext(servletRequest.getUserPrincipal()));
+        SecurityContext securityContect = getSecurityContext(servletRequest.getUserPrincipal());
 
-        boolean isGranted = authorizationService.checkWebResourcePermission(servletRequest);
+        WebResourcePermission webResourcePermission = createWebResourcePermission(servletRequest);
+        setServletRequestForJACC(servletRequest);
+
+        boolean isGranted = checkPermission(webResourcePermission, securityContect.getPrincipalSet());
+
+        SecurityContext.setCurrent(securityContect);
 
         if (logger.isLoggable(FINE)) {
             logger.log(Level.FINE, "[Web-Security] hasResource isGranted: {0}", isGranted);
-            logger.log(Level.FINE, "[Web-Security] hasResource perm: {0}", servletRequest.getRequestURI());
+            logger.log(Level.FINE, "[Web-Security] hasResource perm: {0}", webResourcePermission);
         }
 
         recordWebInvocation(servletRequest, RESOURCE, isGranted);
@@ -420,7 +397,7 @@ public class JaccWebAuthorizationManager {
 
         // Refresh policy if the context was in service
         if (wasInService) {
-            PolicyFactory.getPolicyFactory().getPolicy().refresh();
+            Policy.getPolicy().refresh();
         }
 
         PermissionCacheFactory.removePermissionCache(uncheckedPermissionCache);
@@ -638,7 +615,7 @@ public class JaccWebAuthorizationManager {
         }
 
         // Check whether the requested permission is granted to any of the given principals
-        return principals == null ? policy.implies(requestedPermission) : policy.implies(requestedPermission, principals);
+        return policy.implies(getProtectionDomain(principals), requestedPermission);
     }
 
     private PolicyConfigurationFactory getPolicyFactory() throws PolicyContextException {

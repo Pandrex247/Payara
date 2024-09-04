@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2018-2024] Payara Foundation and/or affiliates
+// Portions Copyright [2018-2021] Payara Foundation and/or affiliates
 
 package org.glassfish.security.services.impl.authorization;
 
@@ -46,13 +46,15 @@ import java.security.Permission;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.security.AccessController;
-import jakarta.security.jacc.Policy;
+import java.security.Principal;
+import java.security.ProtectionDomain;
+import java.security.Policy;
 import java.security.CodeSource;
 import java.security.CodeSigner;
 import javax.security.auth.Subject;
 
-import jakarta.security.jacc.PolicyFactory;
 import org.glassfish.security.services.api.authorization.AuthorizationService;
 import org.glassfish.security.services.api.authorization.AzAction;
 import org.glassfish.security.services.api.authorization.AzResource;
@@ -226,9 +228,13 @@ public final class AuthorizationServiceImpl implements AuthorizationService, Pos
             throw new IllegalArgumentException(localStrings.getLocalString("service.permission_null","The supplied Permission is null."));
         }
 
-        Policy policy = PolicyFactory.getPolicyFactory().getPolicy();
+        Set<Principal> principalset = subject.getPrincipals();
+        Principal[] principalAr = (principalset.isEmpty()) ? null : principalset.toArray(new Principal[principalset.size()]);
+        ProtectionDomain pd = new ProtectionDomain(NULL_CODESOURCE, null, null, principalAr); 
+        Policy policy = Policy.getPolicy();
+        boolean result = policy.implies(pd, permission);
 
-        return policy.implies(permission, subject);
+        return result;
 	}
 
 

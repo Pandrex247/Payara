@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2018-2024] [Payara Foundation and/or its affiliates]
+// Portions Copyright [2018-2021] [Payara Foundation and/or its affiliates]
 package com.sun.enterprise.security.jacc.cache;
 
 import static java.util.Collections.list;
@@ -48,7 +48,7 @@ import java.security.CodeSource;
 import java.security.Permission;
 import java.security.PermissionCollection;
 import java.security.Permissions;
-import jakarta.security.jacc.Policy;
+import java.security.Policy;
 import java.security.PrivilegedActionException;
 import java.security.PrivilegedExceptionAction;
 import java.util.concurrent.locks.Lock;
@@ -61,7 +61,6 @@ import jakarta.security.jacc.PolicyContext;
 import com.sun.enterprise.security.common.AppservAccessController;
 import com.sun.enterprise.security.jacc.cache.CachedPermissionImpl.Epoch;
 import com.sun.logging.LogDomains;
-import jakarta.security.jacc.PolicyFactory;
 
 /**
  * This class is
@@ -71,7 +70,7 @@ import jakarta.security.jacc.PolicyFactory;
 public class PermissionCache extends Object {
 
     private static Logger _logger = LogDomains.getLogger(PermissionCache.class, LogDomains.SECURITY_LOGGER);
-    private static Policy policy = PolicyFactory.getPolicyFactory().getPolicy();
+    private static Policy policy = Policy.getPolicy();
     private static AllPermission allPermission = new AllPermission();
 
     private Permissions cache;
@@ -260,7 +259,8 @@ public class PermissionCache extends Object {
             if (setPc) {
                 setPolicyContextID(pcID);
             }
-            pc = policy.getPermissionCollection(PolicyContext.get(PolicyContext.SUBJECT));
+
+            pc = policy.getPermissions(codesource);
         } catch (Exception ex) {
             _logger.log(SEVERE, "JACC: Unexpected security exception on access decision", ex);
             return false;

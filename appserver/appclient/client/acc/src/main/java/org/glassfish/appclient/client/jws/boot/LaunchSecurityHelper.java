@@ -37,7 +37,6 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2024] Payara Foundation and/or affiliates
 
 package org.glassfish.appclient.client.jws.boot;
 
@@ -47,8 +46,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URI;
-import jakarta.security.jacc.Policy;
-import jakarta.security.jacc.PolicyFactory;
+import java.security.Policy;
 import org.glassfish.appclient.client.acc.AppClientContainer;
 import org.glassfish.appclient.client.acc.Util;
 
@@ -144,7 +142,7 @@ public class LaunchSecurityHelper {
         int idx = firstFreePolicyIndex();
         URI policyFileURI = policyFile.toURI();
         java.security.Security.setProperty("policy.url." + idx, policyFileURI.toASCIIString());
-        Policy p = PolicyFactory.getPolicyFactory().getPolicy();
+        Policy p = Policy.getPolicy();
         p.refresh();
     }
 }
