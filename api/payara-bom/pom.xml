@@ -202,7 +202,7 @@
 
             <dependency>
                 <groupId>fish.payara.arquillian</groupId>
-                <artifactId>payara-micro-remote</artifactId>
+                <artifactId>arquillian-payara-micro-remote</artifactId>
                 <version>${payara-arquillian-container.version}</version>
                 <scope>test</scope>
             </dependency>
