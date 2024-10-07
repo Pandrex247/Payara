@@ -2,7 +2,7 @@
 <!--
  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
 
- Copyright (c) 2019-2023 Payara Foundation and/or its affiliates. All rights reserved.
+ Copyright (c) [2019-2024] Payara Foundation and/or its affiliates. All rights reserved.
 
  The contents of this file are subject to the terms of either the GNU
  General Public License Version 2 only ("GPL") or the Common Development
@@ -113,6 +113,11 @@
         <dependency>
             <groupId>fish.payara.server.core.admin</groupId>
             <artifactId>admin-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>fish.payara.server</groupId>
+            <artifactId>upgrade-services</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>fish.payara.server.core.orb</groupId>
