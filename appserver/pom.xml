@@ -582,7 +582,7 @@
             <dependency>
                 <groupId>org.jboss.logging</groupId>
                 <artifactId>jboss-logging</artifactId>
-                <version>${jboss.logging.version}</version>
+                <version>${jboss-logging.version}</version>
                 <optional>true</optional>
             </dependency>
             
