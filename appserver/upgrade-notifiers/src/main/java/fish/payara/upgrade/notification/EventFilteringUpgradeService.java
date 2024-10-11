@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) [2024] Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2024 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -38,15 +38,17 @@
  * holder.
  */
 
-package fish.payara.upgrade;
+package fish.payara.upgrade.notification;
 
 import com.sun.enterprise.config.serverbeans.Config;
 import com.sun.enterprise.config.serverbeans.Configs;
+import fish.payara.internal.notification.EventLevel;
 import fish.payara.internal.notification.PayaraNotifierConfiguration;
 import fish.payara.internal.notification.admin.NotificationServiceConfiguration;
 import jakarta.inject.Inject;
-import org.glassfish.api.admin.config.ConfigurationUpgrade;
+import org.glassfish.api.StartupRunLevel;
 import org.glassfish.hk2.api.PostConstruct;
+import org.glassfish.hk2.runlevel.RunLevel;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Transaction;
 
@@ -54,7 +56,8 @@ import org.jvnet.hk2.config.Transaction;
  * Upgrade service to remove the noisy parameter from notifier configurations in the domain.xml.
  */
 @Service
-public class EventFilteringUpgrade implements ConfigurationUpgrade, PostConstruct {
+@RunLevel(StartupRunLevel.VAL)
+public class EventFilteringUpgradeService implements PostConstruct {
     @Inject
     Configs configs;
 
@@ -63,16 +66,30 @@ public class EventFilteringUpgrade implements ConfigurationUpgrade, PostConstruc
     public void postConstruct () {
         for (Config config : configs.getConfig()) {
             NotificationServiceConfiguration notifierConfig = config.getExtensionByType(NotificationServiceConfiguration.class);
-            if (notifierConfig != null) {
-                for (PayaraNotifierConfiguration notifier : notifierConfig.getNotifierConfigurationList()) {
-                    Transaction transaction = new Transaction();
-                    try {
-                        PayaraNotifierConfiguration writableNotifier = transaction.enroll(notifier);
-                        writableNotifier.noisy(Boolean.valueOf(PayaraNotifierConfiguration.DEFAULT_NOISY_VALUE));
-                        transaction.commit();
-                    } catch (Exception e) {
-                        transaction.rollback();
+            if (notifierConfig == null) {
+                continue;
+            }
+
+            for (PayaraNotifierConfiguration notifier : notifierConfig.getNotifierConfigurationList()) {
+                if (!PayaraNotifierConfiguration.DEFAULT_EVENT_FILTER.equals(notifier.getFilter())) {
+                    continue;
+                }
+
+                Transaction transaction = new Transaction();
+                try {
+                    PayaraNotifierConfiguration writableNotifier = transaction.enroll(notifier);
+
+                    if (Boolean.TRUE.toString().equals(writableNotifier.getNoisy())) {
+                        writableNotifier.filter(EventLevel.INFO.name());
                     }
+                    else {
+                        writableNotifier.filter(EventLevel.WARNING.name());
+                    }
+                    writableNotifier.noisy(Boolean.valueOf(PayaraNotifierConfiguration.DEFAULT_NOISY_VALUE));
+                    transaction.commit();
+                }
+                catch (Exception e) {
+                    transaction.rollback();
                 }
             }
         }
