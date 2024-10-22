@@ -50,7 +50,10 @@ import org.glassfish.api.StartupRunLevel;
 import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.jvnet.hk2.annotations.Service;
-import org.jvnet.hk2.config.Transaction;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
+
+import java.beans.PropertyVetoException;
 
 /**
  * Upgrade service to remove the noisy parameter from notifier configurations in the domain.xml.
@@ -71,25 +74,22 @@ public class EventFilteringUpgradeService implements PostConstruct {
             }
 
             for (PayaraNotifierConfiguration notifier : notifierConfig.getNotifierConfigurationList()) {
-                if (!PayaraNotifierConfiguration.DEFAULT_EVENT_FILTER.equals(notifier.getFilter())) {
-                    continue;
-                }
-
-                Transaction transaction = new Transaction();
                 try {
-                    PayaraNotifierConfiguration writableNotifier = transaction.enroll(notifier);
-
-                    if (Boolean.TRUE.toString().equals(writableNotifier.getNoisy())) {
-                        writableNotifier.filter(EventLevel.INFO.name());
-                    }
-                    else {
-                        writableNotifier.filter(EventLevel.WARNING.name());
-                    }
-                    writableNotifier.noisy(Boolean.valueOf(PayaraNotifierConfiguration.DEFAULT_NOISY_VALUE));
-                    transaction.commit();
+                    ConfigSupport.apply(
+                        new SingleConfigCode<PayaraNotifierConfiguration>() {
+                            @Override
+                            public Object run (PayaraNotifierConfiguration notifierConfiguration) throws PropertyVetoException {
+                                if (Boolean.TRUE.toString().equals(notifierConfiguration.getNoisy())) {
+                                    notifierConfiguration.filter(EventLevel.INFO.name());
+                                }
+                                notifierConfiguration.noisy(false);
+                                return notifierConfiguration;
+                            }
+                        },
+                        notifier
+                    );
                 }
-                catch (Exception e) {
-                    transaction.rollback();
+                catch (Exception ignored) {
                 }
             }
         }
