@@ -26,7 +26,7 @@ public class UpgradeJavaMail implements PostConstruct {
     @Override
     public void postConstruct () {
         for (MailResource resource : this.resources.getResources(MailResource.class)) {
-            if (resource == null) {
+            if (resource == null || resource.getUpgrade().equals(Boolean.FALSE.toString())) {
                 continue;
             }
 

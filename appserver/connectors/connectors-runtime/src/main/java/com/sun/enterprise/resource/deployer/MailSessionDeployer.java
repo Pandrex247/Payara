@@ -37,9 +37,9 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  *
- * Portions Copyright [2017-2021] Payara Foundation and/or affiliates
+ * Portions Copyright [2017-2024] Payara Foundation and/or affiliates
  */
-// Portions Copyright [2017-2021] [Payara Foundation and/or its affiliates]
+// Portions Copyright [2017-2024] [Payara Foundation and/or its affiliates]
 
 package com.sun.enterprise.resource.deployer;
 
@@ -530,6 +530,16 @@ public class MailSessionDeployer implements ResourceDeployer {
         @Override
         public void setDescription(String value) throws PropertyVetoException {
             //do nothing
+        }
+
+        @Override
+        public String getUpgrade () {
+            return Boolean.TRUE.toString();
+        }
+
+        @Override
+        public void setUpgrade (Boolean value) throws PropertyVetoException {
+            // do nothing
         }
 
         @Override
