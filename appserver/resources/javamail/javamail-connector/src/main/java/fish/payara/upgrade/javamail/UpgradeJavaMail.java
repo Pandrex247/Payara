@@ -7,7 +7,12 @@ import org.glassfish.hk2.api.PostConstruct;
 import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.resources.javamail.config.MailResource;
 import org.jvnet.hk2.annotations.Service;
+import org.jvnet.hk2.config.ConfigSupport;
+import org.jvnet.hk2.config.SingleConfigCode;
 import org.jvnet.hk2.config.Transaction;
+import org.jvnet.hk2.config.TransactionFailure;
+
+import java.beans.PropertyVetoException;
 
 @Service
 @RunLevel(StartupRunLevel.VAL)
@@ -25,32 +30,30 @@ public class UpgradeJavaMail implements PostConstruct {
                 continue;
             }
 
-            if (resource.getStoreProtocolClass().startsWith(OLD_PACKAGE)) {
-                Transaction transaction = new Transaction();
-                try {
-                    MailResource writableResource = transaction.enroll(resource);
-                    writableResource.setStoreProtocolClass(
-                        resource.getStoreProtocolClass().replace(OLD_PACKAGE, NEW_PACKAGE)
-                    );
-                    transaction.commit();
-                }
-                catch (Exception e) {
-                    transaction.rollback();
-                }
-            }
+            try {
+                ConfigSupport.apply(
+                    new SingleConfigCode<MailResource>() {
+                        @Override
+                        public Object run (MailResource mailResource) throws PropertyVetoException {
+                            if (mailResource.getStoreProtocolClass().startsWith(OLD_PACKAGE)) {
+                                mailResource.setStoreProtocolClass(
+                                    mailResource.getStoreProtocolClass().replace(OLD_PACKAGE, NEW_PACKAGE)
+                                );
+                            }
 
-            if (resource.getTransportProtocolClass().startsWith(OLD_PACKAGE)) {
-                Transaction transaction = new Transaction();
-                try {
-                    MailResource writableResource = transaction.enroll(resource);
-                    writableResource.setTransportProtocolClass(
-                        writableResource.getTransportProtocolClass().replace(OLD_PACKAGE, NEW_PACKAGE)
-                    );
-                    transaction.commit();
-                }
-                catch (Exception e) {
-                    transaction.rollback();
-                }
+                            if (mailResource.getTransportProtocolClass().startsWith(OLD_PACKAGE)) {
+                                mailResource.setTransportProtocolClass(
+                                    mailResource.getTransportProtocolClass().replace(OLD_PACKAGE, NEW_PACKAGE)
+                                );
+                            }
+                            return mailResource;
+                        }
+                    },
+                    resource
+                );
+            }
+            catch (TransactionFailure ignored) {
+
             }
         }
     }
