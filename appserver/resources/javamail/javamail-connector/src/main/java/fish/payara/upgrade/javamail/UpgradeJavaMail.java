@@ -13,12 +13,16 @@ import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
 
 import java.beans.PropertyVetoException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Service
 @RunLevel(StartupRunLevel.VAL)
 public class UpgradeJavaMail implements PostConstruct {
     private static final String OLD_PACKAGE = "com.sun.mail";
     private static final String NEW_PACKAGE = "org.eclipse.angus.mail";
+
+    private static final Logger LOGGER = Logger.getAnonymousLogger();
 
     @Inject
     Resources resources;
@@ -32,28 +36,25 @@ public class UpgradeJavaMail implements PostConstruct {
 
             try {
                 ConfigSupport.apply(
-                    new SingleConfigCode<MailResource>() {
-                        @Override
-                        public Object run (MailResource mailResource) throws PropertyVetoException {
-                            if (mailResource.getStoreProtocolClass().startsWith(OLD_PACKAGE)) {
-                                mailResource.setStoreProtocolClass(
-                                    mailResource.getStoreProtocolClass().replace(OLD_PACKAGE, NEW_PACKAGE)
-                                );
-                            }
-
-                            if (mailResource.getTransportProtocolClass().startsWith(OLD_PACKAGE)) {
-                                mailResource.setTransportProtocolClass(
-                                    mailResource.getTransportProtocolClass().replace(OLD_PACKAGE, NEW_PACKAGE)
-                                );
-                            }
-                            return mailResource;
+                    mailResource -> {
+                        if (mailResource.getStoreProtocolClass().startsWith(OLD_PACKAGE)) {
+                            mailResource.setStoreProtocolClass(
+                                mailResource.getStoreProtocolClass().replace(OLD_PACKAGE, NEW_PACKAGE)
+                            );
                         }
+
+                        if (mailResource.getTransportProtocolClass().startsWith(OLD_PACKAGE)) {
+                            mailResource.setTransportProtocolClass(
+                                mailResource.getTransportProtocolClass().replace(OLD_PACKAGE, NEW_PACKAGE)
+                            );
+                        }
+                        return mailResource;
                     },
                     resource
                 );
             }
-            catch (TransactionFailure ignored) {
-
+            catch (TransactionFailure e) {
+                LOGGER.log(Level.WARNING, "Upgrade service failed to update package names for Mail Resource:", e);
             }
         }
     }
