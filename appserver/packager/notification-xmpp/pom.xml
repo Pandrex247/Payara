@@ -104,9 +104,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>org.igniterealtime.smack</groupId>
-            <artifactId>smack-core</artifactId>
-            <version>${smack.version}</version>
+            <groupId>fish.payara.extensions.notifiers</groupId>
+            <artifactId>smack-core-repackager</artifactId>
+            <version>${payara.notifiers.version}</version>
         </dependency>
         <dependency>
             <groupId>org.igniterealtime.smack</groupId>
