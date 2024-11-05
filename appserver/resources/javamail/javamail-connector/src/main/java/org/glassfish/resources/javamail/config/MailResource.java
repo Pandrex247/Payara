@@ -309,21 +309,6 @@ public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
      * @throws java.beans.PropertyVetoException
      */
     public void setDescription(String value) throws PropertyVetoException;
-
-    /**
-     * Gets whether this resource should have its package names updated.
-     *
-     * @return String of "true" or "false";
-     */
-    @Attribute(defaultValue = "true", dataType = Boolean.class)
-    String getUpgrade ();
-
-    /**
-     * Sets whether this resource should have its package names updated.
-     *
-     * @param value Boolean determining if the package name should be updated.
-     */
-    void setUpgrade (Boolean value) throws PropertyVetoException;
     
     /**
     	Properties as per {@link PropertyBag}

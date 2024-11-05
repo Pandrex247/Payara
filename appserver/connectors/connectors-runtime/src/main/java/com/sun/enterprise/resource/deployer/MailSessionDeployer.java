@@ -533,16 +533,6 @@ public class MailSessionDeployer implements ResourceDeployer {
         }
 
         @Override
-        public String getUpgrade () {
-            return Boolean.TRUE.toString();
-        }
-
-        @Override
-        public void setUpgrade (Boolean value) throws PropertyVetoException {
-            // do nothing
-        }
-
-        @Override
         public List<Property> getProperty() {
             // make a copy in the required format
             List<Property> props = new ArrayList<Property>();

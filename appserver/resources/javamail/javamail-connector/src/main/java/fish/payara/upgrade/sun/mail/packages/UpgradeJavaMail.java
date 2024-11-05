@@ -1,4 +1,4 @@
-package fish.payara.upgrade.javamail;
+package fish.payara.upgrade.sun.mail.packages;
 
 import com.sun.enterprise.config.serverbeans.Resources;
 import jakarta.inject.Inject;
@@ -8,11 +8,8 @@ import org.glassfish.hk2.runlevel.RunLevel;
 import org.glassfish.resources.javamail.config.MailResource;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.ConfigSupport;
-import org.jvnet.hk2.config.SingleConfigCode;
-import org.jvnet.hk2.config.Transaction;
 import org.jvnet.hk2.config.TransactionFailure;
 
-import java.beans.PropertyVetoException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,7 +27,7 @@ public class UpgradeJavaMail implements PostConstruct {
     @Override
     public void postConstruct () {
         for (MailResource resource : this.resources.getResources(MailResource.class)) {
-            if (resource == null || resource.getUpgrade().equals(Boolean.FALSE.toString())) {
+            if (resource == null || Boolean.FALSE.toString().equals(resource.getPropertyValue("upgrade"))) {
                 continue;
             }
 
@@ -39,19 +36,15 @@ public class UpgradeJavaMail implements PostConstruct {
                     mailResource -> {
                         if (mailResource.getStoreProtocolClass().startsWith(OLD_PACKAGE)) {
                             mailResource.setStoreProtocolClass(
-                                mailResource.getStoreProtocolClass().replace(OLD_PACKAGE, NEW_PACKAGE)
-                            );
+                                mailResource.getStoreProtocolClass().replace(OLD_PACKAGE, NEW_PACKAGE));
                         }
 
                         if (mailResource.getTransportProtocolClass().startsWith(OLD_PACKAGE)) {
                             mailResource.setTransportProtocolClass(
-                                mailResource.getTransportProtocolClass().replace(OLD_PACKAGE, NEW_PACKAGE)
-                            );
+                                mailResource.getTransportProtocolClass().replace(OLD_PACKAGE, NEW_PACKAGE));
                         }
                         return mailResource;
-                    },
-                    resource
-                );
+                    }, resource);
             }
             catch (TransactionFailure e) {
                 LOGGER.log(Level.WARNING, "Upgrade service failed to update package names for Mail Resource:", e);
