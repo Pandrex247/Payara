@@ -1,4 +1,4 @@
-package fish.payara.upgrade.sun.mail.packages;
+package fish.payara.upgrade.javamail;
 
 import com.sun.enterprise.config.serverbeans.Resources;
 import jakarta.inject.Inject;
@@ -18,6 +18,7 @@ import java.util.logging.Logger;
 public class UpgradeJavaMail implements PostConstruct {
     private static final String OLD_PACKAGE = "com.sun.mail";
     private static final String NEW_PACKAGE = "org.eclipse.angus.mail";
+    private static final String UPGRADE_PROPERTY = "fish.payara.upgrade.sun.mail.packages";
 
     private static final Logger LOGGER = Logger.getAnonymousLogger();
 
@@ -27,7 +28,7 @@ public class UpgradeJavaMail implements PostConstruct {
     @Override
     public void postConstruct () {
         for (MailResource resource : this.resources.getResources(MailResource.class)) {
-            if (resource == null || Boolean.FALSE.toString().equals(resource.getPropertyValue("upgrade"))) {
+            if (resource == null || Boolean.FALSE.toString().equals(resource.getPropertyValue(UPGRADE_PROPERTY))) {
                 continue;
             }
 
