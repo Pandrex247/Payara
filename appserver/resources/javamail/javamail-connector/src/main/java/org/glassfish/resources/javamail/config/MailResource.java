@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  *
- * Portions Copyright [2017-2021] Payara Foundation and/or affiliates
+ * Portions Copyright [2017-2024] Payara Foundation and/or affiliates
  */
 
 package org.glassfish.resources.javamail.config;
@@ -83,7 +83,8 @@ import com.sun.enterprise.config.serverbeans.customvalidators.JavaClassName;
  * The mail-resource element describes a jakarta.mail.Session resource 
  */
 public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, BindableResource {
-
+    String DEFAULT_STORE_PROTOCOL_CLASS = "org.eclipse.angus.mail.imap.IMAPStore";
+    String DEFAULT_TRANSPORT_PROTOCOL_CLASS = "org.eclipse.angus.mail.smtp.SMTPTransport";
 
     /**
      * Gets the value of the storeProtocol property.
@@ -109,7 +110,7 @@ public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="com.sun.mail.imap.IMAPStore")
+    @Attribute(defaultValue = DEFAULT_STORE_PROTOCOL_CLASS)
     @JavaClassName
     public String getStoreProtocolClass();
 
@@ -146,7 +147,7 @@ public interface MailResource extends ConfigBeanProxy, Resource, PropertyBag, Bi
      * @return possible object is
      *         {@link String }
      */
-    @Attribute (defaultValue="com.sun.mail.smtp.SMTPTransport")
+    @Attribute(defaultValue = DEFAULT_TRANSPORT_PROTOCOL_CLASS)
     @JavaClassName
     public String getTransportProtocolClass();
 
