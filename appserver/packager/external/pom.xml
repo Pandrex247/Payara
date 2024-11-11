@@ -69,7 +69,6 @@
         <module>jcip</module>
         <module>metro-xmlsec</module>
         <module>jakarta-ee9-shim</module>
-        <module>snmp4j-repackaged</module>
     </modules>
     <build>
         <plugins>
