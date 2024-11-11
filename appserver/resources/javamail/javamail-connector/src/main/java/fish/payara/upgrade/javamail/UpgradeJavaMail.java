@@ -28,27 +28,48 @@ public class UpgradeJavaMail implements PostConstruct {
     @Override
     public void postConstruct () {
         for (MailResource resource : this.resources.getResources(MailResource.class)) {
-            if (resource == null || Boolean.FALSE.toString().equals(resource.getPropertyValue(UPGRADE_PROPERTY))) {
+            if (resource == null) {
                 continue;
             }
+            if (Boolean.FALSE.toString().equals(resource.getPropertyValue(UPGRADE_PROPERTY))) {
+                try {
+                    ConfigSupport.apply(
+                        mailResource -> {
+                            if (mailResource.getStoreProtocolClass().equals(MailResource.DEFAULT_STORE_PROTOCOL_CLASS)) {
+                                mailResource.setStoreProtocolClass(
+                                    mailResource.getStoreProtocolClass().replace(NEW_PACKAGE, OLD_PACKAGE));
+                            }
 
-            try {
-                ConfigSupport.apply(
-                    mailResource -> {
-                        if (mailResource.getStoreProtocolClass().startsWith(OLD_PACKAGE)) {
-                            mailResource.setStoreProtocolClass(
-                                mailResource.getStoreProtocolClass().replace(OLD_PACKAGE, NEW_PACKAGE));
-                        }
-
-                        if (mailResource.getTransportProtocolClass().startsWith(OLD_PACKAGE)) {
-                            mailResource.setTransportProtocolClass(
-                                mailResource.getTransportProtocolClass().replace(OLD_PACKAGE, NEW_PACKAGE));
-                        }
-                        return mailResource;
-                    }, resource);
+                            if (mailResource.getTransportProtocolClass().equals(MailResource.DEFAULT_TRANSPORT_PROTOCOL_CLASS)) {
+                                mailResource.setTransportProtocolClass(
+                                    mailResource.getTransportProtocolClass().replace(NEW_PACKAGE, OLD_PACKAGE));
+                            }
+                            return mailResource;
+                        }, resource);
+                }
+                catch (TransactionFailure e) {
+                    LOGGER.log(Level.WARNING, "Upgrade service failed to update package names for Mail Resource:", e);
+                }
             }
-            catch (TransactionFailure e) {
-                LOGGER.log(Level.WARNING, "Upgrade service failed to update package names for Mail Resource:", e);
+            else {
+                try {
+                    ConfigSupport.apply(
+                        mailResource -> {
+                            if (mailResource.getStoreProtocolClass().startsWith(OLD_PACKAGE)) {
+                                mailResource.setStoreProtocolClass(
+                                    mailResource.getStoreProtocolClass().replace(OLD_PACKAGE, NEW_PACKAGE));
+                            }
+
+                            if (mailResource.getTransportProtocolClass().startsWith(OLD_PACKAGE)) {
+                                mailResource.setTransportProtocolClass(
+                                    mailResource.getTransportProtocolClass().replace(OLD_PACKAGE, NEW_PACKAGE));
+                            }
+                            return mailResource;
+                        }, resource);
+                }
+                catch (TransactionFailure e) {
+                    LOGGER.log(Level.WARNING, "Upgrade service failed to update package names for Mail Resource:", e);
+                }
             }
         }
     }
