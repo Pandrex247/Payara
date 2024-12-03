@@ -221,7 +221,7 @@
         <diagnostics-tool.version>2.1.0</diagnostics-tool.version>
 
         <deploy.skip>true</deploy.skip>
-        <license-maven-plugin.version>2.4.0</license-maven-plugin.version>
+        <license-maven-plugin.version>2.5.0</license-maven-plugin.version>
     </properties>
 
     <profiles>
