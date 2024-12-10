@@ -31,13 +31,13 @@
 
     
     <artifactId>cleanboot</artifactId>
-    <version>6.21.0-SNAPSHOT</version>
+    <version>6.21.0</version>
     <name>Payara Samples - Payara - Clean boot test</name>
 
     <parent>
         <groupId>fish.payara.samples</groupId>
         <artifactId>payara-samples-profiled-tests</artifactId>
-        <version>6.21.0-SNAPSHOT</version>
+        <version>6.21.0</version>
     </parent>
 
     <properties>
