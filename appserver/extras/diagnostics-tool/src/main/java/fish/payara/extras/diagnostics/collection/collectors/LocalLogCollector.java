@@ -67,6 +67,7 @@ public class LocalLogCollector extends FileCollector {
         this.logPath = logPath;
         this.logName = logName;
         this.obfuscateEnabled = collectorService.getObfuscateEnabled();
+        this.setInstanceName("server");
     }
 
     public LocalLogCollector(Path logPath, String instanceName, String logName, CollectorService collectorService) {
