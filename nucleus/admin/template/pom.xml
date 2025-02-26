@@ -98,14 +98,6 @@
                             <artifactItems>
                                 <!-- The index.html for the "docroot" application,
                                     saying Payara is running etc when nothing is deployed to root. -->
-                                <artifactItem>
-                                    <groupId>org.glassfish.docs</groupId>
-                                    <artifactId>basedocs</artifactId>
-                                    <version>4.1.payara-p3</version>
-                                    <type>zip</type>
-                                    <overWrite>false</overWrite>
-                                    <includes>glassfish/lib/templates/**</includes>
-                                </artifactItem>
 
                                 <artifactItem>
                                     <groupId>fish.payara.server.internal.ejb</groupId>
