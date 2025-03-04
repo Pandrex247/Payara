@@ -38,7 +38,7 @@
     only if the new code is made subject to such option by the copyright
     holder.
 
-   Portions Copyright [2020-2023] [Payara Foundation and/or its affiliates]
+   Portions Copyright 2020-2025 Payara Foundation and/or its affiliates
 -->
 
 <!initPage
@@ -50,7 +50,7 @@
               productImageDescription="$resource{theme.productName}"
               productImageWidth="200"
               productImageHeight="121"
-              userInfo="#{userName}"  userInfoLabel="$resource{i18n.masthead.userInfoLabel}"
+              userInfo="#{sanitisedUserName}"  userInfoLabel="$resource{i18n.masthead.userInfoLabel}"
               roleInfo="#{domainName}" roleInfoLabel="$resource{i18n.masthead.domainInfoLabel}"
               serverInfo="#{hostName}" serverInfoLabel="$resource{i18n.masthead.serverInfoLabel}"
               dateTime="$boolean{false}" notificationMsg="$attribute{null}">
