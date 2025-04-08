@@ -47,7 +47,7 @@
     <parent>
 	<groupId>fish.payara.server.internal.persistence</groupId>
     	<artifactId>persistence</artifactId>
-        <version>6.25.0</version>
+        <version>6.26.0-SNAPSHOT</version>
     </parent>
     <artifactId>persistence-common</artifactId>
     <packaging>glassfish-jar</packaging>
