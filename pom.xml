@@ -92,8 +92,8 @@
             </snapshots>
         </repository>
         <repository>
-            <id>payara-nexus-enterprise-distributions</id>
-            <url>https://nexus.dev.payara.fish/repository/payara-enterprise</url>
+            <id>payara-nexus-enterprise-artifacts</id>
+            <url>https://nexus.dev.payara.fish/repository/payara-enterprise-artifacts-private</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
@@ -102,8 +102,8 @@
             </snapshots>
         </repository>
         <repository>
-            <id>payara-nexus-enterprise-artifacts</id>
-            <url>https://nexus.dev.payara.fish/repository/payara-enterprise-artifacts-private</url>
+            <id>payara-nexus-enterprise-distributions</id>
+            <url>https://nexus.dev.payara.fish/repository/payara-enterprise</url>
             <releases>
                 <enabled>true</enabled>
             </releases>
