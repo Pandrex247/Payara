@@ -56,7 +56,6 @@
 
     <properties>
         <temp.dir>${project.build.directory}/dependency</temp.dir>
-        <payara.core.version>6.2.0</payara.core.version>
     </properties>
 
     <build>
