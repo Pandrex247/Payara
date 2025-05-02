@@ -138,11 +138,13 @@
         <dependency>
             <groupId>fish.payara.deployment.transformer</groupId>
             <artifactId>deployment-transformer-api</artifactId>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>fish.payara.deployment.transformer</groupId>
             <artifactId>deployment-transformer-impl</artifactId>
+            <version>${project.version}</version>
             <optional>true</optional>
         </dependency>
 

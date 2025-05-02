@@ -295,6 +295,7 @@
         <dependency>
             <groupId>fish.payara.deployment.transformer</groupId>
             <artifactId>deployment-transformer-api</artifactId>
+            <version>${project.version}</version>
         </dependency>
     </dependencies>
 </project>
