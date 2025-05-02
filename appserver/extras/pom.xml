@@ -67,6 +67,7 @@
         <module>certificate-management</module>
         <module>deployment-transformer</module>
         <module>diagnostics-tool</module>
+        <module>upgrade-tool</module>
     </modules>
 
     <build>

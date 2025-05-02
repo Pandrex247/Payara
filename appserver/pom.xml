@@ -97,7 +97,6 @@
         <dockerfile-maven-plugin.version>1.4.13</dockerfile-maven-plugin.version>
 
         <!-- Enterprise extension versions -->
-        <upgrade.tool.version>2.1</upgrade.tool.version>
         <payara.notifiers.version>2.1</payara.notifiers.version>
         <smack.version>4.4.8</smack.version>
         <jxmpp.version>1.0.3</jxmpp.version>
