@@ -1,0 +1,136 @@
+<!--
+    DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
+
+    Copyright (c) 2021 Payara Foundation and/or its affiliates. All rights reserved.
+    The contents of this file are subject to the terms of either the GNU
+    General Public License Version 2 only ("GPL") or the Common Development
+    and Distribution License("CDDL") (collectively, the "License"). You
+    may not use this file except in compliance with the License. You can
+    obtain a copy of the License at
+    https://github.com/payara/Payara/blob/master/LICENSE.txt
+    See the License for the specific
+    language governing permissions and limitations under the License.
+
+    When distributing the software, include this License Header Notice in each
+    file and include the License file at glassfish/legal/LICENSE.txt.
+
+    GPL Classpath Exception:
+    The Payara Foundation designates this particular file as subject to the "Classpath"
+    exception as provided by the Payara Foundation in the GPL Version 2 section of the License
+    file that accompanied this code.
+
+    Modifications:
+    If applicable, add the following below the License Header, with the fields
+    enclosed by brackets [] replaced by your own identifying information:
+    "Portions Copyright [year] [name of copyright owner]"
+
+    Contributor(s):
+    If you wish your version of this file to be governed by only the CDDL or
+    only the GPL Version 2, indicate your decision by adding "[Contributor]
+    elects to include this software in this distribution under the [CDDL or GPL
+    Version 2] license." If you don't indicate a single choice of license, a
+    recipient has the option to distribute your version of this file under
+    either the CDDL, the GPL Version 2 or to extend the choice of license to
+    its licensees as provided above. However, if you add GPL Version 2 code
+    and therefore, elected the GPL Version 2 license, then the option applies
+    only if the new code is made subject to such option by the copyright
+    holder.
+-->
+
+<!composition template="/templates/default.layout"  guiTitle="Create Nodes Scaling Group">
+    <!define name="content">
+        <event>
+            <!beforeCreate
+                setSessionAttribute(key="autoScaleGroupsTabs" value="nodesScaleGroupsTab");
+                getRequestValue(key="scalingGroupName" value="#{pageSession.scalingGroupName}");
+                urlencode(value="#{pageSession.scalingGroupName}" encoding="UTF-8" result="#{pageSession.encodedScalingGroupName}");
+                getRequestValue(key="dgName" value="#{pageSession.dgName}");
+                urlencode(value="#{pageSession.dgName}" encoding="UTF-8" result="#{pageSession.encodedDGName}");
+                setPageSessionAttribute(key="selfPage",
+                        value="#{request.contextPath}/nodesScaleGroups/nodesScaleGroupsNew.jsf?scalingGroupName=#{pageSession.encodedScalingGroupName}&dgName=#{pageSession.encodedDGName}");
+                setPageSessionAttribute(key="listPage",
+                        value="#{request.contextPath}/nodesScaleGroups/nodesScaleGroupsList.jsf?scalingGroupName=#{pageSession.encodedScalingGroupName}&dgName=#{pageSession.encodedDGName}");
+                setPageSessionAttribute(key="parentPage", value="#{request.contextPath}/cluster/dg/dgs.jsf");
+
+                createMap(result="#{pageSession.valueMap}");
+
+                gf.getChildrenNamesList(endpoint="#{sessionScope.REST_URL}/configs/config",
+                        result="#{requestScope.tmpList}");
+                listRemove(list="#{requestScope.tmpList}" value="server-config" result="#{pageSession.configRefsList}");
+                listRemove(list="#{requestScope.tmpList}" value="default-config" result="#{pageSession.configRefsList}");
+
+                gf.getChildrenNamesList(endpoint="#{sessionScope.REST_URL}/deployment-groups/deployment-group",
+                        result="#{pageSession.deploymentGroupRefsList}");
+
+                py.getNodeNamesList(parentEndpoint="#{sessionScope.REST_URL}/nodes", childType="node",
+                        result="#{pageSession.nodesList}");
+                gf.convertListToOptionArray(list="#{pageSession.nodesList}",
+                        optionArray="#{pageSession.nodesListArray}");
+                convertStringtoList(str="", result="#{requestScope.tmpList}");
+                convertListToArray(list="#{requestScope.tmpList}", array="#{pageSession.selectedNodesListArray}");
+            />
+        </event>
+        <sun:form id="propertyForm">
+
+#include "/cluster/dg/dgTabs.inc"
+#include "/autoScaleGroups/autoScaleGroupsTabs.inc"
+#include "/common/shared/alertMsg_1.inc"
+            <!-- Page Title -->
+            <sun:title id="propertyContentPage" title="New Nodes Scaling Group"
+                       helpText="Create a Nodes AutoScale Group">
+                <!facet pageButtonsTop>
+                    <sun:panelGroup id="topButtons">
+                        <sun:button id="newButton" text="$resource{i18n.button.OK}"
+                                    onClick="if (guiValidate('#{reqMsg}','#{reqInt}','#{reqPort}')) {submitAndDisable(this, '$resource{i18n.button.Processing}');}; return false;">
+                            <!command
+                                <!-- Convert selected nodes to csv -->
+                                convertArrayToCommaString(array="#{pageSession.selectedNodesListArray}",
+                                        commaString="#{requestScope.selectedNodesListString}");
+                                mapPut(map="#{pageSession.valueMap}" key="nodes" value="#{requestScope.selectedNodesListString}");
+                                 <!-- Execute -->
+                                gf.restRequest(endpoint="#{sessionScope.REST_URL}/scaling-groups/create-nodes-scaling-group",
+                                        attrs="#{pageSession.valueMap}");
+                                prepareSuccessfulMsg();
+                                gf.redirect(page="#{pageSession.listPage}&alertType=${alertType}&alertSummary=${alertSummary}&alertDetail=${alertDetail}");
+                            />
+                        </sun:button>
+                    </sun:panelGroup>
+                </facet>
+            </sun:title>
+            <sun:propertySheet id="newScalingGroupSheet">
+                <sun:propertySheetSection>
+                    <sun:property id="nameProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}" label="Name:"
+                                  helpText="The name of the Scaling Group">
+                        <sun:textField id="nameText" columns="$int{60}" required="#{true}"
+                                       text="#{pageSession.valueMap['name']}" styleClass="required"/>
+                    </sun:property>
+                    <sun:property id="configRefProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}"
+                                  label="Config:"
+                                  helpText="The config new instances creating while scaling will use">
+                        <sun:dropDown id="configRefDrop" selected="#{pageSession.valueMap['config']}"
+                                labels="$pageSession{configRefsList}"  values="$pageSession{configRefsList}"
+                                required="#{true}" styleClass="required">
+                        </sun:dropDown>
+                    </sun:property>
+                    <sun:property id="deploymentGroupRefProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}"
+                                  label="Deployment Group:"
+                                  helpText="The deployment group this scaling group is attached to">
+                        <sun:dropDown id="deploymentGroupRefDrop" selected="#{pageSession.valueMap['deploymentGroup']}"
+                                labels="$pageSession{deploymentGroupRefsList}"  values="$pageSession{deploymentGroupRefsList}"
+                                required="#{true}" styleClass="required">
+                        </sun:dropDown>
+                    </sun:property>
+                    <sun:property id="nodesProp" labelAlign="left" noWrap="#{true}" overlapLabel="#{false}"
+                                  label="Nodes:" helpText="The nodes this scaling group can create instances on">
+                        <sun:addRemove id="nodesAddRemove" selectAll="$boolean{true}"
+                                       items="#{pageSession.nodesListArray}"
+                                       selected="#{pageSession.selectedNodesListArray}"
+                                       availableItemsLabel="Available Nodes"
+                                       selectedItemsLabel="Selected Nodes">
+                        </sun:addRemove>
+                    </sun:property>
+                </sun:propertySheetSection>
+            </sun:propertySheet>
+        </sun:form>
+    </define>
+</composition>
