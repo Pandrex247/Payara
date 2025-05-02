@@ -65,6 +65,7 @@
         <!-- Enterprise Extensions -->
         <module>autoscale-groups</module>
         <module>deployment-transformer</module>
+        <module>diagnostics-tool</module>
     </modules>
 
     <build>

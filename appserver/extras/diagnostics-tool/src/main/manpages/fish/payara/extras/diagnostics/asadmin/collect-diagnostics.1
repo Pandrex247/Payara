@@ -1,0 +1,113 @@
+collect-diagnostics(1)  asadmin Utility Subcommands collect-diagnostics(1)
+
+NAME
+       collect-diagnostics - collects useful information for diagnosing issues
+
+SYNOPSIS
+           collect-diagnostics [--help]
+           [--serverlog={true|false}]  [--notificationlog={true|false}]
+           [--accesslog={true|false}]  [--domainxml={true|false}]
+           [--threaddump={true|false}]  [--heapdump={true|false}]
+           [--jvmreport={true|false}]   [--domaindir domaindir]
+           [--nodedir nodedir]          [--dir dir]
+           [--target target-name]       [--obfuscate={true|false}]
+           domainname
+
+DESCRIPTION
+       Collects diagnostics from a local Payara Server instance.
+
+       The collect-diagnostics subcommand by default will collect the domain.xml,
+       thread dump, heap dump and jvm report from the DAS, Instances, Deployment
+       Groups and Clusters. Specific Instances, Deployment Groups and Clusters can
+       be targeted via the target parameter.
+
+       The collection for each item can be enabled/disabled by setting the relevant
+       parameter.
+
+       The items collected are stored in a zip file in your user home directory, the
+       output directory can be changed via the dir parameter.
+
+OPTIONS
+       --help, -?
+           Displays the help text for the subcommand.
+
+       --serverlog
+           Whether to collect server log. The default is true.
+
+       --notificationlog
+           Whether to collect notification log. The default is true.
+
+       --accesslog
+           Whether to collect access log. The default is true.
+
+       --domainxml
+           Whether to collect the domain.xml. The default is true.
+
+       --obfuscate
+           Whether to obfuscate data in domain.xml. The default is true
+
+       --threaddump
+           Whether to collect a thread dump. The default is true.
+
+        --heapdump
+           Whether to collect a heap dump. The default is true.
+
+       --jvmreport
+           Whether to collect the jvm report. The default is true.
+
+       --domaindir
+           The domain root directory, which contains the directory of the
+           target domain. If specified, the path must be accessible in the
+           file system. The default location of the domain root directory
+           is as-install/domains.
+
+       --dir
+           The directory where the tool should store the resultant zip file.
+           The default is the user home directory.
+
+       --nodedir
+           The directory where the tool should look for an instance in a custom
+           node directory.
+
+       --target
+           The name of the instance, cluster or deployment group you would like
+           to collect diagnostics information from. The default is domain which targets
+           every instance, cluster and deployment group.
+
+OPERANDS
+       domainname
+           The domain to collect diagnostics from. The default is domain1.
+
+EXAMPLES
+       Example 1, Collect every diagnostic from domain1.
+
+           This example collects everything from domain1.
+
+               asadmin> collect-diagnostics
+
+       Example 2, Specify a custom output directory.
+
+           This example changes the default output directory for the resultant
+           zip file.
+
+               asadmin> collect-diagnostics --dir /home/payara/diagnostics
+
+       Example 3, Only collect logs.
+
+           This example only enables log collection.
+
+               asadmin> collect-diagnostics --domainxml false --threaddump false --jvmreport false --heapdump false
+
+       Example 4, Target a deployment group on a custom domain.
+
+           This example targets a deployment group on a custom domain called mydomain.
+
+               asadmin> collect-diagnostics --target deploymentGroup1 mydomain
+
+EXIT STATUS
+       0
+           command executed successfully
+
+       1
+           error in executing the command
+

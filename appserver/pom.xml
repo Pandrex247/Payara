@@ -105,7 +105,6 @@
         <snmp4j.version>2.5.3-payara.p1</snmp4j.version>
         <minidns.version>1.0.5</minidns.version>
         <certificate-management.version>2.0.0</certificate-management.version>
-        <diagnostics-tool.version>2.1.0</diagnostics-tool.version>
     </properties>
 
 

@@ -1,0 +1,35 @@
+.\" Manpage for upload.
+.TH man 8 "22 Feb 2023" "1.0" "upload man page"
+.SH NAME
+upload \- Uploads collected diagnostics.
+.SH SYNOPSIS
+upload [--help] [--file] --username username --password password --destination={nexus|zendesk}
+.SH DESCRIPTION
+The upload command uploads a zip archive to a selected destination. To be used in conjunction with the collect command.
+.SH OPTIONS
+.TP
+-f, --file=\fIPathToFile\fR
+File path for the file to be uploaded.
+.TP
+-u, --username=\fIusername\fR
+Username to be used to identify user to the configured destination.
+.TP
+-p, --password=\fIpassword\fR
+Password to be used to authenticate user to the configured destination.
+.TP
+-d, --destination=\fI{nexus|zendesk}\fR
+The upload destination.
+.SH EXAMPLES
+.TP
+Example 1, Uploading to Nexus
+asadmin> upload --file /path/to/file.zip --destination nexus --username user --password pass
+.TP
+Example 2, Uploading to Payara Customer Portal
+asadmin> upload --file /path/to/file.zip --destination zendesk --username user --password pass --ticket 2100
+.SH EXIT STATUS
+.TP
+0 subcommand executed successfully
+.TP
+1 error in executing subcommand
+.SH AUTHOR
+Alan Roth (alan.roth@payara.fish)
