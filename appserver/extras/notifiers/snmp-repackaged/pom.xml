@@ -74,13 +74,18 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
-                        <Embed-Dependency>
-                            *;scope=compile;inline=true
-                        </Embed-Dependency>
+                        <Embed-Dependency>*;scope=compile;inline=true</Embed-Dependency>
                         <!-- Export everything from snmp4j in the final bundle -->
                         <Export-Package>*;version=${snmp4j.version}</Export-Package>
                         <!-- Exclude unnecessary imports -->
                         <Private-Package>!*</Private-Package>
+                        <!--
+                            The use of maven-bundle-plugin 5.1.9 instead of 4.1.0 (as used over in the Notifiers repo)
+                            has the repackaged SNMP4J attempt to import this package (even though by the maven dependency
+                            tree it should be the other way around as snmp4j-unix-transport depends on snmp4j?).
+                            I have marked this resolution as optional instead of pulling in this extra dependency
+                            as it requires Java 17. -->
+                        <Import-Package>org.snmp4j.transport.unix;resolution:=optional,*</Import-Package>
                         <!-- Make it an HK2 module, as GlassFish needs it to be HK2 module.
                          This is needed because we don't want to change the packaging type to
                          hk2-jar. -->
