@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) 2021-2023 Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2021-2025 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -40,15 +40,14 @@
 package fish.payara.extras.upgrade;
 
 import com.sun.enterprise.admin.cli.CLICommand;
-import junit.framework.TestCase;
 import org.glassfish.api.admin.CommandValidationException;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
-import org.mockito.runners.MockitoJUnitRunner;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -58,8 +57,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
-@RunWith(MockitoJUnitRunner.class)
-public class UpgradeServerCommandTest extends TestCase {
+public class UpgradeServerCommandTest {
 
     @Mock
     private HttpURLConnection httpURLConnection;
@@ -67,6 +65,11 @@ public class UpgradeServerCommandTest extends TestCase {
     @InjectMocks
     @Spy
     private UpgradeServerCommand upgradeServerCommand = new UpgradeServerCommand();
+
+    @Before
+    public void setUp() {
+        MockitoAnnotations.initMocks(this);
+    }
 
     @Test
     public void testPreventVersionDowngrade() throws CommandValidationException {
@@ -81,7 +84,7 @@ public class UpgradeServerCommandTest extends TestCase {
         try {
             upgradeServerCommand.validateVersions();
         } catch (CommandValidationException e) {
-            assertTrue(e.getMessage().contains("The version indicated is incorrect"));
+            Assert.assertTrue(e.getMessage().contains("The version indicated is incorrect"));
             verify(upgradeServerCommand, times(1)).getVersion();
             verify(upgradeServerCommand, times(1)).getCurrentMajorVersion();
             verify(upgradeServerCommand, times(1)).getCurrentMinorVersion();
@@ -100,7 +103,7 @@ public class UpgradeServerCommandTest extends TestCase {
         try {
             upgradeServerCommand.validateVersions();
         } catch (CommandValidationException e) {
-            assertTrue(e.getMessage().contains("Invalid selected version"));
+            Assert.assertTrue(e.getMessage().contains("Invalid selected version"));
             verify(upgradeServerCommand, times(1)).getVersion();
         }
 
@@ -116,7 +119,7 @@ public class UpgradeServerCommandTest extends TestCase {
         try {
             upgradeServerCommand.validateVersions();
         } catch (CommandValidationException e) {
-            assertTrue(e.getMessage().contains("Invalid selected version"));
+            Assert.assertTrue(e.getMessage().contains("Invalid selected version"));
             verify(upgradeServerCommand, times(1)).getVersion();
         }
     }
@@ -131,7 +134,7 @@ public class UpgradeServerCommandTest extends TestCase {
         try {
             upgradeServerCommand.validateVersions();
         } catch (CommandValidationException e) {
-            assertTrue(e.getMessage().contains("Invalid selected version"));
+            Assert.assertTrue(e.getMessage().contains("Invalid selected version"));
             verify(upgradeServerCommand, times(1)).getVersion();
         }
     }
@@ -145,7 +148,7 @@ public class UpgradeServerCommandTest extends TestCase {
         try {
             upgradeServerCommand.validateVersions();
         } catch (CommandValidationException e) {
-            assertTrue(e.getMessage().contains("Empty selected version"));
+            Assert.assertTrue(e.getMessage().contains("Empty selected version"));
             verify(upgradeServerCommand, times(1)).getVersion();
         }
     }
@@ -163,7 +166,7 @@ public class UpgradeServerCommandTest extends TestCase {
         try {
             upgradeServerCommand.validateVersions();
         } catch (CommandValidationException e) {
-            assertTrue(e.getMessage().contains("It was selected the same version"));
+            Assert.assertTrue(e.getMessage().contains("It was selected the same version"));
             verify(upgradeServerCommand, times(1)).getVersion();
             verify(upgradeServerCommand, times(1)).getCurrentMajorVersion();
             verify(upgradeServerCommand, times(1)).getCurrentMinorVersion();
@@ -203,7 +206,7 @@ public class UpgradeServerCommandTest extends TestCase {
         try {
             upgradeServerCommand.validateVersions();
         } catch (CommandValidationException e) {
-            assertTrue(e.getMessage().contains("6.2023.2 is a Payara Community version. You can only upgrade to a Payara Enterprise version"));
+            Assert.assertTrue(e.getMessage().contains("6.2023.2 is a Payara Community version. You can only upgrade to a Payara Enterprise version"));
             verify(upgradeServerCommand, times(1)).getVersion();
         }
     }
@@ -218,7 +221,7 @@ public class UpgradeServerCommandTest extends TestCase {
         try {
             upgradeServerCommand.validateVersions();
         } catch (CommandValidationException e) {
-            assertTrue(e.getMessage().contains("6.2023.1 is a Payara Community version. You can only upgrade to a Payara Enterprise version"));
+            Assert.assertTrue(e.getMessage().contains("6.2023.1 is a Payara Community version. You can only upgrade to a Payara Enterprise version"));
             verify(upgradeServerCommand, times(1)).getVersion();
         }
     }
@@ -252,7 +255,7 @@ public class UpgradeServerCommandTest extends TestCase {
 
         int result = upgradeServerCommand.executeCommand();
 
-        assertEquals(CLICommand.ERROR, result);
+        Assert.assertEquals(CLICommand.ERROR, result);
     }
 
 }
