@@ -140,7 +140,6 @@
         <logging-annotation-processor.version>1.9</logging-annotation-processor.version>
         <command-security-plugin.version>1.0.17</command-security-plugin.version>
         <command.security.maven.plugin.isFailureFatal>false</command.security.maven.plugin.isFailureFatal>
-        <copyright-plugin.version>2.4</copyright-plugin.version>
         <nucleus.install.dir.name>nucleus</nucleus.install.dir.name>
         <ant.version>1.10.15</ant.version>
         <metainf-services.version>1.11</metainf-services.version>
@@ -906,36 +905,6 @@ Parent is ${project.parent}</echo>
             <modules>
                 <module>tests</module>
             </modules>
-        </profile>
-
-        <profile>
-            <id>copyright</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.glassfish.copyright</groupId>
-                            <artifactId>glassfish-copyright-maven-plugin</artifactId>
-                            <version>${copyright-plugin.version}</version>
-                            <configuration>
-                                <excludeFile>
-                                    copyright-exclude
-                                </excludeFile>
-                            </configuration>
-                            <dependencies>
-                                <dependency>
-                                    <groupId>fish.payara.server.internal</groupId>
-                                    <artifactId>copyright</artifactId>
-                                    <version>${project.version}</version>
-                                </dependency>
-                            </dependencies>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
         </profile>
 
         <profile>
