@@ -926,35 +926,6 @@ Parent is ${project.parent}</echo>
                 </plugins>
             </build>
         </profile>
-        <profile>
-            <id>DeploySnapshot-Sonatype</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>payara-maven-central</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                </snapshotRepository>
-            </distributionManagement>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.13</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>payara-maven-central</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
          <profile>
             <id>CodeCoverage</id>
             <activation>
