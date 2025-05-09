@@ -146,15 +146,13 @@
         <javadoc.options>-Xdoclint:none</javadoc.options>
 
         <!-- Debug / analysis -->
-        <jacoco.plugin.version>0.8.12</jacoco.plugin.version>
+        <jacoco-maven-plugin.version>0.8.13</jacoco-maven-plugin.version>
 
         <awaitility.version>4.3.0</awaitility.version>
 
         <okhttp3-version>4.12.0</okhttp3-version>
         <kotlin-version>2.1.20</kotlin-version>
 
-        <!-- Enterprise extension versions -->
-        <payara.deployment.transformer.version>1.3</payara.deployment.transformer.version>
     </properties>
 
     <modules>
@@ -353,7 +351,7 @@
                 <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>${jacoco.plugin.version}</version>
+                    <version>${jacoco-maven-plugin.version}</version>
                     <configuration>
                         <skip>${maven.test.skip}</skip>
                         <propertyName>argLine</propertyName>
@@ -604,7 +602,7 @@ Parent is ${project.parent}</echo>
             <dependency>
                 <groupId>fish.payara.api</groupId>
                 <artifactId>payara-bom</artifactId>
-                <!-- A workaround for case when module redefines its version (rest-monitoring-war) -->
+                <!-- A workaround for case when module redefines its version -->
                 <version>${project.parent.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
@@ -898,58 +896,10 @@ Parent is ${project.parent}</echo>
                 <version>${mockito.version}</version>
                 <scope>test</scope>
             </dependency>
-
-            <dependency>
-                <groupId>fish.payara.deployment.transformer</groupId>
-                <artifactId>deployment-transformer-api</artifactId>
-                <version>${payara.deployment.transformer.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>fish.payara.deployment.transformer</groupId>
-                <artifactId>deployment-transformer-impl</artifactId>
-                <version>${payara.deployment.transformer.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <profiles>
-        <profile>
-            <id>ci</id>
-            <modules>
-                <module>tests</module>
-            </modules>
-        </profile>
-
-        <profile>
-            <id>copyright</id>
-            <activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-            <build>
-                <pluginManagement>
-                    <plugins>
-                        <plugin>
-                            <groupId>org.glassfish.copyright</groupId>
-                            <artifactId>glassfish-copyright-maven-plugin</artifactId>
-                            <version>${copyright-plugin.version}</version>
-                            <configuration>
-                                <excludeFile>
-                                    copyright-exclude
-                                </excludeFile>
-                            </configuration>
-                            <dependencies>
-                                <dependency>
-                                    <groupId>fish.payara.server.internal</groupId>
-                                    <artifactId>copyright</artifactId>
-                                    <version>${project.version}</version>
-                                </dependency>
-                            </dependencies>
-                        </plugin>
-                    </plugins>
-                </pluginManagement>
-            </build>
-        </profile>
-
         <profile>
             <id>embed-source</id>
             <build>
@@ -965,51 +915,6 @@ Parent is ${project.parent}</echo>
                                 </goals>
                             </execution>
                         </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>DeploySnapshot-Sonatype</id>
-            <activation>
-                <activeByDefault>false</activeByDefault>
-            </activation>
-
-            <distributionManagement>
-                <snapshotRepository>
-                    <id>payara-maven-central</id>
-                    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-                </snapshotRepository>
-            </distributionManagement>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.sonatype.plugins</groupId>
-                        <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.13</version>
-                        <extensions>true</extensions>
-                        <configuration>
-                            <serverId>payara-maven-central</serverId>
-                            <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-         <profile>
-            <id>CodeCoverage</id>
-            <activation>
-                <property>
-                    <name>BUILD_NUMBER</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>

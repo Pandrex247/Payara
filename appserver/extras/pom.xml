@@ -40,7 +40,7 @@
     holder.
 
 -->
-<!-- Portions Copyright 2023 Payara Foundation and/or its affiliates. -->
+<!-- Portions Copyright 2023-2025 Payara Foundation and/or its affiliates. -->
 
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
@@ -61,6 +61,14 @@
         <module>javaee</module>
         <module>appserv-rt</module>
         <module>payara-micro</module>
+
+        <!-- Enterprise Extensions -->
+        <module>autoscale-groups</module>
+        <module>certificate-management</module>
+        <module>deployment-transformer</module>
+        <module>diagnostics-tool</module>
+        <module>notifiers</module>
+        <module>upgrade-tool</module>
     </modules>
 
     <build>

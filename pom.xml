@@ -246,7 +246,8 @@
         <maven.gpg.plugin.version>3.2.7</maven.gpg.plugin.version>
         <maven.deploy.plugin.version>3.1.4</maven.deploy.plugin.version>
         <maven.source.plugin.version>3.2.1</maven.source.plugin.version>
-        <maven.javadoc.plugin.version>3.11.2</maven.javadoc.plugin.version>
+        <!-- Be careful updating to a higher version - an issue affecting 3.10.0-3.11.2 causes the aggregate jar to be empty -->
+        <maven.javadoc.plugin.version>3.8.0</maven.javadoc.plugin.version>
         <maven.install.plugin.version>3.1.4</maven.install.plugin.version>
         <maven.bundle.plugin.version>5.1.9</maven.bundle.plugin.version>
         <maven.failsafe.plugin.version>3.5.3</maven.failsafe.plugin.version>
@@ -277,7 +278,7 @@
         <yasson.version>3.0.4</yasson.version>
         <eclipselink.version>4.0.1.payara-p4</eclipselink.version>
         <eclipselink.asm.version>9.8.0</eclipselink.asm.version>
-        <mq.version>6.5.1.payara-p1</mq.version>
+        <openmq.version>6.5.1.payara-p1</openmq.version>
         <com.ibm.jbatch.container.version>2.1.1</com.ibm.jbatch.container.version>
         <com.ibm.jbatch.spi.version>2.1.1</com.ibm.jbatch.spi.version>
         <webservices.version>4.0.3.payara-p1</webservices.version>
@@ -367,7 +368,7 @@
         <opentelemetry.version>1.29.0</opentelemetry.version>
         <opentelemetry.alpha.version>1.29.0-alpha</opentelemetry.alpha.version>
         <jakarta.faces-api.version>4.0.1</jakarta.faces-api.version>
-        <payara.transformer.version>0.2.12</payara.transformer.version>
+        <payara.transformer.version>0.2.13</payara.transformer.version>
     </properties>
 
     <profiles>
@@ -416,6 +417,9 @@
                     <value>true</value>
                 </property>
             </activation>
+            <properties>
+                <javadoc.skip>false</javadoc.skip>
+            </properties>
             <build>
                 <finalName>payara-${project.version}</finalName>
                 <plugins>

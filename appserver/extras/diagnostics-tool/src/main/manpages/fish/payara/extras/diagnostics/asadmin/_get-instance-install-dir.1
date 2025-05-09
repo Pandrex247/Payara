@@ -1,0 +1,42 @@
+_get-instance-install-dir(1)  asadmin Utility Subcommands _get-instance-install-dir(1)
+
+NAME
+       _get-instance-install-dir - Returns the instance's install directory.
+
+SYNOPSIS
+           _get-instance-install-dir [--help]
+           [--nodedir nodedir] [--node node]
+           instance_name
+
+DESCRIPTION
+       The _get-instance-install-dir subcommand will return the instance's
+       install directory.
+
+OPTIONS
+       --help, -?
+           Displays the help text for the subcommand.
+
+       --nodedir
+           The directory where the instance's node is located.
+
+       --node
+           The name of the node.
+OPERANDS
+       instance_name
+           The name of the instance.
+
+EXAMPLES
+       Example 1, Get instance's install directory in a custom node
+       directory
+
+           This example returns the install directory for the instance
+
+               asadmin> _get-instance-install-dir --nodedir C:\workspace\testnode\ int1
+
+EXIT STATUS
+       0
+           command executed successfully
+
+       1
+           error in executing the command
+
