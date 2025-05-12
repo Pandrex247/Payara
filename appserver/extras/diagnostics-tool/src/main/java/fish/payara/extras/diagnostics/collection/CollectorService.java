@@ -115,6 +115,7 @@ public class CollectorService {
     private Map<String, String> instanceWithType = new HashMap<>();
     private Map<String, String> nodeInstallationDirectories= new HashMap<>();
     private Map<String, String> instanceInNode= new HashMap<>();
+    private TargetType targetType;
 
     public CollectorService(Map<String, Object> params, Environment environment, ProgramOptions programOptions, String target, ServiceLocator serviceLocator, String domainName, String nodeDir) {
         this.parameterMap = params;
@@ -169,7 +170,7 @@ public class CollectorService {
         List<Collector> activeCollectors = new ArrayList<>();
         // Populates the `targets` list
         domainUtil = new DomainUtil(domain);
-        TargetType targetType = getTargetType();
+        targetType = getTargetType();
         if (targetType == null) {
             LOGGER.info("Target not found! Is the name correct?");
             return 0;
@@ -294,7 +295,9 @@ public class CollectorService {
                         String[]  instances = nodeReferenceBy.split(", ");
                         for (String instance : instances) {
                             if (!instance.isEmpty()){
-                                LOGGER.info("Adding instance: " + instance + " with type: " + nodeType);
+                                if (nodeName.contains(domain.getName())){
+                                    LOGGER.info("Adding instance: " + instance + " with type: " + nodeType);
+                                }
                                 instanceWithType.put(instance, nodeType);
                                 instanceInNode.put(instance, nodeName);
                             }
