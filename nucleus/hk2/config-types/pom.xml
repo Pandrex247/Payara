@@ -46,13 +46,13 @@
     <parent>
         <groupId>fish.payara.server.internal.hk2</groupId>
         <artifactId>glassfish-nucleus-hk2</artifactId>
-        <version>6.26.0-SNAPSHOT</version>
+        <version>6.27.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>config-types</artifactId>
     <name>HK2 config types</name>
     <packaging>glassfish-jar</packaging>
-    
+
     <build>
         <plugins>
            <plugin>
