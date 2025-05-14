@@ -501,6 +501,25 @@
         </profile>
 
         <profile>
+            <id>deploy-internals</id>
+
+            <properties>
+                <deploy.skip>false</deploy.skip>
+            </properties>
+
+            <distributionManagement>
+                <repository>
+                    <id>payara-nexus-enterprise-artifacts</id>
+                    <url>https://nexus.dev.payara.fish/repository/payara-enterprise-artifacts-private/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>payara-nexus-enterprise-snapshots</id>
+                    <url>https://nexus.dev.payara.fish/repository/payara-enterprise-snapshots-private/</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+
+        <profile>
             <id>payara-nexus-staging</id>
             <properties>
                 <payara-nexus-staging.repo.releases.enabled>true</payara-nexus-staging.repo.releases.enabled>
