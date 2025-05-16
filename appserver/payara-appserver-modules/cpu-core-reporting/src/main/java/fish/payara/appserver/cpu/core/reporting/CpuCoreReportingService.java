@@ -76,6 +76,18 @@ import java.nio.file.Files;
 @RunLevel(StartupRunLevel.VAL)
 public class CpuCoreReportingService implements EventListener {
 
+    @Inject
+    private Events events;
+
+    @Inject
+    private Logger logger;
+
+    @Inject
+    private ServerEnvironmentImpl env;
+
+    private MessageDigest messageDigest;
+    private static final String LOG_FILE_NAME = "cpu_monitor.log";
+
     @Override
     public void event(Event<?> event) {
         if (!event.is(EventTypes.SERVER_STARTUP)) {
@@ -138,16 +150,4 @@ public class CpuCoreReportingService implements EventListener {
     public void preDestroy() {
         events.unregister(this);
     }
-
-    @Inject
-    private Events events;
-
-    @Inject
-    private Logger logger;
-
-    @Inject
-    private ServerEnvironmentImpl env;
-
-    private MessageDigest messageDigest;
-    private static final String LOG_FILE_NAME = "cpu_monitor.log";
 }
