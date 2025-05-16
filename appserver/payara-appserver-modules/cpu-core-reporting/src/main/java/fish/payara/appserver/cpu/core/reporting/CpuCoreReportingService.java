@@ -83,17 +83,20 @@ public class CpuCoreReportingService implements EventListener {
 
         Thread thread = new Thread(() -> {
             try {
-                Path path = Paths.get(env.getInstanceRoot().getAbsolutePath() + File.separator + "logs" + File.separator + LOG_FILE_NAME);
                 String timestamp = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_DATE_TIME);
                 int availableProcessors = Runtime.getRuntime().availableProcessors();
 
+                Path path = Paths.get(env.getInstanceRoot().getAbsolutePath() + File.separator + "logs" + File.separator + LOG_FILE_NAME);
+                String content = timestamp + "," + availableProcessors;
+                String rowHash;
+
                 if (!Files.exists(path)) {
                     Files.createFile(path);
+                    rowHash = generateHash(content);
+                } else {
+                    rowHash = generateHash(content + "," + getLastHash(path.toFile()));
                 }
-                Files.writeString(
-                        path,
-                        String.format("%s,%s\n", timestamp, availableProcessors),
-                        StandardOpenOption.APPEND);
+                Files.writeString(path, content + "," + rowHash + "\n", StandardOpenOption.APPEND);
             } catch (IOException e) {
                 logger.log(Level.WARNING, "Failed to capture CPU cores data", e);
             }
@@ -102,6 +105,23 @@ public class CpuCoreReportingService implements EventListener {
         events.unregister(this);
 
         thread.start();
+    }
+
+    private String getLastHash(File file) throws IOException {
+        String lastLine = "";
+        try (BufferedReader bufferedReader = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                lastLine = line;
+            }
+        }
+        String[] parts = lastLine.split(",");
+        return (parts.length > 2) ? parts[2] : "";
+    }
+
+    private String generateHash(String content) {
+        byte[] hashBytes = messageDigest.digest(content.getBytes(StandardCharsets.UTF_8));
+        return Base64.getEncoder().encodeToString(hashBytes);
     }
 
     @PostConstruct
@@ -129,5 +149,6 @@ public class CpuCoreReportingService implements EventListener {
     @Inject
     private ServerEnvironmentImpl env;
 
+    private MessageDigest messageDigest;
     private static final String LOG_FILE_NAME = "cpu_monitor.log";
 }
