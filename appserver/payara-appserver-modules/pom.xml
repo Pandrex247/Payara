@@ -68,6 +68,7 @@
         <module>microprofile</module>
         <module>healthcheck-checker</module>
         <module>healthcheck-metrics</module>
+        <module>cpu-core-reporting</module>
     </modules>
 </project>
 
