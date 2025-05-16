@@ -106,6 +106,12 @@ public class CpuCoreReportingService implements EventListener {
 
     @PostConstruct
     public void postConstruct() {
+        try {
+            messageDigest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            logger.log(Level.WARNING, "CPU Core Reporting Service: Initialisation error.", e);
+            throw new Error(e);
+        }
         events.register(this);
     }
 
