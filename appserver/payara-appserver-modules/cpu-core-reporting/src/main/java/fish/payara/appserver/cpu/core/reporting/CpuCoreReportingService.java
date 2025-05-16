@@ -61,6 +61,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -83,11 +85,8 @@ public class CpuCoreReportingService implements EventListener {
 
         Thread thread = new Thread(() -> {
             try {
-                String timestamp = java.time.LocalDateTime.now().format(java.time.format.DateTimeFormatter.ISO_DATE_TIME);
-                int availableProcessors = Runtime.getRuntime().availableProcessors();
-
                 Path path = Paths.get(env.getInstanceRoot().getAbsolutePath() + File.separator + "logs" + File.separator + LOG_FILE_NAME);
-                String content = timestamp + "," + availableProcessors;
+                String content = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME) + "," + Runtime.getRuntime().availableProcessors();
                 String rowHash;
 
                 if (!Files.exists(path)) {
