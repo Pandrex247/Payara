@@ -93,12 +93,15 @@ public class CpuCoreReportingService implements EventListener {
         if (!event.is(EventTypes.SERVER_STARTUP)) {
             return;
         }
-        logger.log(Level.INFO, "Capturing CPU cores data...");
 
         Thread thread = new Thread(() -> {
             try {
+                int availableProcessors = Runtime.getRuntime().availableProcessors();
+
+                logger.info("Running on " + availableProcessors + " cores");
+
                 Path path = Paths.get(env.getInstanceRoot().getAbsolutePath() + File.separator + "logs" + File.separator + LOG_FILE_NAME);
-                String content = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME) + "," + Runtime.getRuntime().availableProcessors();
+                String content = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME) + "," + availableProcessors;
                 String rowHash;
 
                 if (!Files.exists(path)) {
