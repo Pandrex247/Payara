@@ -74,7 +74,7 @@ public class RestMonitoringAuthModule implements ServerAuthModule {
     private boolean securityEnabled = false;
 
     private static final String DEFAULT_USER_NAME = "payara";
-    private static final String ORIG_REQUEST_PATH = "origRequestPath";
+    private static final String ORIG_REQUEST_PATH = "__origRequestPath";
     private static final String LOGIN_PAGE = "/login.xhtml";
     private static final Class[] SUPPORTED_MESSAGE_TYPES = new Class[] {HttpServletRequest.class, 
             HttpServletResponse.class };
@@ -130,6 +130,8 @@ public class RestMonitoringAuthModule implements ServerAuthModule {
                 }
                 
                 session.setAttribute(ORIG_REQUEST_PATH, origPath);
+                //clear session attribute for security reason
+                session.removeAttribute(ORIG_REQUEST_PATH);
                 RequestDispatcher rd = request.getRequestDispatcher(LOGIN_PAGE);
                 
                 try {
