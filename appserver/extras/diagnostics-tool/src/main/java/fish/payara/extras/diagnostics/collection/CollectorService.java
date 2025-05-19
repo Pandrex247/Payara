@@ -436,6 +436,10 @@ public class CollectorService {
 
         boolean correctDomainRunning = correctDomainRunning();
         String instanceType = instanceWithType.get(currentTarget);
+        //instanceType will be empty when collecting domain logs for the first time if it is an empty domain
+        if (currentTarget.isEmpty()){
+            instanceType="CONFIG";
+        }
 
         if (targetType == TargetType.DOMAIN) {
             //The collectors inside this block, will copy the files with no folder
