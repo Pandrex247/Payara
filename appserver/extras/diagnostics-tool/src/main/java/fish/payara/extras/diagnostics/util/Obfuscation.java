@@ -57,6 +57,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -184,7 +185,9 @@ public class Obfuscation {
     }
 
     public static void obfuscateLogData(Path sourceFile, Path destinationFile) throws IOException {
-        try (BufferedReader reader = Files.newBufferedReader(sourceFile);
+        Path tempCopy = Files.createTempFile("log-obfuscation", ".tmp");
+        Files.copy(sourceFile, tempCopy, StandardCopyOption.REPLACE_EXISTING);
+        try (BufferedReader reader = Files.newBufferedReader(tempCopy);
              BufferedWriter writer = Files.newBufferedWriter(destinationFile)) {
             String line;
             while ((line = reader.readLine()) != null) {
