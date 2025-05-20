@@ -98,8 +98,6 @@ public class CpuCoreReportingService implements EventListener {
             try {
                 int availableProcessors = Runtime.getRuntime().availableProcessors();
 
-                logger.info("Running on " + availableProcessors + " cores");
-
                 Path path = Paths.get(env.getInstanceRoot().getAbsolutePath() + File.separator + "logs" + File.separator + LOG_FILE_NAME);
                 String content = LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME) + "," + availableProcessors;
                 String rowHash;
@@ -111,6 +109,7 @@ public class CpuCoreReportingService implements EventListener {
                     rowHash = generateHash(content + "," + getLastHash(path.toFile()));
                 }
                 Files.writeString(path, content + "," + rowHash + "\n", StandardOpenOption.APPEND);
+                logger.info("Running on " + availableProcessors + " cores. Signature: " + rowHash);
             } catch (IOException e) {
                 logger.log(Level.WARNING, "Failed to capture CPU cores data", e);
             }
