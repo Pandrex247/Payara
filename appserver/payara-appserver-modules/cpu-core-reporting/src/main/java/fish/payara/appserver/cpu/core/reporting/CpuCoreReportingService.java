@@ -86,7 +86,7 @@ public class CpuCoreReportingService implements EventListener {
     private ServerEnvironmentImpl env;
 
     private MessageDigest messageDigest;
-    private static final String LOG_FILE_NAME = "cpu_monitor.log";
+    private static final String LOG_FILE_NAME = "cpu_monitor.csv";
 
     @Override
     public void event(Event<?> event) {
