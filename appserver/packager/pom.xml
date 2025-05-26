@@ -184,6 +184,7 @@
         <module>certificate-management</module>
         <module>upgrade-tool</module>
         <module>diagnostics-tool</module>
+        <module>cpu-core-reporting-package</module>
     </modules>
     
     <properties>
