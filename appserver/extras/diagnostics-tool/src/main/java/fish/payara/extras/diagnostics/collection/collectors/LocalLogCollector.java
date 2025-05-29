@@ -62,12 +62,14 @@ public class LocalLogCollector extends FileCollector {
     private String logName;
     private String dirSuffix;
     private boolean obfuscateEnabled;
+    private boolean collectingForServer;
 
     public LocalLogCollector(Path logPath, String logName, CollectorService collectorService) {
         this.logPath = logPath;
         this.logName = logName;
         this.obfuscateEnabled = collectorService.getObfuscateEnabled();
         this.setInstanceName("server");
+        this.collectingForServer = true;
     }
 
     public LocalLogCollector(Path logPath, String instanceName, String logName, CollectorService collectorService) {
@@ -78,6 +80,7 @@ public class LocalLogCollector extends FileCollector {
     public LocalLogCollector(Path logPath, String instanceName, String dirSuffix, String logName, CollectorService collectorService) {
         this(logPath, instanceName, logName, collectorService);
         this.dirSuffix = dirSuffix;
+        this.collectingForServer = false;
     }
 
     @Override
@@ -91,7 +94,12 @@ public class LocalLogCollector extends FileCollector {
 
         if (confirmPath(logPath, false) && confirmPath(outputPath, true)) {
             if (logName.equals("access_log")) {
-                collectLogs(logPath, outputPath.resolve("logs/access"), logName);
+                if (collectingForServer) {
+                    collectLogs(logPath, outputPath.resolve("logs"), logName);
+                }
+                else {
+                    collectLogs(logPath, outputPath.resolve("logs/access"), logName);
+                }
             } else {
                 collectLogs(logPath, outputPath.resolve("logs"), logName);
             }
@@ -155,7 +163,7 @@ public class LocalLogCollector extends FileCollector {
             }
 
             Path resolvedDestination;
-            if (instanceName != null) {
+            if (instanceName != null && !collectingForServer) {
                 String prefix = instanceName + "-";
                 if ((prefix + relativePath).startsWith(prefix + instanceName)) {
                     prefix = "";
@@ -164,8 +172,9 @@ public class LocalLogCollector extends FileCollector {
             } else {
                 resolvedDestination = destination.resolve(relativePath);
             }
+            Files.createDirectories(resolvedDestination.getParent()); //Creates directory with prefix
 
-            if (obfuscateEnabled){
+            if (obfuscateEnabled && fileContains.equals("server.log")){
                 Obfuscation.obfuscateLogData(file, resolvedDestination);
             }else {
                 Files.copy(file, resolvedDestination);
