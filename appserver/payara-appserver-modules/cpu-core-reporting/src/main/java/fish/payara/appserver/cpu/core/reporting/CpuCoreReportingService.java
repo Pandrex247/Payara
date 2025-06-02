@@ -77,6 +77,9 @@ import java.nio.file.Files;
 public class CpuCoreReportingService implements EventListener {
 
     @Inject
+    private CpuCoreReportingConfiguration configuration;
+
+    @Inject
     private Events events;
 
     @Inject
@@ -139,6 +142,10 @@ public class CpuCoreReportingService implements EventListener {
 
     @PostConstruct
     public void postConstruct() {
+        if (!Boolean.valueOf(configuration.getEnabled())) {
+            return;
+        }
+
         try {
             messageDigest = MessageDigest.getInstance("SHA-256");
         } catch (NoSuchAlgorithmException e) {
