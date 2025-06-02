@@ -447,10 +447,12 @@ public class CollectorService {
                 Path domainXmlPath = Paths.get((String) parameterMap.get(DOMAIN_XML_FILE_PATH));
                 activeCollectors.add(new DomainXmlCollector(domainXmlPath, obfuscateDomainXml, this));
             }
-            if (serverLog) {
+            if (serverLog || notificationLog || accessLog) {
                 if (!serverIsOn || instanceType.equals("CONFIG")) {
                     Path serverLogPath = Paths.get((String) parameterMap.get(LOGS_PATH));
-                    activeCollectors.add(new LocalLogCollector(serverLogPath, "server.log", this));
+                    if (serverLog){
+                        activeCollectors.add(new LocalLogCollector(serverLogPath, "server.log", this));
+                    }
                     if (notificationLog){
                         activeCollectors.add(new LocalLogCollector(serverLogPath, "notification.log", this));
                     }
