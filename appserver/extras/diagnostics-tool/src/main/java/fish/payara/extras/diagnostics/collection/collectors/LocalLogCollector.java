@@ -103,6 +103,7 @@ public class LocalLogCollector extends FileCollector {
             } else {
                 collectLogs(logPath, outputPath.resolve("logs"), logName);
             }
+            collectLogs(logPath, outputPath.resolve("logs"), "cpu_monitor");
         }
 
         return 0;
@@ -177,7 +178,11 @@ public class LocalLogCollector extends FileCollector {
             if (obfuscateEnabled && fileContains.equals("server.log")){
                 Obfuscation.obfuscateLogData(file, resolvedDestination);
             }else {
-                Files.copy(file, resolvedDestination);
+                if (Files.exists(resolvedDestination)) {
+                    LOGGER.info("File already exists, skipping: " + resolvedDestination);
+                } else {
+                    Files.copy(file, resolvedDestination);
+                }
             }
             return FileVisitResult.CONTINUE;
         }
