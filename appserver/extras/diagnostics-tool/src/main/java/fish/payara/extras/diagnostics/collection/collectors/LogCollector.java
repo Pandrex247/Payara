@@ -170,11 +170,16 @@ public class LogCollector extends FileCollector {
             if (retrieveAccessLogs && targetType.equals("SSH")){
                 Path accessLogsFilePath = Paths.get(nodeInstallationDirectory + "/glassfish/nodes/" + node.getName() + "/" + getInstanceName() + "/logs/access/");
                 String accessLogFile = nodeInstallationDirectory + "/glassfish/nodes/" + node.getName() + "/" + getInstanceName() + "/logs/access/";
-                downloadAccessLogUsingSCP(accessLogFile,outputPath.toString(), logName, accessLogsFilePath);
+                downloadLogsUsingSCP(accessLogFile,outputPath.toString(), logName, accessLogsFilePath, true, false);
             }
             if (retrieveAccessLogs && targetType.equals("CONFIG")){
                 Path accessLogsFilePath = Paths.get(nodeInstallationDirectory + "/glassfish/nodes/" + node.getName() + "/" + getInstanceName() + "/logs/access/");
                 retrieveAccessLogSLocally(outputPath.toString(),accessLogsFilePath);
+            }
+            if (targetType.equals("SSH")){
+                Path cpuMonitorFilePath = Paths.get(nodeInstallationDirectory + "/glassfish/nodes/" + node.getName() + "/" + getInstanceName() + "/logs/");
+                String cpuMonitorFile = nodeInstallationDirectory + "/glassfish/nodes/" + node.getName() + "/" + getInstanceName() + "/logs/";
+                downloadLogsUsingSCP(cpuMonitorFile,outputPath.toString(), logName, cpuMonitorFilePath, false, true);
             }
 
             if (report.getActionExitCode() == ActionReport.ExitCode.SUCCESS) {
@@ -242,27 +247,43 @@ public class LogCollector extends FileCollector {
         }
     }
 
-    private boolean downloadAccessLogUsingSCP(String remoteDirectory, String localAccessDirectory, String fileName, Path remoteFilePath) throws IOException {
+    private boolean downloadLogsUsingSCP(String remoteDirectory, String localAccessDirectory, String fileName, Path remoteFilePath, boolean collectAccess, boolean collectCPU) throws IOException {
         try  {
             SSHLauncher sshL = getSSHL(serviceLocator);
             sshL.init(node, LOGGER);
             SFTPv3Client sftpClient = sshL.getSFTPClient();
             SCPClient scpClient = sshL.getSCPClient();
-            localAccessDirectory = localAccessDirectory+"/logs/"+getInstanceName()+"/access/";
-            Files.createDirectories(Paths.get(localAccessDirectory));
-            remoteFilePath.getFileName().toString().contains(fileName);
 
-            Vector listOfFilesInDirectory = sftpClient.ls(remoteDirectory);
-            for (Object fileObject: listOfFilesInDirectory){
-                SFTPv3DirectoryEntry file = (SFTPv3DirectoryEntry) fileObject;
-                if (file.attributes.isRegularFile()){
-                    String remoteFileName = file.filename;
-                    LOGGER.info("Downloading access log: " + remoteFileName);
-                    scpClient.get(remoteDirectory + remoteFileName, localAccessDirectory);
+            if (collectAccess){
+                localAccessDirectory = localAccessDirectory+"/logs/"+getInstanceName()+"/access/";
+                Files.createDirectories(Paths.get(localAccessDirectory));
+                remoteFilePath.getFileName().toString().contains(fileName);
+
+                Vector listOfFilesInDirectory = sftpClient.ls(remoteDirectory);
+                for (Object fileObject: listOfFilesInDirectory){
+                    SFTPv3DirectoryEntry file = (SFTPv3DirectoryEntry) fileObject;
+                    if (file.attributes.isRegularFile()){
+                        String remoteFileName = file.filename;
+                        LOGGER.info("Downloading access log: " + remoteFileName);
+                        scpClient.get(remoteDirectory + remoteFileName, localAccessDirectory);
+                    }
+                }
+                // remoteFile would be {installationDirectory} + "/glassfish/nodes/" + {node.toString()} + "/" + {instance} + "/logs/access/(file contains access_log)"
+                LOGGER.info("Access log downloaded successfully to: " + localAccessDirectory);
+            }
+            if (collectCPU) {
+                String cpuMonitorFileName = "cpu_monitor.csv";
+                String localCpuPath = localAccessDirectory+"/logs/" + getInstanceName() + "/";
+                Files.createDirectories(Paths.get(localCpuPath));
+
+                String fullRemotePath = remoteDirectory + (remoteDirectory.endsWith("/") ? "" : "/") + cpuMonitorFileName;
+                try (OutputStream localOut = new FileOutputStream(Paths.get(localCpuPath, cpuMonitorFileName).toFile())) {
+                    LOGGER.info("Downloading CPU monitor file from: " + fullRemotePath);
+                    scpClient.get(fullRemotePath, localOut);
+                    LOGGER.info("CPU monitor file downloaded successfully to: " + localCpuPath);
                 }
             }
-            // remoteFile would be {installationDirectory} + "/glassfish/nodes/" + {node.toString()} + "/" + {instance} + "/logs/access/(file contains access_log)"
-            LOGGER.info("Access log downloaded successfully to: " + localAccessDirectory);
+
             return true;
         } catch (IOException e) {
             LOGGER.severe("Error downloading access logs: " + e.getMessage());
