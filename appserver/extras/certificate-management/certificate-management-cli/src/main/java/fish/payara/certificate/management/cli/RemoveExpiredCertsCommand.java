@@ -61,7 +61,8 @@ import java.security.cert.CertificateExpiredException;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.text.SimpleDateFormat;
-import java.util.Enumeration;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.glassfish.api.Param;
@@ -122,10 +123,9 @@ public class RemoveExpiredCertsCommand extends AbstractCertManagementCommand {
         int removedKeys = 0;
 
         // Count through all aliases
-        Enumeration<String> aliases = store.aliases();
-        while (aliases.hasMoreElements()) {
+        List<String> aliases = Collections.list(store.aliases());
+        for (String alias : aliases) {
             // Get the certificate and alias
-            String alias = aliases.nextElement();
             Certificate cert = store.getCertificate(alias);
 
             // If the certificate is an X509 certificate
