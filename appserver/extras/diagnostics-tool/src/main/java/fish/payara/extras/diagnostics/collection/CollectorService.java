@@ -68,6 +68,7 @@ import jakarta.json.JsonString;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -77,11 +78,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.SimpleFileVisitor;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
@@ -451,7 +448,8 @@ public class CollectorService {
                 if (!serverIsOn || instanceType.equals("CONFIG")) {
                     Path serverLogPath = Paths.get((String) parameterMap.get(LOGS_PATH));
                     if (serverLog){
-                        activeCollectors.add(new LocalLogCollector(serverLogPath, "server.log", this));
+                        Path resolvedLogFile = resolveActualLogFile(serverLogPath, "server.log");
+                        activeCollectors.add(new LocalLogCollector(resolvedLogFile.getParent(), "server", "", resolvedLogFile.getFileName().toString(), this));
                     }
                     if (notificationLog){
                         activeCollectors.add(new LocalLogCollector(serverLogPath, "notification.log", this));
@@ -556,7 +554,8 @@ public class CollectorService {
 
             if (serverLog) {
                 if (!serverIsOn && instanceType.equals("CONFIG")) {
-                    activeCollectors.add(new LocalLogCollector(logPath, server.getName(), finalDirSuffix, "server.log",this));
+                    Path resolvedLogPath = resolveActualLogFile(logPath, "server.log");
+                    activeCollectors.add(new LocalLogCollector(resolvedLogPath.getParent(), server.getName(), finalDirSuffix, resolvedLogPath.getFileName().toString(), this));
                 } else if (serverIsOn){
                     activeCollectors.add(new LogCollector(server.getName(), finalDirSuffix, "server.log", this, environment, programOptions, "server", false));
                 }
@@ -667,6 +666,27 @@ public class CollectorService {
         return null;
     }
 
+    private Path resolveActualLogFile(Path logsDir, String defaultLogFile) {
+        Path loggingPropertiesPath = logsDir.getParent().resolve("config").resolve("logging.properties");
+        Properties props = new Properties();
+        try (InputStream in = Files.newInputStream(loggingPropertiesPath)) {
+            props.load(in);
+            String customLogPath = props.getProperty("com.sun.enterprise.server.logging.GFFileHandler.file");
+            if (customLogPath != null) {
+                // Resolve ${com.sun.aas.instanceRoot}
+                String instanceRoot = logsDir.getParent().toAbsolutePath().toString();
+                customLogPath = customLogPath.replace("${com.sun.aas.instanceRoot}", instanceRoot);
+                Path resolved = Paths.get(customLogPath);
+                if (Files.exists(resolved)) {
+                    return resolved;
+                }
+            }
+        } catch (IOException e) {
+            LOGGER.warning("Failed to resolve log file path: " + e.getMessage());
+        }
+        // Fallback to default
+        return logsDir.resolve(defaultLogFile);
+    }
 
 
     public String returnInstanceType(String instance) {
