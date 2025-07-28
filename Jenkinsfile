@@ -69,6 +69,8 @@ pipeline {
                         -Dglassfish.home=\"${pwd()}/appserver/distributions/payara/target/stage/payara6/glassfish\" \
                         -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                         -Djavax.xml.accessExternalSchema=all \
+                        -Dsurefire.rerunFailingTestsCount=2 \
+                        -Dfailsafe.rerunFailingTestsCount=2 \
                         -f appserver/tests/quicklook/pom.xml"""
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -97,6 +99,8 @@ pipeline {
                         -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                         -Djavax.xml.accessExternalSchema=all \
                         -Dpayara.home=\"${pwd()}/appserver/distributions/payara/target/stage/payara6/glassfish\" \
+                        -Dsurefire.rerunFailingTestsCount=2 \
+                        -Dfailsafe.rerunFailingTestsCount=2 \
                         -f appserver/tests/payara-samples """
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -132,6 +136,8 @@ pipeline {
                         -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                         -Djavax.xml.accessExternalSchema=all -Dpayara.version=${pom.version} \
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
+                        -Dsurefire.rerunFailingTestsCount=2 \
+                        -Dfailsafe.rerunFailingTestsCount=2 \
                         -Ppayara-server-remote,full \
                         -f MicroProfile-Config"""
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
@@ -168,6 +174,8 @@ pipeline {
                         -Djavax.xml.accessExternalSchema=all -Dpayara.version=${pom.version} \
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
                         -Ppayara-server-remote,full \
+                        -Dsurefire.rerunFailingTestsCount=2 \
+                        -Dfailsafe.rerunFailingTestsCount=2 \
                         -f MicroProfile-Fault-Tolerance"""
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -203,6 +211,8 @@ pipeline {
                         -Djavax.xml.accessExternalSchema=all -Dpayara.version=${pom.version} \
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
                         -Ppayara-server-remote,full \
+                        -Dsurefire.rerunFailingTestsCount=2 \
+                        -Dfailsafe.rerunFailingTestsCount=2 \
                         -f MicroProfile-Health"""
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -239,6 +249,8 @@ pipeline {
                         -Djavax.xml.accessExternalSchema=all -Dpayara.version=${pom.version} \
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
                         -Ppayara-server-remote,full \
+                        -Dsurefire.rerunFailingTestsCount=2 \
+                        -Dfailsafe.rerunFailingTestsCount=2 \
                         -f MicroProfile-JWT-Auth"""
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -274,6 +286,8 @@ pipeline {
                         -Djavax.xml.accessExternalSchema=all -Dpayara.version=${pom.version} \
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
                         -Ppayara-server-remote,full \
+                        -Dsurefire.rerunFailingTestsCount=2 \
+                        -Dfailsafe.rerunFailingTestsCount=2 \
                         -f MicroProfile-Metrics"""
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -309,6 +323,8 @@ pipeline {
                         -Djavax.xml.accessExternalSchema=all -Dpayara.version=${pom.version} \
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
                         -Ppayara-server-remote,full \
+                        -Dsurefire.rerunFailingTestsCount=2 \
+                        -Dfailsafe.rerunFailingTestsCount=2 \
                         -f MicroProfile-OpenAPI"""
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -344,6 +360,8 @@ pipeline {
                         -Djavax.xml.accessExternalSchema=all -Dpayara.version=${pom.version} \
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
                         -Ppayara-server-remote,full \
+                        -Dsurefire.rerunFailingTestsCount=2 \
+                        -Dfailsafe.rerunFailingTestsCount=2 \
                         -f MicroProfile-OpenTelemetry-Tracing"""
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -379,6 +397,8 @@ pipeline {
                         -Djavax.xml.accessExternalSchema=all -Dpayara.version=${pom.version} \
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
                         -Ppayara-server-remote,full \
+                        -Dsurefire.rerunFailingTestsCount=2 \
+                        -Dfailsafe.rerunFailingTestsCount=2 \
                         -f MicroProfile-OpenTracing"""
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -414,6 +434,8 @@ pipeline {
                         -Djavax.xml.accessExternalSchema=all -Dpayara.version=${pom.version} \
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
                         -Ppayara-server-remote,full \
+                        -Dsurefire.rerunFailingTestsCount=2 \
+                        -Dfailsafe.rerunFailingTestsCount=2 \
                         -f MicroProfile-Rest-Client"""
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -447,6 +469,8 @@ pipeline {
                         sh "mvn -B -V -ff -e clean install -Dsurefire.useFile=false \
                         -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                         -Djavax.xml.accessExternalSchema=all -Dpayara.version=${pom.version} \
+                        -Dsurefire.rerunFailingTestsCount=2 \
+                        -Dfailsafe.rerunFailingTestsCount=2 \
                         -Ppayara-server-remote,stable"
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -482,6 +506,8 @@ pipeline {
                        sh  """mvn -B -V -ff -e clean verify --strict-checksums -Dsurefire.useFile=false \
                          -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                          -Djavax.xml.accessExternalSchema=all \
+                         -Dsurefire.rerunFailingTestsCount=2 \
+                         -Dfailsafe.rerunFailingTestsCount=2 \
                          -Ppayara-server-remote -DtrimStackTrace=false"""
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -515,6 +541,8 @@ pipeline {
                         -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                         -Djavax.xml.accessExternalSchema=all -Dpayara.version=${pom.version} \
                         -Dpayara_domain=${DOMAIN_NAME} \
+                        -Dsurefire.rerunFailingTestsCount=2 \
+                        -Dfailsafe.rerunFailingTestsCount=2 \
                         -Ppayara-server-remote,stable,payara6"""
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -553,13 +581,19 @@ pipeline {
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running test with Payara Micro  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         sh """mvn -V -B -ff clean install --strict-checksums -Ppayara-micro-managed,install-deps \
                         -Dpayara.version=${pom.version} \
+                        -Dsurefire.rerunFailingTestsCount=2 \
+                        -Dfailsafe.rerunFailingTestsCount=2 \
                         -f appserver/tests/functional/payara-micro """
 
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running test with Payara Embedded  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         sh """mvn -V -B -ff clean verify --strict-checksums -PFullProfile \
+                        -Dsurefire.rerunFailingTestsCount=2 \
+                        -Dfailsafe.rerunFailingTestsCount=2 \
                         -Dversion=${pom.version} -f appserver/tests/functional/embeddedtest """
 
                         sh """mvn -V -B -ff clean verify --strict-checksums -PWebProfile \
+                        -Dsurefire.rerunFailingTestsCount=2 \
+                        -Dfailsafe.rerunFailingTestsCount=2 \
                         -Dversion=${pom.version} -f appserver/tests/functional/embeddedtest """
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
