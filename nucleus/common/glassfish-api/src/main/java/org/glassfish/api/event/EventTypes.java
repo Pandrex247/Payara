@@ -76,7 +76,7 @@ public final class EventTypes<T> {
      * This will be enabled by default in Community (opt-out instead of opt-in).
      *
      * This is to counter a side effect of us changing the run levels to apply a structured order to the post-boot and
-     * deployment services in FISH-6588 (introduced in version 5.47.0) to prevent a race between post-boot scripts
+     * deployment services in FISH-6588 (introduced in version 6.2022.2) to prevent a race between post-boot scripts
      * and previously deployed applications; all of these services used to run at the same `StartupRunLevel`
      * and so would've been initialised by the time the `SERVER_READY` event would've fired.
       */
