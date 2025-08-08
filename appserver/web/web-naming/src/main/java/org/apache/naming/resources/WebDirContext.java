@@ -175,8 +175,7 @@ public class WebDirContext extends FileDirContext {
             WebDirContext tempContext = new WebDirContext(env);
             if (file == null) {
                 tempContext.docBase = name;
-            }
-            else {
+            } else {
                 tempContext.setDocBase(file.getAbsolutePath());
             }
             tempContext.setAllowLinking(getAllowLinking());
