@@ -275,6 +275,11 @@
             <artifactId>monitoring-console-api</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.crac</groupId>
+            <artifactId>crac</artifactId>
+            <optional>true</optional>
+        </dependency>
     </dependencies>
 </project>
 
