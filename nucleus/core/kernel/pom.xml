@@ -297,6 +297,11 @@
             <artifactId>deployment-transformer-api</artifactId>
             <version>${project.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.crac</groupId>
+            <artifactId>crac</artifactId>
+        </dependency>
     </dependencies>
 </project>
 
