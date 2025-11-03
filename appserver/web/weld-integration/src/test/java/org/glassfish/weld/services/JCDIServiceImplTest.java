@@ -1,7 +1,11 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) 2021-2025 Payara Foundation and/or its affiliates. All rights reserved.
+<<<<<<< HEAD
+ * Copyright (c) [2021-2025] Payara Foundation and/or its affiliates. All rights reserved.
+=======
+ * Copyright (c) [2021-2024] Payara Foundation and/or its affiliates. All rights reserved.
+>>>>>>> upstream/FISH-10752-Reapply-EAR-Deployment-Changes-and-Shared-War-Libs
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -13,7 +17,7 @@
  * language governing permissions and limitations under the License.
  *
  * When distributing the software, include this License Header Notice in each
- * file and include the License file at legal/OPEN-SOURCE-LICENSE.txt.
+ * file and include the License file at glassfish/legal/LICENSE.txt.
  *
  * GPL Classpath Exception:
  * The Payara Foundation designates this particular file as subject to the "Classpath"
