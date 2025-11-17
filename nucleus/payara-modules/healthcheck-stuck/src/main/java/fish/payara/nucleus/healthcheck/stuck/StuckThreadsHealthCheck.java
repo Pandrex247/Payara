@@ -1,7 +1,11 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
+<<<<<<< HEAD
  * Copyright (c) [2016-2024] Payara Foundation and/or its affiliates. All rights reserved.
+=======
+ * Copyright (c) 2016-2025 Payara Foundation and/or its affiliates. All rights reserved.
+>>>>>>> Payara7
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -40,11 +44,14 @@
 package fish.payara.nucleus.healthcheck.stuck;
 
 import fish.payara.internal.notification.EventLevel;
+<<<<<<< HEAD
 import fish.payara.monitoring.collect.MonitoringData;
 import fish.payara.monitoring.collect.MonitoringDataCollector;
 import fish.payara.monitoring.collect.MonitoringDataSource;
 import fish.payara.monitoring.collect.MonitoringWatchCollector;
 import fish.payara.monitoring.collect.MonitoringWatchSource;
+=======
+>>>>>>> Payara7
 import fish.payara.notification.healthcheck.HealthCheckResultEntry;
 import fish.payara.notification.healthcheck.HealthCheckResultStatus;
 import fish.payara.nucleus.healthcheck.HealthCheckResult;
@@ -68,8 +75,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @since 4.1.2.173
@@ -79,8 +84,7 @@ import java.util.concurrent.atomic.AtomicLong;
 @Service(name = "healthcheck-stuck")
 @RunLevel(StartupRunLevel.VAL)
 public class StuckThreadsHealthCheck extends
-        BaseHealthCheck<HealthCheckStuckThreadExecutionOptions, StuckThreadsChecker>
-        implements MonitoringDataSource, MonitoringWatchSource, HealthCheckStatsProvider {
+        BaseHealthCheck<HealthCheckStuckThreadExecutionOptions, StuckThreadsChecker> implements HealthCheckStatsProvider {
 
     private final Map<String, Number> stuckThreadResult = new ConcurrentHashMap<>();
     private static final String STUCK_THREAD_COUNT = "count";
@@ -144,6 +148,7 @@ public class StuckThreadsHealthCheck extends
     protected EventLevel createNotificationEventLevel (HealthCheckResultStatus checkResult) {
         if (checkResult == HealthCheckResultStatus.FINE) {
             return EventLevel.INFO;
+<<<<<<< HEAD
         }
         return EventLevel.WARNING;
     }
@@ -204,7 +209,10 @@ public class StuckThreadsHealthCheck extends
         case TIMED_WAITING:
             return "Waiting on ";
         default: return "Running ";
+=======
+>>>>>>> Payara7
         }
+        return EventLevel.WARNING;
     }
 
     private void acceptStuckThreads(StuckThreadConsumer consumer) {

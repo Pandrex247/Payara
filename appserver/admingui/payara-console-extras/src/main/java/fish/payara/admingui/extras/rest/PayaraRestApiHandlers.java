@@ -287,7 +287,11 @@ public class PayaraRestApiHandlers {
           }
           handlerCtx.setOutputValue("result", result);
     }
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> Payara7
     /**
      * Sets the successful command message to be displayed
      * @param handlerCtx 

@@ -37,7 +37,11 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+<<<<<<< HEAD
 // Portions Copyright [2018-2025] [Payara Foundation and/or its affiliates]
+=======
+// Portions Copyright [2018-2024] [Payara Foundation and/or its affiliates]
+>>>>>>> Payara7
 package com.sun.enterprise.security.ee;
 
 import static java.util.logging.Level.FINE;
@@ -48,7 +52,7 @@ import java.util.logging.Logger;
 import jakarta.security.jacc.PolicyConfiguration;
 import jakarta.security.jacc.PolicyConfigurationFactory;
 import jakarta.security.jacc.PolicyContextException;
-
+import jakarta.security.jacc.PolicyFactory;
 import org.glassfish.api.deployment.DeploymentContext;
 import org.glassfish.api.deployment.OpsParams;
 import org.glassfish.deployment.common.SecurityRoleMapperFactory;
@@ -64,7 +68,7 @@ import com.sun.logging.LogDomains;
 import org.glassfish.exousia.AuthorizationService;
 
 /**
- * This utility class contains JACC related utilities.
+ * This utility class contains Jakarta Authorization related utilities.
  * 
  * <p>
  * This is mostly used by the SecurityDeployer, but the getContextID method
@@ -138,7 +142,11 @@ public class SecurityUtil {
             
             // Only do refresh policy if the deleted context was in service
             if (wasInService) {
+<<<<<<< HEAD
                 AuthorizationService.getPolicy().refresh();
+=======
+                PolicyFactory.getPolicyFactory().getPolicy().refresh();
+>>>>>>> Payara7
             }
 
         } catch (java.lang.ClassNotFoundException cnfe) {
@@ -164,8 +172,7 @@ public class SecurityUtil {
             return;
         }
         String appName = params.name();
-        SecurityRoleMapperFactory factory = getRoleMapperFactory();
-        factory.removeRoleMapper(appName);
+        getRoleMapperFactory().removeRoleMapper(appName);
     }
     
     
@@ -204,7 +211,11 @@ public class SecurityUtil {
                 }
             }
 
+<<<<<<< HEAD
             AuthorizationService.getPolicy().refresh();
+=======
+            PolicyFactory.getPolicyFactory().getPolicy().refresh();
+>>>>>>> Payara7
         } catch (ClassNotFoundException | PolicyContextException cnfe) {
             throw new IASSecurityException(cnfe);
         }

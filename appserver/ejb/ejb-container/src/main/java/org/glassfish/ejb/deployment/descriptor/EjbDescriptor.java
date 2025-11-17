@@ -37,7 +37,11 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+<<<<<<< HEAD
 // Portions Copyright [2019-2024] [Payara Foundation and/or its affiliates]
+=======
+// Portions Copyright 2019-2024 Payara Foundation and/or its affiliates
+>>>>>>> Payara7
 
 package org.glassfish.ejb.deployment.descriptor;
 
@@ -108,7 +112,7 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
     protected boolean usesDefaultTransaction;
     private Hashtable<MethodDescriptor, ContainerTransaction> methodContainerTransactions;
     private Hashtable<MethodPermission, Set<MethodDescriptor>> permissionedMethodsByPermission;
-    private Map<MethodPermission, List<MethodDescriptor>> methodPermissionsFromDD;
+    private Map<MethodPermission, List<MethodDescriptor>> methodPermissionsFromDD = new HashMap<>();
     private Set<EnvironmentProperty> environmentProperties = new HashSet<>();
     private Set<EjbReference> ejbReferences = new HashSet<>();
     private Set<ResourceEnvReferenceDescriptor> resourceEnvReferences = new HashSet<>();
@@ -1423,17 +1427,11 @@ public abstract class EjbDescriptor extends CommonResourceDescriptor implements 
      * Keep a record of all the Method Permissions exactly as they were in the DD
      */
     private void saveMethodPermissionFromDD(MethodPermission methodPermission, MethodDescriptor methodDescriptor) {
-        if (methodPermissionsFromDD == null) {
-            methodPermissionsFromDD = new HashMap<>();
-        }
-
         // We organize by permission, makes it easier...
         // Use Array List as opposed to HashMap or Table because MethodDescriptor
         // Equality once did not take into account differences in
         // method interface, and will process sequentially.
-
-        methodPermissionsFromDD.computeIfAbsent(methodPermission, e -> new ArrayList<>())
-        .add(methodDescriptor);
+        methodPermissionsFromDD.computeIfAbsent(methodPermission, e -> new ArrayList<>()).add(methodDescriptor);
     }
 
     /**

@@ -42,7 +42,11 @@
     <parent>
         <groupId>fish.payara.server.internal.payara-modules</groupId>
         <artifactId>payara-nucleus-modules</artifactId>
+<<<<<<< HEAD
         <version>6.2025.12-SNAPSHOT</version>
+=======
+        <version>7.2025.2-SNAPSHOT</version>
+>>>>>>> Payara7
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>hazelcast-bootstrap</artifactId>
@@ -90,10 +94,13 @@
             <groupId>fish.payara.server.internal.admin</groupId>
             <artifactId>admin-cli</artifactId>
             <version>${project.version}</version>
+<<<<<<< HEAD
         </dependency>
         <dependency>
             <groupId>fish.payara.monitoring-console</groupId>
             <artifactId>monitoring-console-api</artifactId>
+=======
+>>>>>>> Payara7
         </dependency>
     </dependencies>
 </project>

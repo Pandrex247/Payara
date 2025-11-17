@@ -48,7 +48,11 @@
     <parent>
         <groupId>fish.payara.server.internal.concurrent</groupId>
         <artifactId>concurrent</artifactId>
+<<<<<<< HEAD
         <version>6.2025.12-SNAPSHOT</version>
+=======
+        <version>7.2025.2-SNAPSHOT</version>
+>>>>>>> Payara7
     </parent>    
     <artifactId>concurrent-impl</artifactId>
     <packaging>glassfish-jar</packaging>
@@ -86,6 +90,15 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
+<<<<<<< HEAD
+=======
+            <groupId>fish.payara.server.internal.test-utils</groupId>
+            <artifactId>utils</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+>>>>>>> Payara7
             <groupId>fish.payara.server.internal.admin</groupId>
             <artifactId>admin-util</artifactId>
             <version>${project.version}</version>
@@ -115,8 +128,8 @@
             <artifactId>jakarta.enterprise.concurrent-api</artifactId>
         </dependency>
        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>jakarta.enterprise.concurrent</artifactId>
+            <groupId>org.glassfish.concurro</groupId>
+            <artifactId>concurro</artifactId>
         </dependency>
         <dependency>
             <groupId>org.easymock</groupId>

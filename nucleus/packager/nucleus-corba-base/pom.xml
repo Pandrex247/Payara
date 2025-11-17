@@ -48,7 +48,11 @@
     <parent>
         <groupId>fish.payara.server.internal.packager</groupId>
         <artifactId>nucleus-packages</artifactId>
+<<<<<<< HEAD
         <version>6.2025.12-SNAPSHOT</version>
+=======
+        <version>7.2025.2-SNAPSHOT</version>
+>>>>>>> Payara7
     </parent>
     <artifactId>nucleus-corba-base</artifactId>
     <name>Nucleus Base CORBA APIs Package</name>

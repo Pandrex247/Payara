@@ -40,7 +40,11 @@
 
 -->
 
+<<<<<<< HEAD
 <!-- Portions Copyright [2017-2025] [Payara Foundation and/or its affiliates] -->
+=======
+<!-- Portions Copyright [2017-2024] [Payara Foundation and/or its affiliates] -->
+>>>>>>> Payara7
 
 
 <sun:propertySheet id="propertySheet">

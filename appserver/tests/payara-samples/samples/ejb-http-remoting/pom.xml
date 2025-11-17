@@ -49,7 +49,11 @@
     <parent>
         <groupId>fish.payara.samples</groupId>
         <artifactId>payara-samples-profiled-tests</artifactId>
+<<<<<<< HEAD
         <version>6.2025.12-SNAPSHOT</version>
+=======
+        <version>7.2025.2-SNAPSHOT</version>
+>>>>>>> Payara7
     </parent>
 
     <properties>
@@ -62,6 +66,12 @@
             <artifactId>jakarta.jakartaee-api</artifactId>
             <scope>provided</scope>
         </dependency>
+        <!-- Temporary dependencies while EE11 in development, remove once EE11 fully released -->
+        <dependency>
+            <groupId>jakarta.jms</groupId>
+            <artifactId>jakarta.jms-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>fish.payara.extras</groupId>
             <artifactId>ejb-http-client</artifactId>
@@ -69,7 +79,11 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.mq</groupId>
+<<<<<<< HEAD
             <artifactId>imq</artifactId>
+=======
+            <artifactId>mq-client</artifactId>
+>>>>>>> Payara7
             <scope>provided</scope>
         </dependency>
 
@@ -77,6 +91,31 @@
             <groupId>fish.payara.extras</groupId>
             <artifactId>payara-embedded-all</artifactId>
             <scope>test</scope>
+<<<<<<< HEAD
+=======
+            <exclusions>
+                <exclusion>
+                    <groupId>fish.payara.server.internal.packager</groupId>
+                    <artifactId>ldapbp-repackaged</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId> fish.payara.server.internal.packager</groupId>
+                    <artifactId>libpam4j-repackaged</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>fish.payara.server.internal.packager</groupId>
+                    <artifactId>tiger-types</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>fish.payara.server.internal.packager</groupId>
+                    <artifactId>jmxremote_optional-repackaged</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>fish.payara.server.internal.packager</groupId>
+                    <artifactId>opentracing-repackaged</artifactId>
+                </exclusion>
+            </exclusions>
+>>>>>>> Payara7
         </dependency>
 
         <dependency>

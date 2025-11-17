@@ -39,6 +39,7 @@
     holder.
 
 -->
+<!-- Portions Copyright 2025 Payara Foundation and/or its affiliates -->
 
 <!-- appServer/jvmReport.jsf -->
 
@@ -58,8 +59,13 @@
     />
     <sun:html id="html2"> 
         <sun:head id="propertyhead" title="JVM Report" >
+<<<<<<< HEAD
             <sun:script url="/jakarta.faces.resource/jsf.js.jsf?ln=jakarta.faces" />
             <sun:script url="/resource/js/adminjsf.js" />
+=======
+            <sun:script url="/jakarta.faces.resource/faces.js.jsf?ln=jakarta.faces" />
+            <sun:script url="/resource/common/js/adminjsf.js" />
+>>>>>>> Payara7
         </sun:head>
         <sun:body id="body3">
             <sun:form id="propertyForm">

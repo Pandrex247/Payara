@@ -46,7 +46,11 @@
     <parent>
         <groupId>fish.payara.samples</groupId>
         <artifactId>payara-samples-profiled-tests</artifactId>
+<<<<<<< HEAD
         <version>6.2025.12-SNAPSHOT</version>
+=======
+        <version>7.2025.2-SNAPSHOT</version>
+>>>>>>> Payara7
     </parent>
 
     <artifactId>jacc-per-app</artifactId>
@@ -55,6 +59,7 @@
 
     <dependencies>
         <dependency>
+<<<<<<< HEAD
             <groupId>fish.payara.server.internal.tests</groupId>
             <artifactId>jacc-provider-repackaged</artifactId>
             <classifier>jakartaee9</classifier>
@@ -62,6 +67,8 @@
         </dependency>
 
         <dependency>
+=======
+>>>>>>> Payara7
             <groupId>fish.payara.api</groupId>
             <artifactId>payara-api</artifactId>
             <scope>provided</scope>
@@ -80,6 +87,15 @@
             <groupId>jakarta.authorization</groupId>
             <artifactId>jakarta.authorization-api</artifactId>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>jakarta.annotation</groupId>
+            <artifactId>jakarta.annotation-api</artifactId>
         </dependency>
         <dependency>
             <groupId>jakarta.ws.rs</groupId>
