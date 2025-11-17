@@ -46,11 +46,7 @@
     <parent>
         <groupId>fish.payara.server.internal.featuresets</groupId>
         <artifactId>featuresets</artifactId>
-<<<<<<< HEAD
-        <version>6.2025.12-SNAPSHOT</version>
-=======
         <version>7.2025.2-SNAPSHOT</version>
->>>>>>> Payara7
     </parent>
     
     <artifactId>payara-web-featureset</artifactId>
@@ -247,15 +243,12 @@
 
         <dependency>
             <groupId>fish.payara.server.internal.packager</groupId>
-<<<<<<< HEAD
-=======
             <artifactId>data</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
         </dependency>
         <dependency>
             <groupId>fish.payara.server.internal.packager</groupId>
->>>>>>> Payara7
             <artifactId>payara-mvc</artifactId>
             <version>${project.version}</version>
             <type>zip</type>

@@ -38,11 +38,8 @@
  * holder.
  */
 // Portions Copyright [2019-2024] [Payara Foundation and/or its affiliates]
-<<<<<<< HEAD
-=======
 // Portions Copyright 2024 Contributors to the Eclipse Foundation
 // Payara Foundation and/or its affiliates elects to include this software in this distribution under the GPL Version 2 license
->>>>>>> Payara7
 
 package org.glassfish.security.common;
 
@@ -57,14 +54,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
-<<<<<<< HEAD
-import java.nio.charset.StandardCharsets;
-=======
 import java.io.Serial;
 import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.attribute.UserPrincipal;
->>>>>>> Payara7
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Arrays;

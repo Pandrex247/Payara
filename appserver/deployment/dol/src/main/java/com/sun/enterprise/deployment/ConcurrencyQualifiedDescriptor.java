@@ -37,53 +37,6 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-<<<<<<<< HEAD:appserver/tests/payara-samples/samples/mvc/src/main/java/fish/payara/samples/mvc/Salutation.java
-
-package fish.payara.samples.mvc;
-
-import jakarta.enterprise.context.RequestScoped;
-import jakarta.inject.Named;
-
-@Named
-@RequestScoped
-public class Salutation {
-
-    private String greet;
-    private String platform;
-    private String greetingDate;
-    private String message;
-
-    public String getGreet() {
-        return greet;
-    }
-
-    public String getPlatform() {
-        return platform;
-    }
-
-    public void setPlatform(String platform) {
-        this.platform = platform;
-    }
-
-    public String getGreetingDate() {
-        return greetingDate;
-    }
-
-    public void setGreetingDate(String greetingDate) {
-        this.greetingDate = greetingDate;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public void setGreet(String greet) {
-        this.greet = greet;
-========
 package com.sun.enterprise.deployment;
 
 import java.util.Arrays;
@@ -119,6 +72,5 @@ public abstract class ConcurrencyQualifiedDescriptor extends ResourceDescriptor 
 
     public void setQualifiers(String qualifiers[]) {
         this.qualifiers = new HashSet(Arrays.asList(qualifiers));
->>>>>>>> Payara7:appserver/deployment/dol/src/main/java/com/sun/enterprise/deployment/ConcurrencyQualifiedDescriptor.java
     }
 }

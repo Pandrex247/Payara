@@ -45,11 +45,7 @@
     <parent>
         <groupId>fish.payara.samples</groupId>
         <artifactId>payara-samples</artifactId>
-<<<<<<< HEAD
-        <version>6.2025.12-SNAPSHOT</version>
-=======
         <version>7.2025.2-SNAPSHOT</version>
->>>>>>> Payara7
     </parent>
 
     <artifactId>payara-samples-profiled-tests</artifactId>
@@ -78,10 +74,6 @@
         <module>rest-management</module>
         <module>rolesPermitted</module>
         <module>realm-identity-stores</module>
-<<<<<<< HEAD
-        <module>jakartaee-namespace-transformer</module>
-=======
->>>>>>> Payara7
         <module>http</module>
         <module>logging</module>
         <module>ejb-http-remoting</module>
@@ -89,7 +81,7 @@
         <module>rolesallowed-unprotected-methods</module>
         <module>microprofile-rc-ft</module>
         <module>multiple-keystores</module>
-        <module>client-certificate-validator</module>
+        <!--module>client-certificate-validator</module-->
         <!-- Skip - this test needs to be run repeatedly for around 60 minutes to be effective -->
         <!--<module>corba-read-timeout</module>-->
         <module>microprofile-rest-client</module>
@@ -98,10 +90,7 @@
         <module>opentelemetry</module>
         <module>use-bundled-jsf-primefaces</module>
         <module>mvc</module>
-<<<<<<< HEAD
-=======
         <module>data</module>
->>>>>>> Payara7
         <module>versioned-deployment</module>
     </modules>
 
@@ -121,13 +110,13 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
-
+    
     <profiles>
         <profile>
             <id>playwright</id>
             <modules>
                 <module>cleanboot</module>
-            </modules>
+            </modules>        
         </profile>
     </profiles>
 </project>

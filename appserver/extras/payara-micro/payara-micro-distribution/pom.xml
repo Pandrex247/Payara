@@ -45,11 +45,7 @@
     <parent>
         <groupId>fish.payara.server.internal.extras</groupId>
         <artifactId>payara-micro-parent</artifactId>
-<<<<<<< HEAD
-        <version>6.2025.12-SNAPSHOT</version>
-=======
         <version>7.2025.2-SNAPSHOT</version>
->>>>>>> Payara7
     </parent>
     <groupId>fish.payara.extras</groupId>
     <artifactId>payara-micro</artifactId>
@@ -60,11 +56,7 @@
 
     <!-- Don't inherit SCM from parent since flatten resolves it incorrectly in a similar manner to the URL -->
     <scm>
-<<<<<<< HEAD
-        <url>https://github.com/payara/Payara/tree/main</url>
-=======
         <url>https://github.com/payara/Payara/tree//blob/main</url>
->>>>>>> Payara7
         <connection>scm:git:git://github.com/payara/payara.git</connection>
         <developerConnection>scm:git:ssh://github.com:payara/payara.git</developerConnection>
     </scm>
@@ -502,8 +494,6 @@
 
         <dependency>
             <groupId>fish.payara.server.internal.packager</groupId>
-<<<<<<< HEAD
-=======
             <artifactId>data</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
@@ -511,7 +501,6 @@
         </dependency>
         <dependency>
             <groupId>fish.payara.server.internal.packager</groupId>
->>>>>>> Payara7
             <artifactId>payara-mvc</artifactId>
             <version>${project.version}</version>
             <type>zip</type>

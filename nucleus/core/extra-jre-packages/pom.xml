@@ -47,11 +47,7 @@
     <parent>
         <groupId>fish.payara.server.internal.core</groupId>
         <artifactId>nucleus-core</artifactId>
-<<<<<<< HEAD
-        <version>6.2025.12-SNAPSHOT</version>
-=======
         <version>7.2025.2-SNAPSHOT</version>
->>>>>>> Payara7
     </parent>
     <artifactId>glassfish-extra-jre-packages</artifactId>
     <name>GlassFish Extra JRE Packages</name>

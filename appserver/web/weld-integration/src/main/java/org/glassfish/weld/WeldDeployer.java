@@ -37,11 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-<<<<<<< HEAD
-// Portions Copyright [2016-2025] [Payara Foundation and/or its affiliates]
-=======
 // Portions Copyright 2016-2025 Payara Foundation and/or its affiliates
->>>>>>> Payara7
 
 package org.glassfish.weld;
 
@@ -173,10 +169,6 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
     private static final String WELD_BOOTSTRAP_SHUTDOWN = "weld_bootstrap_shutdown";
     private static final String WELD_CONVERSATION_FILTER_CLASS = "org.jboss.weld.module.web.servlet.ConversationFilter";
     private static final String WELD_CONVERSATION_FILTER_NAME = "CDI Conversation Filter";
-<<<<<<< HEAD
-
-=======
->>>>>>> Payara7
     private static final String JERSEY_PROCESS_ALL_CLASS_NAME = "org.glassfish.jersey.ext.cdi1x.internal.ProcessAllAnnotatedTypes";
     private static final String JERSEY_HK2_CLASS_NAME = "org.glassfish.jersey.ext.cdi1x.spi.Hk2CustomBoundTypesProvider";
     private static final String JERSEY_PROCESS_JAXRS_CLASS_NAME = "org.glassfish.jersey.ext.cdi1x.internal.ProcessJAXRSAnnotatedTypes";
@@ -346,13 +338,9 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
                 // However, it will be applied only if web.xml has a mapping for it.
                 // Doing this here to make sure that its done only for CDI enabled web applications
                 registerWeldConversationFilter(webBundleDescriptor);
-<<<<<<< HEAD
-            }
-=======
 
             }
 
->>>>>>> Payara7
 
             BundleDescriptor bundle = (webBundleDescriptor != null) ? webBundleDescriptor : ejbBundle;
             if (bundle != null && (!beanDeploymentArchive.getBeansXml().getBeanDiscoveryMode().equals(NONE)
@@ -974,11 +962,7 @@ public class WeldDeployer extends SimpleDeployer<WeldContainer, WeldApplicationC
         configuration.setConcurrentDeployment(WeldUtils.isConcurrentDeploymentEnabled());
         configuration.setPreLoaderThreadPoolSize(WeldUtils.getPreLoaderThreads());
     }
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> Payara7
     private void addWeldListenerToAllWars(DeploymentContext context) {
         // if there's at least 1 ejb jar then add the listener to all wars
         ApplicationHolder applicationHolder = context.getModuleMetaData(ApplicationHolder.class);

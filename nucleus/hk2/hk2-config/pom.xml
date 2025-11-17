@@ -47,11 +47,7 @@
     <parent>
         <groupId>fish.payara.server.internal.hk2</groupId>
         <artifactId>glassfish-nucleus-hk2</artifactId>
-<<<<<<< HEAD
-        <version>6.2025.12-SNAPSHOT</version>
-=======
         <version>7.2025.2-SNAPSHOT</version>
->>>>>>> Payara7
     </parent>
     <artifactId>hk2-config</artifactId>
     
@@ -126,13 +122,8 @@
                 <configuration>
                     <instructions>
                         <Import-Package>
-<<<<<<< HEAD
-                            jakarta.validation.*;resolution:=optional;version="${range;[==,${jakarta.validation.version.upperbound});${jakarta.validation.version}}",
-                            org.hibernate.validator.*;resolution:=optional;version="${range;[==,${hibernate.validator.version.upperbound});${hibernate.validator.osgi.version}}",
-=======
                             jakarta.validation.*;resolution:=optional;version="[${jakarta.validation.osgi.version},${jakarta.validation.osgi.version.upperbound})",
                             org.hibernate.validator.*;resolution:=optional;version="[${hibernate.validator.osgi.version},${hibernate.validator.osgi.version.upperbound})",
->>>>>>> Payara7
                             *
                         </Import-Package>
                         <DynamicImport-Package>*</DynamicImport-Package>

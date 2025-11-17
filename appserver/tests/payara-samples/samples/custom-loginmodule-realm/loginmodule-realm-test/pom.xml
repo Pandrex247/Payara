@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
-<<<<<<< HEAD
-
-=======
   
->>>>>>> Payara7
   Copyright (c) 2022-2025 Payara Foundation and/or its affiliates. All rights reserved.
 
   The contents of this file are subject to the terms of either the GNU
@@ -47,11 +43,7 @@
     <parent>
         <groupId>fish.payara.samples</groupId>
         <artifactId>custom-loginmodule-realm</artifactId>
-<<<<<<< HEAD
-        <version>6.2025.12-SNAPSHOT</version>
-=======
         <version>7.2025.2-SNAPSHOT</version>
->>>>>>> Payara7
     </parent>
 
     <artifactId>loginmodule-realm-test</artifactId>
@@ -72,8 +64,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-<<<<<<< HEAD
-=======
             <groupId>fish.payara.server.internal.security</groupId>
             <artifactId>security</artifactId>
             <version>${project.version}</version>
@@ -87,7 +77,6 @@
         </dependency>
 
         <dependency>
->>>>>>> Payara7
             <groupId>fish.payara.samples</groupId>
             <artifactId>samples-test-utils</artifactId>
         </dependency>

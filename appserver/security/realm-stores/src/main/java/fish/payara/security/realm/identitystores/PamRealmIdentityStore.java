@@ -14,11 +14,7 @@
  *
  *  When distributing the software, include this License Header Notice in each
  *  file and include the License file at legal/OPEN-SOURCE-LICENSE.txt.
-<<<<<<< HEAD
- * 
-=======
  *
->>>>>>> Payara7
  *  GPL Classpath Exception:
  *  The Payara Foundation designates this particular file as subject to the "Classpath"
  *  exception as provided by the Payara Foundation in the GPL Version 2 section of the License

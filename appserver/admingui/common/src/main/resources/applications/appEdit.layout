@@ -40,11 +40,7 @@
 
 -->
 
-<<<<<<< HEAD
-<!-- Portions Copyright [2016-2025] [Payara Foundation and/or its affiliates] -->
-=======
 <!-- Portions Copyright [2016-2024] [Payara Foundation and/or its affiliates] -->
->>>>>>> Payara7
 
 <!initPage
     setResourceBundle(key="i18nc" bundle="org.glassfish.common.admingui.Strings")
@@ -170,10 +166,7 @@
                     listAdd(list="#{pageSession.tableList}" value="#{requestScope.cdimap}");
                 }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> Payara7
                 javaToJSON(obj="#{pageSession.tableList}" json="#{requestScope.tmpJSON}");
                 gf.restRequest(endpoint="#{pageSession.selfUrl}/property.json", method="POST", data="#{requestScope.tmpJSON}", result="#{requestScope.restResponse}");
 

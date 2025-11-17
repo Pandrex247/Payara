@@ -38,11 +38,7 @@
  * holder.
  */
 // Portions Copyright [2018-2025] [Payara Foundation and/or its affiliates]
-<<<<<<< HEAD:appserver/security/core-ee/src/main/java/com/sun/enterprise/security/jacc/cache/PermissionCache.java
-package com.sun.enterprise.security.jacc.cache;
-=======
 package com.sun.enterprise.security.ee.authorization.cache;
->>>>>>> Payara7:appserver/security/core-ee/src/main/java/com/sun/enterprise/security/ee/authorization/cache/PermissionCache.java
 
 import com.sun.enterprise.security.ee.authorization.PolicyProvider;
 import com.sun.logging.LogDomains;
@@ -62,17 +58,8 @@ import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.logging.Logger;
 
-<<<<<<< HEAD:appserver/security/core-ee/src/main/java/com/sun/enterprise/security/jacc/cache/PermissionCache.java
-import jakarta.security.jacc.PolicyContext;
-
-import com.sun.enterprise.security.common.AppservAccessController;
-import com.sun.enterprise.security.jacc.cache.CachedPermissionImpl.Epoch;
-import com.sun.logging.LogDomains;
-import org.glassfish.exousia.AuthorizationService;
-=======
 import static java.util.Collections.list;
 import static java.util.logging.Level.SEVERE;
->>>>>>> Payara7:appserver/security/core-ee/src/main/java/com/sun/enterprise/security/ee/authorization/cache/PermissionCache.java
 
 /**
  * This class is
@@ -82,11 +69,7 @@ import static java.util.logging.Level.SEVERE;
 public class PermissionCache extends Object {
 
     private static Logger _logger = LogDomains.getLogger(PermissionCache.class, LogDomains.SECURITY_LOGGER);
-<<<<<<< HEAD:appserver/security/core-ee/src/main/java/com/sun/enterprise/security/jacc/cache/PermissionCache.java
-    private static Policy policy = AuthorizationService.getPolicy();
-=======
     private static Policy policy = PolicyProvider.getInstance();
->>>>>>> Payara7:appserver/security/core-ee/src/main/java/com/sun/enterprise/security/ee/authorization/cache/PermissionCache.java
     private static AllPermission allPermission = new AllPermission();
 
     private Permissions cache;

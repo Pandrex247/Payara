@@ -44,11 +44,7 @@
     <parent>
         <groupId>fish.payara.api</groupId>
         <artifactId>api-parent</artifactId>
-<<<<<<< HEAD
-        <version>6.2025.12-SNAPSHOT</version>
-=======
         <version>7.2025.2-SNAPSHOT</version>
->>>>>>> Payara7
     </parent>
 
     <artifactId>payara-bom</artifactId>
@@ -359,14 +355,11 @@
                 <version>${cdi-api.version}</version>
             </dependency>
             <dependency>
-<<<<<<< HEAD
-=======
                 <groupId>jakarta.enterprise</groupId>
                 <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
                 <version>${cdi-api.version}</version>
             </dependency>
             <dependency>
->>>>>>> Payara7
                 <groupId>jakarta.inject</groupId>
                 <artifactId>jakarta.inject-api</artifactId>
                 <version>${jakarta.inject.version}</version>
@@ -395,11 +388,7 @@
             <dependency>
                 <groupId>jakarta.authorization</groupId>
                 <artifactId>jakarta.authorization-api</artifactId>
-<<<<<<< HEAD
-                <version>${jakarta.security.jacc-api.version}</version>
-=======
                 <version>${jakarta.authorization-api.version}</version>
->>>>>>> Payara7
             </dependency>
             <dependency>
                 <groupId>org.glassfish.exousia</groupId>
@@ -409,11 +398,7 @@
             <dependency>
                 <groupId>jakarta.authentication</groupId>
                 <artifactId>jakarta.authentication-api</artifactId>
-<<<<<<< HEAD
-                <version>${jakarta.security.auth.message-api.version}</version>
-=======
                 <version>${jakarta.authentication-api.version}</version>
->>>>>>> Payara7
             </dependency>
             <dependency>
                 <groupId>jakarta.persistence</groupId>
@@ -421,14 +406,6 @@
                 <version>${jakarta-persistence-api.version}</version>
             </dependency>
             <dependency>
-<<<<<<< HEAD
-                <groupId>jakarta.security.auth.message</groupId>
-                <artifactId>jakarta.security.auth.message-api</artifactId>
-                <version>${jakarta.security.auth.message-api.version}</version>
-            </dependency>
-            <dependency>
-=======
->>>>>>> Payara7
                 <groupId>org.eclipse.persistence</groupId>
                 <artifactId>jakarta.persistence</artifactId>
                 <version>${jakarta-persistence-api.version}</version>
@@ -473,14 +450,11 @@
                 <artifactId>jakarta.enterprise.concurrent-api</artifactId>
                 <version>${concurrent-api.version}</version>
             </dependency>
-<<<<<<< HEAD
-=======
             <dependency>
                 <groupId>jakarta.data</groupId>
                 <artifactId>jakarta.data-api</artifactId>
                 <version>${jakarta.data-api.version}</version>
             </dependency>
->>>>>>> Payara7
 
             <dependency>
                 <groupId>org.osgi</groupId>
@@ -729,13 +703,8 @@
             </dependency>
             <dependency>
                 <groupId>org.glassfish.soteria</groupId>
-<<<<<<< HEAD
-                <artifactId>jakarta.security.enterprise</artifactId>
-                <version>${jakarta.security.enterprise.version}</version>
-=======
                 <artifactId>soteria</artifactId>
                 <version>${soteria.version}</version>
->>>>>>> Payara7
             </dependency>
             <dependency>
                 <groupId>org.glassfish.soteria</groupId>
@@ -842,52 +811,6 @@
                         <artifactId>jboss-classfilewriter</artifactId>
                     </exclusion>
                 </exclusions>
-<<<<<<< HEAD
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.weld</groupId>
-                <artifactId>weld-api</artifactId>
-                <version>${weld-api.version}</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>jakarta.enterprise</groupId>
-                        <artifactId>jakarta.enterprise.cdi-api</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.weld</groupId>
-                <artifactId>weld-lite-extension-translator</artifactId>
-                <version>${weld.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.weld.se</groupId>
-                <artifactId>weld-se-shaded</artifactId>
-                <version>${weld.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jboss.weld.environment</groupId>
-                <artifactId>weld-environment-common</artifactId>
-                <version>${weld.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.glassfish.wasp</groupId>
-                <artifactId>wasp</artifactId>
-                <version>${jsp-impl.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>org.glassfish.mq</groupId>
-                <artifactId>imq</artifactId>
-                <version>${openmq.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.mq</groupId>
-                <artifactId>imqjmx</artifactId>
-                <version>${openmq.version}</version>
-=======
->>>>>>> Payara7
             </dependency>
             <dependency>
                 <groupId>org.jboss.weld</groupId>
@@ -928,15 +851,9 @@
                 <version>${openmq.version}</version>
             </dependency>
             <dependency>
-<<<<<<< HEAD
-                <groupId>org.glassfish.web</groupId>
-                <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-                <version>${jakarta.servlet.jsp.jstl.version}</version>
-=======
                 <groupId>org.glassfish.mq</groupId>
                 <artifactId>mq-client</artifactId>
                 <version>${openmq.version}</version>
->>>>>>> Payara7
             </dependency>
 
             <dependency>
@@ -971,14 +888,6 @@
                 <version>${tyrus.version}</version>
                 <scope>import</scope>
                 <type>pom</type>
-<<<<<<< HEAD
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.enterprise.concurrent</artifactId>
-                <version>${concurro.version}</version>
-=======
->>>>>>> Payara7
             </dependency>
             <dependency>
                 <groupId>com.sun.istack</groupId>
@@ -1000,15 +909,12 @@
                 <groupId>org.eclipse.krazo</groupId>
                 <artifactId>krazo-jersey</artifactId>
                 <version>${krazo.version}</version>
-<<<<<<< HEAD
-=======
             </dependency>
 
             <dependency>
                 <groupId>org.glassfish.concurro</groupId>
                 <artifactId>concurro</artifactId>
                 <version>${concurro.version}</version>
->>>>>>> Payara7
             </dependency>
 
             <!-- Other libraries -->

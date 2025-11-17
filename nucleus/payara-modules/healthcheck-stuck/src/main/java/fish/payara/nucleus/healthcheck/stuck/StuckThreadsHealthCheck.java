@@ -1,11 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
-<<<<<<< HEAD
- * Copyright (c) [2016-2024] Payara Foundation and/or its affiliates. All rights reserved.
-=======
  * Copyright (c) 2016-2025 Payara Foundation and/or its affiliates. All rights reserved.
->>>>>>> Payara7
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -44,14 +40,6 @@
 package fish.payara.nucleus.healthcheck.stuck;
 
 import fish.payara.internal.notification.EventLevel;
-<<<<<<< HEAD
-import fish.payara.monitoring.collect.MonitoringData;
-import fish.payara.monitoring.collect.MonitoringDataCollector;
-import fish.payara.monitoring.collect.MonitoringDataSource;
-import fish.payara.monitoring.collect.MonitoringWatchCollector;
-import fish.payara.monitoring.collect.MonitoringWatchSource;
-=======
->>>>>>> Payara7
 import fish.payara.notification.healthcheck.HealthCheckResultEntry;
 import fish.payara.notification.healthcheck.HealthCheckResultStatus;
 import fish.payara.nucleus.healthcheck.HealthCheckResult;
@@ -148,69 +136,6 @@ public class StuckThreadsHealthCheck extends
     protected EventLevel createNotificationEventLevel (HealthCheckResultStatus checkResult) {
         if (checkResult == HealthCheckResultStatus.FINE) {
             return EventLevel.INFO;
-<<<<<<< HEAD
-        }
-        return EventLevel.WARNING;
-    }
-
-    @Override
-    @MonitoringData(ns = "health", intervalSeconds = 4)
-    public void collect(MonitoringDataCollector collector) {
-        if (options == null || !options.isEnabled()) {
-            return;
-        }
-        AtomicInteger count = new AtomicInteger(0);
-        AtomicLong maxDuration = new AtomicLong(0L);
-        acceptStuckThreads((workStartedTime, timeWorkingInMillis, thresholdInMillis, info) -> {
-            String thread = info.getThreadName();
-            if (thread == null || thread.isEmpty()) {
-                thread = String.valueOf(info.getThreadId());
-            }
-            collector.annotate("StuckThreadDuration", timeWorkingInMillis, true, //
-                    "Thread", thread, // OBS! must be the first attribute as it is the key.
-                    "Started", String.valueOf(workStartedTime), //
-                    "Threshold", String.valueOf(thresholdInMillis), //
-                    "Locked", Boolean.toString(info.getLockInfo() != null), //
-                    "Suspended", String.valueOf(info.isSuspended()), //
-                    "State", composeStateText(info));
-            count.incrementAndGet();
-            maxDuration.updateAndGet(value -> Math.max(value, timeWorkingInMillis));
-        });
-        collector.collect("StuckThreadDuration", maxDuration);
-        collector.collect("StuckThreadCount", count);
-        stuckThreadResult.put(STUCK_THREAD_MAX_DURATION, maxDuration.get());
-        stuckThreadResult.put(STUCK_THREAD_COUNT, count.get());
-    }
-
-    @Override
-    public void collect(MonitoringWatchCollector collector) {
-        if (options == null || !options.isEnabled()) {
-            return;
-        }
-        long thresholdInMillis = getThresholdInMillis();
-        collector.watch("ns:health StuckThreadDuration", "Stuck Threads", "ms")
-            .red(thresholdInMillis, -30000L, false, null, null, false)
-            .green(-thresholdInMillis, 1, false, null, null, false);
-    }
-
-    private static String composeStateText(ThreadInfo info) {
-        if (info.getLockInfo() == null) {
-            return "Running";
-        }
-        Thread.State state = info.getThreadState();
-        return composeActionText(state) + info.getLockInfo().toString();
-    }
-
-    private static String composeActionText(Thread.State state) {
-        switch(state) {
-        case BLOCKED:
-            return "Blocked on ";
-        case WAITING:
-        case TIMED_WAITING:
-            return "Waiting on ";
-        default: return "Running ";
-=======
->>>>>>> Payara7
         }
         return EventLevel.WARNING;
     }

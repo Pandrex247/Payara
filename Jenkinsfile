@@ -32,11 +32,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo '*#*#*#*#*#*#*#*#*#*#*#*#  Building SRC  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
-<<<<<<< HEAD
-                sh """mvn -B -V -ff -e clean install --strict-checksums -PQuickBuild,BuildEmbedded \
-=======
                 sh """mvn -B -V -ff -e clean install --strict-checksums -PQuickBuild,BuildEmbedded,jakarta-staging \
->>>>>>> Payara7
                     -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                     -Djavax.xml.accessExternalSchema=all -Dbuild.number=${payaraBuildNumber} \
                     -Djavadoc.skip -Dsource.skip"""
@@ -73,13 +69,8 @@ pipeline {
 
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         sh """rm  ~/test\\|sa.mv.db  || true"""
-<<<<<<< HEAD
-                        sh """mvn -B -V -ff -e clean test --strict-checksums -Pall \
-                        -Dglassfish.home=\"${pwd()}/appserver/distributions/payara/target/stage/payara6/glassfish\" \
-=======
                         sh """mvn -B -V -ff -e clean test --strict-checksums -Pall,jakarta-staging \
                         -Dglassfish.home=\"${pwd()}/appserver/distributions/payara/target/stage/payara7/glassfish\" \
->>>>>>> Payara7
                         -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                         -Djavax.xml.accessExternalSchema=all \
                         -Dsurefire.rerunFailingTestsCount=2 \
@@ -97,9 +88,6 @@ pipeline {
                         }
                     }
                 }
-<<<<<<< HEAD
-                stage('Payara Samples Tests') {
-=======
                  stage('Payara Samples Tests') {
                      agent {
                          label 'general-purpose'
@@ -128,25 +116,12 @@ pipeline {
                      }
                  }
                 stage('MicroProfile Config TCK') {
->>>>>>> Payara7
                     agent {
                         label 'general-purpose'
                     }
                     options {
                         retry(3)
                     }
-<<<<<<< HEAD
-                    steps {
-                        setupDomain()
-
-                        echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
-                        sh """mvn -V -B -ff clean install --strict-checksums -Ppayara-server-remote,playwright \
-                        -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
-                        -Djavax.xml.accessExternalSchema=all \
-                        -Dsurefire.rerunFailingTestsCount=2 \
-                        -Dfailsafe.rerunFailingTestsCount=2 \
-                        -f appserver/tests/payara-samples """
-=======
                     steps{
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
@@ -166,7 +141,6 @@ pipeline {
                         -Dfailsafe.rerunFailingTestsCount=2 \
                         -Ppayara-server-remote,full \
                         -f MicroProfile-Config"""
->>>>>>> Payara7
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
                     post {
@@ -174,21 +148,11 @@ pipeline {
                             processReportAndStopDomain()
                         }
                         cleanup {
-<<<<<<< HEAD
-                            saveLogsAndCleanup 'samples-log.zip'
-                        }
-                    }
-                }
-
-                // MicroProfile TCK runners
-                stage('MicroProfile-Config TCK') {
-=======
                             saveLogsAndCleanup 'mp-tck-log.zip'
                         }
                     }
                 }
                 stage('MicroProfile Fault Tolerance TCK') {
->>>>>>> Payara7
                     agent {
                         label 'general-purpose'
                     }
@@ -198,11 +162,7 @@ pipeline {
                     steps{
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
-<<<<<<< HEAD
-                            branches: [[name: "*/microprofile-6.1"]],
-=======
                             branches: [[name: "*/microprofile-6.1-Payara7"]],
->>>>>>> Payara7
                             userRemoteConfigs: [[url: "https://github.com/payara/MicroProfile-TCK-Runners.git"]]]
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checked out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
 
@@ -213,19 +173,11 @@ pipeline {
                         sh """mvn -B -V -ff -e clean verify --strict-checksums \
                         -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                         -Djavax.xml.accessExternalSchema=all \
-<<<<<<< HEAD
-                        -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
-                        -Ppayara-server-remote,full \
-                        -Dsurefire.rerunFailingTestsCount=2 \
-                        -Dfailsafe.rerunFailingTestsCount=2 \
-                        -f MicroProfile-Config"""
-=======
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara7" \
                         -Dsurefire.rerunFailingTestsCount=2 \
                         -Dfailsafe.rerunFailingTestsCount=2 \
                         -Ppayara-server-remote,full \
                         -f MicroProfile-Fault-Tolerance"""
->>>>>>> Payara7
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
                     post {
@@ -237,12 +189,7 @@ pipeline {
                         }
                     }
                 }
-<<<<<<< HEAD
-
-                stage('MicroProfile-Fault-Tolerance TCK') {
-=======
                 stage('MicroProfile Health TCK') {
->>>>>>> Payara7
                     agent {
                         label 'general-purpose'
                     }
@@ -252,11 +199,7 @@ pipeline {
                     steps{
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
-<<<<<<< HEAD
-                            branches: [[name: "*/microprofile-6.1"]],
-=======
                             branches: [[name: "*/microprofile-6.1-Payara7"]],
->>>>>>> Payara7
                             userRemoteConfigs: [[url: "https://github.com/payara/MicroProfile-TCK-Runners.git"]]]
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checked out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
 
@@ -267,49 +210,7 @@ pipeline {
                         sh """mvn -B -V -ff -e clean verify --strict-checksums \
                         -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                         -Djavax.xml.accessExternalSchema=all \
-<<<<<<< HEAD
-                        -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
-                        -Ppayara-server-remote,full \
-                        -Dsurefire.rerunFailingTestsCount=2 \
-                        -Dfailsafe.rerunFailingTestsCount=2 \
-                        -f MicroProfile-Fault-Tolerance"""
-                        echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
-                    }
-                    post {
-                        always {
-                            processReportAndStopDomain()
-                        }
-                        cleanup {
-                            saveLogsAndCleanup 'mp-tck-log.zip'
-                        }
-                    }
-                }
-
-                stage('MicroProfile-Health TCK') {
-                    agent {
-                        label 'general-purpose'
-                    }
-                    options {
-                        retry(3)
-                    }
-                    steps{
-                        echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
-                        checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
-                            branches: [[name: "*/microprofile-6.1"]],
-                            userRemoteConfigs: [[url: "https://github.com/payara/MicroProfile-TCK-Runners.git"]]]
-                        echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checked out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
-
-                        setupDomain()
-                        updatePomPayaraVersion("${pom.version}")
-
-                        echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
-                        sh """mvn -B -V -ff -e clean verify --strict-checksums \
-                        -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
-                        -Djavax.xml.accessExternalSchema=all \
-                        -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
-=======
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara7" \
->>>>>>> Payara7
                         -Dsurefire.rerunFailingTestsCount=2 \
                         -Dfailsafe.rerunFailingTestsCount=2 \
                         -Ppayara-server-remote,full \
@@ -325,13 +226,7 @@ pipeline {
                         }
                     }
                 }
-<<<<<<< HEAD
-
-
-                stage('MicroProfile-JWT-Auth TCK') {
-=======
                 stage('MicroProfile JWT Auth TCK') {
->>>>>>> Payara7
                     agent {
                         label 'general-purpose'
                     }
@@ -341,11 +236,7 @@ pipeline {
                     steps{
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
-<<<<<<< HEAD
-                            branches: [[name: "*/microprofile-6.1"]],
-=======
                             branches: [[name: "*/microprofile-6.1-Payara7"]],
->>>>>>> Payara7
                             userRemoteConfigs: [[url: "https://github.com/payara/MicroProfile-TCK-Runners.git"]]]
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checked out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
 
@@ -356,17 +247,10 @@ pipeline {
                         sh """mvn -B -V -ff -e clean verify --strict-checksums \
                         -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                         -Djavax.xml.accessExternalSchema=all \
-<<<<<<< HEAD
-                        -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
-                        -Ppayara-server-remote,full \
-                        -Dsurefire.rerunFailingTestsCount=2 \
-                        -Dfailsafe.rerunFailingTestsCount=2 \
-=======
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara7" \
                         -Dsurefire.rerunFailingTestsCount=2 \
                         -Dfailsafe.rerunFailingTestsCount=2 \
                         -Ppayara-server-remote,full \
->>>>>>> Payara7
                         -f MicroProfile-JWT-Auth"""
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -379,12 +263,7 @@ pipeline {
                         }
                     }
                 }
-<<<<<<< HEAD
-
-                stage('MicroProfile-Metrics TCK') {
-=======
                 stage('MicroProfile Metrics TCK') {
->>>>>>> Payara7
                     agent {
                         label 'general-purpose'
                     }
@@ -394,11 +273,7 @@ pipeline {
                     steps{
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
-<<<<<<< HEAD
-                            branches: [[name: "*/microprofile-6.1"]],
-=======
                             branches: [[name: "*/microprofile-6.1-Payara7"]],
->>>>>>> Payara7
                             userRemoteConfigs: [[url: "https://github.com/payara/MicroProfile-TCK-Runners.git"]]]
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checked out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
 
@@ -409,17 +284,10 @@ pipeline {
                         sh """mvn -B -V -ff -e clean verify --strict-checksums \
                         -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                         -Djavax.xml.accessExternalSchema=all \
-<<<<<<< HEAD
-                        -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
-                        -Ppayara-server-remote,full \
-                        -Dsurefire.rerunFailingTestsCount=2 \
-                        -Dfailsafe.rerunFailingTestsCount=2 \
-=======
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara7" \
                         -Dsurefire.rerunFailingTestsCount=2 \
                         -Dfailsafe.rerunFailingTestsCount=2 \
                         -Ppayara-server-remote,full \
->>>>>>> Payara7
                         -f MicroProfile-Metrics"""
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -432,12 +300,7 @@ pipeline {
                         }
                     }
                 }
-<<<<<<< HEAD
-
-               stage('MicroProfile-OpenAPI TCK') {
-=======
                 stage('MicroProfile OpenAPI TCK') {
->>>>>>> Payara7
                     agent {
                         label 'general-purpose'
                     }
@@ -447,11 +310,7 @@ pipeline {
                     steps{
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
-<<<<<<< HEAD
-                            branches: [[name: "*/microprofile-6.1"]],
-=======
                             branches: [[name: "*/microprofile-6.1-Payara7"]],
->>>>>>> Payara7
                             userRemoteConfigs: [[url: "https://github.com/payara/MicroProfile-TCK-Runners.git"]]]
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checked out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
 
@@ -462,17 +321,10 @@ pipeline {
                         sh """mvn -B -V -ff -e clean verify --strict-checksums \
                         -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                         -Djavax.xml.accessExternalSchema=all \
-<<<<<<< HEAD
-                        -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
-                        -Ppayara-server-remote,full \
-                        -Dsurefire.rerunFailingTestsCount=2 \
-                        -Dfailsafe.rerunFailingTestsCount=2 \
-=======
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara7" \
                         -Dsurefire.rerunFailingTestsCount=2 \
                         -Dfailsafe.rerunFailingTestsCount=2 \
                         -Ppayara-server-remote,full \
->>>>>>> Payara7
                         -f MicroProfile-OpenAPI"""
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -485,12 +337,7 @@ pipeline {
                         }
                     }
                 }
-<<<<<<< HEAD
-
-                stage('MicroProfile-OpenTelemetry-Tracing TCK') {
-=======
                 stage('MicroProfile OpenTelemetry Tracing TCK') {
->>>>>>> Payara7
                     agent {
                         label 'general-purpose'
                     }
@@ -500,11 +347,7 @@ pipeline {
                     steps{
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
-<<<<<<< HEAD
-                            branches: [[name: "*/microprofile-6.1"]],
-=======
                             branches: [[name: "*/microprofile-6.1-Payara7"]],
->>>>>>> Payara7
                             userRemoteConfigs: [[url: "https://github.com/payara/MicroProfile-TCK-Runners.git"]]]
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checked out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
 
@@ -515,11 +358,7 @@ pipeline {
                         sh """mvn -B -V -ff -e clean verify --strict-checksums \
                         -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                         -Djavax.xml.accessExternalSchema=all \
-<<<<<<< HEAD
-                        -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
-=======
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara7" \
->>>>>>> Payara7
                         -Dsurefire.rerunFailingTestsCount=2 \
                         -Dfailsafe.rerunFailingTestsCount=2 \
                         -Ppayara-server-remote,full \
@@ -535,12 +374,7 @@ pipeline {
                         }
                     }
                 }
-<<<<<<< HEAD
-
-                stage('MicroProfile-OpenTracing TCK') {
-=======
                 stage('MicroProfile OpenTracing TCK') {
->>>>>>> Payara7
                     agent {
                         label 'general-purpose'
                     }
@@ -550,11 +384,7 @@ pipeline {
                     steps{
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
-<<<<<<< HEAD
-                            branches: [[name: "*/microprofile-6.1"]],
-=======
                             branches: [[name: "*/microprofile-6.1-Payara7"]],
->>>>>>> Payara7
                             userRemoteConfigs: [[url: "https://github.com/payara/MicroProfile-TCK-Runners.git"]]]
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checked out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
 
@@ -565,11 +395,7 @@ pipeline {
                         sh """mvn -B -V -ff -e clean verify --strict-checksums \
                         -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                         -Djavax.xml.accessExternalSchema=all \
-<<<<<<< HEAD
-                        -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
-=======
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara7" \
->>>>>>> Payara7
                         -Dsurefire.rerunFailingTestsCount=2 \
                         -Dfailsafe.rerunFailingTestsCount=2 \
                         -Ppayara-server-remote,full \
@@ -585,12 +411,7 @@ pipeline {
                         }
                     }
                 }
-<<<<<<< HEAD
-
-              stage('MicroProfile-Rest-Client TCK') {
-=======
                 stage('MicroProfile REST Client TCK') {
->>>>>>> Payara7
                     agent {
                         label 'general-purpose'
                     }
@@ -600,11 +421,7 @@ pipeline {
                     steps{
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
-<<<<<<< HEAD
-                            branches: [[name: "*/microprofile-6.1"]],
-=======
                             branches: [[name: "*/microprofile-6.1-Payara7"]],
->>>>>>> Payara7
                             userRemoteConfigs: [[url: "https://github.com/payara/MicroProfile-TCK-Runners.git"]]]
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checked out MP TCK Runners  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
 
@@ -615,17 +432,10 @@ pipeline {
                         sh """mvn -B -V -ff -e clean verify --strict-checksums \
                         -Djavax.net.ssl.trustStore=${env.JAVA_HOME}/lib/security/cacerts \
                         -Djavax.xml.accessExternalSchema=all \
-<<<<<<< HEAD
-                        -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara6" \
-                        -Ppayara-server-remote,full \
-                        -Dsurefire.rerunFailingTestsCount=2 \
-                        -Dfailsafe.rerunFailingTestsCount=2 \
-=======
                         -Dpayara_domain=${DOMAIN_NAME} -Dpayara.home="${pwd()}/appserver/distributions/payara/target/stage/payara7" \
                         -Dsurefire.rerunFailingTestsCount=2 \
                         -Dfailsafe.rerunFailingTestsCount=2 \
                         -Ppayara-server-remote,full \
->>>>>>> Payara7
                         -f MicroProfile-Rest-Client"""
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
@@ -638,10 +448,6 @@ pipeline {
                         }
                     }
                 }
-<<<<<<< HEAD
-
-=======
->>>>>>> Payara7
                 stage('EE8 Tests') {
                     agent {
                         label 'general-purpose'
@@ -652,11 +458,7 @@ pipeline {
                     steps{
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out EE8 tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
-<<<<<<< HEAD
-                            branches: [[name: "*/Payara6"]],
-=======
                             branches: [[name: "*/Payara7"]],
->>>>>>> Payara7
                             userRemoteConfigs: [[url: "https://github.com/payara/patched-src-javaee8-samples.git"]]]
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checked out EE8 tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
 
@@ -691,11 +493,7 @@ pipeline {
                     steps{
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out cargoTracker tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
-<<<<<<< HEAD
-                            branches: [[name: "*/Payara6"]],
-=======
                             branches: [[name: "*/Payara7"]],
->>>>>>> Payara7
                             userRemoteConfigs: [[url: "https://github.com/payara/cargoTracker.git"]]]
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checked out cargoTracker tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
 
@@ -733,11 +531,7 @@ pipeline {
                     steps{
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checking out EE7 tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         checkout changelog: false, poll: false, scm: [$class: 'GitSCM',
-<<<<<<< HEAD
-                            branches: [[name: "*/Payara6"]],
-=======
                             branches: [[name: "*/Payara7"]],
->>>>>>> Payara7
                             userRemoteConfigs: [[url: "https://github.com/payara/patched-src-javaee7-samples.git"]]]
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Checked out EE7 tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
 
@@ -751,11 +545,7 @@ pipeline {
                         -Dpayara_domain=${DOMAIN_NAME} \
                         -Dsurefire.rerunFailingTestsCount=2 \
                         -Dfailsafe.rerunFailingTestsCount=2 \
-<<<<<<< HEAD
-                        -Ppayara-server-remote,stable,payara6"""
-=======
                         -Ppayara-server-remote,stable"""
->>>>>>> Payara7
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                     }
                     post {
@@ -798,34 +588,12 @@ pipeline {
 
                         echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running test with Payara Embedded  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
                         sh """mvn -V -B -ff clean verify --strict-checksums -PFullProfile \
-<<<<<<< HEAD
-=======
                         -Dversion=${pom.version} \
->>>>>>> Payara7
                         -Dsurefire.rerunFailingTestsCount=2 \
                         -Dfailsafe.rerunFailingTestsCount=2 \
                         -f appserver/tests/functional/embeddedtest """
 
                         sh """mvn -V -B -ff clean verify --strict-checksums -PWebProfile \
-<<<<<<< HEAD
-                        -Dsurefire.rerunFailingTestsCount=2 \
-                        -Dfailsafe.rerunFailingTestsCount=2 \
-                        -f appserver/tests/functional/embeddedtest """
-
-                        echo '*#*#*#*#*#*#*#*#*#*#*#*#  Running asadmin tests  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
-                        setupDomain()
-                        sh """python3 appserver/tests/functional/asadmin/run_all_tests.py \
-                        --asadmin ${pwd()}/appserver/distributions/payara/target/stage/payara6/bin/asadmin"""
-                        echo '*#*#*#*#*#*#*#*#*#*#*#*#  Ran test  *#*#*#*#*#*#*#*#*#*#*#*#*#*#*#'
-                    }
-                    post {
-                        always {
-                            stopDomain()
-                        }
-                        cleanup {
-                            processReport()
-                            saveLogsAndCleanup 'asadmin-log.zip'
-=======
                         -Dversion=${pom.version} \
                         -Dsurefire.rerunFailingTestsCount=2 \
                         -Dfailsafe.rerunFailingTestsCount=2 \
@@ -835,7 +603,6 @@ pipeline {
                     post {
                         cleanup {
                             processReport()
->>>>>>> Payara7
                         }
                     }
                 }
