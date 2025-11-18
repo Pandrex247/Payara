@@ -67,11 +67,7 @@ public class AppController {
         models.put("date",  LocalDateTime.now(ZoneOffset.UTC).format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
         models.put("message", "Your Jakarta MVC application is running!");
 
-<<<<<<< HEAD
-        return "greet.xhtml";
-=======
         return "greet.jsp";
->>>>>>> Test-Disappearing
     }
 
     @GET
@@ -84,10 +80,6 @@ public class AppController {
         salutation.setGreetingDate(formattedDate);
         salutation.setMessage("Your Jakarta MVC application is running!");
 
-<<<<<<< HEAD
-        return "salute.xhtml";
-=======
         return "salute.jsp";
->>>>>>> Test-Disappearing
     }
 }

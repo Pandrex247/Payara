@@ -46,11 +46,7 @@
     <parent>
         <groupId>fish.payara.server</groupId>
         <artifactId>payara-parent</artifactId>
-<<<<<<< HEAD
-        <version>6.2025.12-SNAPSHOT</version>
-=======
         <version>7.2025.2-SNAPSHOT</version>
->>>>>>> Test-Disappearing
     </parent>
     
     <groupId>fish.payara.server.internal.packager</groupId>
@@ -167,10 +163,7 @@
         <module>docker</module>
         <module>microprofile-package</module>
         <module>opentracing-jaxws-package</module>
-<<<<<<< HEAD
-=======
         <module>data</module>
->>>>>>> Test-Disappearing
         <module>payara-mvc</module>
     </modules>
     

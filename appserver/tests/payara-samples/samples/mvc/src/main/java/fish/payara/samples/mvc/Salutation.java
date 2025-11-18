@@ -37,7 +37,6 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-<<<<<<<< HEAD:appserver/tests/payara-samples/samples/mvc/src/main/java/fish/payara/samples/mvc/Salutation.java
 
 package fish.payara.samples.mvc;
 
@@ -83,42 +82,5 @@ public class Salutation {
 
     public void setGreet(String greet) {
         this.greet = greet;
-========
-package com.sun.enterprise.deployment;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-/**
- * Unify access to qualifier for Concurrency *Definition classes.
- *
- * @author Petr Aubrecht
- */
-public abstract class ConcurrencyQualifiedDescriptor extends ResourceDescriptor {
-
-    private Set<String> qualifiers = new HashSet<>();
-
-    /**
-     * return one of CONTEXT_SERVICE, MANAGEDTHREADFACTORY,
-     * MANAGEDEXECUTORSERVICE, or MANAGEDSCHEDULEDEXECUTORSERVICE
-     */
-    abstract public String getConcurrencyType();
-
-    public Set<String> getQualifiers() {
-        return qualifiers;
-    }
-
-    public void addQualifier(String qualifier) {
-        this.qualifiers.add(qualifier);
-    }
-
-    public void setQualifiers(Set<String> qualifiers) {
-        this.qualifiers = qualifiers;
-    }
-
-    public void setQualifiers(String qualifiers[]) {
-        this.qualifiers = new HashSet(Arrays.asList(qualifiers));
->>>>>>>> Test-Disappearing:appserver/deployment/dol/src/main/java/com/sun/enterprise/deployment/ConcurrencyQualifiedDescriptor.java
     }
 }

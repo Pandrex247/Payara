@@ -82,7 +82,6 @@ import org.glassfish.api.deployment.InstrumentableClassLoader;
 import org.glassfish.api.deployment.ResourceClassLoader;
 import org.glassfish.api.deployment.ResourceEntry;
 import org.glassfish.common.util.InstanceCounter;
-import org.glassfish.exousia.AuthorizationService;
 import org.glassfish.hk2.api.PreDestroy;
 import org.glassfish.web.util.ExceptionUtils;
 import org.glassfish.web.util.IntrospectionUtils;
@@ -3232,11 +3231,7 @@ public class WebappClassLoader
             // The policy file may have been modified to adjust
             // permissions, so we're reloading it when loading or
             // reloading a Context
-<<<<<<< HEAD
-            Policy policy = AuthorizationService.getPolicy();
-=======
             Policy policy = PolicyFactory.getPolicyFactory().getPolicy();
->>>>>>> Test-Disappearing
             policy.refresh();
         } catch (AccessControlException e) {
             // Some policy files may restrict this, even for the core,

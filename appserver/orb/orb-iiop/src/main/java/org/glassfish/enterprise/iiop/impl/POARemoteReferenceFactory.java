@@ -37,47 +37,12 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-<<<<<<< HEAD
-// Portions Copyright [2018-2025] [Payara Foundation and/or its affiliates]
-=======
 // Portions Copyright 2018-2025 Payara Foundation and/or its affiliates
->>>>>>> Test-Disappearing
 
 package org.glassfish.enterprise.iiop.impl;
 
 
-<<<<<<< HEAD
-import jakarta.ejb.NoSuchObjectLocalException;
-
-import java.lang.ref.WeakReference;
-import java.rmi.Remote;
-
-import java.security.AccessController ;
-import java.security.PrivilegedAction ;
-
-import org.omg.CORBA.portable.Delegate;
-
-import org.glassfish.enterprise.iiop.api.RemoteReferenceFactory;
-
-import org.glassfish.enterprise.iiop.spi.EjbContainerFacade;
-import org.glassfish.enterprise.iiop.util.S1ASThreadPoolManager;
-
-import org.omg.PortableServer.POA ;
-import org.omg.PortableServer.Servant ;
-import org.omg.PortableServer.ServantLocator ;
-import org.omg.PortableServer.ServantLocatorPackage.CookieHolder ;
-
-import com.sun.logging.LogDomains;
-
-import com.sun.enterprise.deployment.EjbDescriptor;
-
-// TODO Only needed for checkpointing
-// import com.sun.ejb.base.sfsb.util.EJBServerConfigLookup;
-
-import com.sun.corba.ee.spi.extension.ServantCachingPolicy;
-=======
 import com.sun.corba.ee.org.omg.CORBA.SUNVMCID;
->>>>>>> Test-Disappearing
 import com.sun.corba.ee.spi.extension.CopyObjectPolicy;
 import com.sun.corba.ee.spi.extension.RequestPartitioningPolicy;
 import com.sun.corba.ee.spi.extension.ServantCachingPolicy;

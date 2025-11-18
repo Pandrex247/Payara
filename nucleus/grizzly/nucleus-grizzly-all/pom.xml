@@ -48,11 +48,7 @@
     <parent>
         <groupId>fish.payara.server.internal.grizzly</groupId>
         <artifactId>nucleus-grizzly</artifactId>
-<<<<<<< HEAD
-        <version>6.2025.12-SNAPSHOT</version>
-=======
         <version>7.2025.2-SNAPSHOT</version>
->>>>>>> Test-Disappearing
     </parent>
 
     <artifactId>nucleus-grizzly-all</artifactId>
@@ -72,10 +68,6 @@
     </developers>
 
     <properties>
-<<<<<<< HEAD
-        <gmbal.grizzly.version>4.0.3</gmbal.grizzly.version>
-=======
->>>>>>> Test-Disappearing
         <jar.manifest></jar.manifest>
     </properties>    
 

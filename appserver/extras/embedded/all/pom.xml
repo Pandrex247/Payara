@@ -48,11 +48,7 @@
     <parent>
         <groupId>fish.payara.extras</groupId>
         <artifactId>extras</artifactId>
-<<<<<<< HEAD
-        <version>6.2025.12-SNAPSHOT</version>
-=======
         <version>7.2025.2-SNAPSHOT</version>
->>>>>>> Test-Disappearing
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
@@ -458,8 +454,6 @@
 
         <dependency>
             <groupId>fish.payara.server.internal.packager</groupId>
-<<<<<<< HEAD
-=======
             <artifactId>data</artifactId>
             <version>${project.version}</version>
             <type>zip</type>
@@ -467,7 +461,6 @@
         </dependency>
         <dependency>
             <groupId>fish.payara.server.internal.packager</groupId>
->>>>>>> Test-Disappearing
             <artifactId>payara-mvc</artifactId>
             <version>${project.version}</version>
             <type>zip</type>

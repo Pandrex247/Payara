@@ -37,13 +37,8 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-<<<<<<< HEAD:appserver/security/core-ee/src/main/java/com/sun/enterprise/security/jacc/cache/PermissionCacheFactory.java
-// Portions Copyright [2018-2025] [Payara Foundation and/or its affiliates]
-package com.sun.enterprise.security.jacc.cache;
-=======
 // Portions Copyright [2018-2024] [Payara Foundation and/or its affiliates]
 package com.sun.enterprise.security.ee.authorization.cache;
->>>>>>> Test-Disappearing:appserver/security/core-ee/src/main/java/com/sun/enterprise/security/ee/authorization/cache/PermissionCacheFactory.java
 
 import java.net.SocketPermission;
 import java.security.CodeSource;
@@ -53,12 +48,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.PropertyPermission;
 
-<<<<<<< HEAD:appserver/security/core-ee/src/main/java/com/sun/enterprise/security/jacc/cache/PermissionCacheFactory.java
-import com.sun.enterprise.security.ee.J2EESecurityManager;
-import org.glassfish.exousia.AuthorizationService;
-=======
 import jakarta.security.jacc.PolicyFactory;
->>>>>>> Test-Disappearing:appserver/security/core-ee/src/main/java/com/sun/enterprise/security/ee/authorization/cache/PermissionCacheFactory.java
 
 /**
  * This class is the factory for creating and managing PermissionCache.
@@ -80,11 +70,7 @@ public class PermissionCacheFactory {
             // make a call to policy.refresh() to see if the provider
             // calls the supportsReuse callback (see resetCaches below).
             // which will set supportsReuse to true (to enable caching).
-<<<<<<< HEAD:appserver/security/core-ee/src/main/java/com/sun/enterprise/security/jacc/cache/PermissionCacheFactory.java
-            Policy policy = AuthorizationService.getPolicy();
-=======
             Policy policy = PolicyFactory.getPolicyFactory().getPolicy();
->>>>>>> Test-Disappearing:appserver/security/core-ee/src/main/java/com/sun/enterprise/security/ee/authorization/cache/PermissionCacheFactory.java
             if (policy != null) {
                 policy.refresh();
             }

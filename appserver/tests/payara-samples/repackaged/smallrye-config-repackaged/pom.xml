@@ -43,11 +43,7 @@
     <parent>
         <groupId>fish.payara.server.internal.tests</groupId>
         <artifactId>repackaged</artifactId>
-<<<<<<< HEAD
-        <version>6.2025.12-SNAPSHOT</version>
-=======
         <version>7.2025.2-SNAPSHOT</version>
->>>>>>> Test-Disappearing
     </parent>
     <artifactId>smallrye-config-repackaged</artifactId>
     <name>Payara Samples - Payara - smallrye-config repackaged as a module</name>

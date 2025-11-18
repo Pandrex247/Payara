@@ -55,11 +55,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-<<<<<<< HEAD
-// Portions Copyright [2019-2024] Payara Foundation and/or affiliates
-=======
 // Portions Copyright 2019-2024 Payara Foundation and/or affiliates
->>>>>>> Test-Disappearing
 
 package org.apache.catalina.connector;
 

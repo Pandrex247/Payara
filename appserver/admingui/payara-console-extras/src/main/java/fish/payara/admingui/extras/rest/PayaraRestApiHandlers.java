@@ -287,11 +287,7 @@ public class PayaraRestApiHandlers {
           }
           handlerCtx.setOutputValue("result", result);
     }
-<<<<<<< HEAD
-    
-=======
 
->>>>>>> Test-Disappearing
     /**
      * Sets the successful command message to be displayed
      * @param handlerCtx 

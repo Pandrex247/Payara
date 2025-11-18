@@ -37,11 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-<<<<<<< HEAD
-// Portions Copyright [2016-2024] [Payara Foundation and/or its affiliates]
-=======
 // Portions Copyright 2016-2025 Payara Foundation and/or its affiliates
->>>>>>> Test-Disappearing
 
 package com.sun.enterprise.web;
 
@@ -239,12 +235,9 @@ public class WebContainer implements org.glassfish.api.container.Container, Post
     @Inject
     private Deployment deployment;
 
-<<<<<<< HEAD
-=======
     @Inject
     private SecurityDeployer securityDeployer;
 
->>>>>>> Test-Disappearing
     private final Map<String, WebConnector> connectorMap = new HashMap<>();
 
     private EmbeddedWebContainer _embedded;

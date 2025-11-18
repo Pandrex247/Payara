@@ -41,10 +41,6 @@
     holder.
 
 -->
-<<<<<<< HEAD
-
-=======
->>>>>>> Test-Disappearing
 <!-- Portions Copyright 2017-2025 Payara Foundation and/or its affiliates -->
 
 <domain log-root="${com.sun.aas.instanceRoot}/logs" application-root="${com.sun.aas.instanceRoot}/applications" version="10.0">
@@ -217,16 +213,6 @@
                 <jvm-options>--add-opens=java.logging/java.util.logging=ALL-UNNAMED</jvm-options>
                 <jvm-options>--add-opens=java.management/javax.management=ALL-UNNAMED</jvm-options>
                 <jvm-options>--add-opens=java.management/javax.management.openmbean=ALL-UNNAMED</jvm-options>
-<<<<<<< HEAD
-                <jvm-options>[17|]--add-exports=java.base/sun.net.www=ALL-UNNAMED</jvm-options>
-                <jvm-options>[17|]--add-exports=java.base/sun.security.util=ALL-UNNAMED</jvm-options>
-                <jvm-options>[17|]--add-opens=java.base/java.lang.invoke=ALL-UNNAMED</jvm-options>
-                <jvm-options>[17|]--add-opens=java.desktop/java.beans=ALL-UNNAMED</jvm-options>
-                <jvm-options>[17|]--add-exports=jdk.naming.dns/com.sun.jndi.dns=ALL-UNNAMED</jvm-options>
-                <jvm-options>[17|]--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED</jvm-options>
-                <jvm-options>[17|]--add-opens=java.base/java.io=ALL-UNNAMED</jvm-options>
-                <jvm-options>[21|]--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED</jvm-options>
-=======
                 <jvm-options>--add-exports=java.base/sun.net.www=ALL-UNNAMED</jvm-options>
                 <jvm-options>--add-exports=java.base/sun.security.util=ALL-UNNAMED</jvm-options>
                 <jvm-options>--add-opens=java.base/java.lang.invoke=ALL-UNNAMED</jvm-options>
@@ -235,7 +221,6 @@
                 <jvm-options>--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED</jvm-options>
                 <jvm-options>--add-opens=java.base/java.io=ALL-UNNAMED</jvm-options>
                 <jvm-options>--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED</jvm-options>
->>>>>>> Test-Disappearing
                 <jvm-options>[24|]--sun-misc-unsafe-memory-access=allow</jvm-options>
                 <jvm-options>[24|]--enable-native-access=ALL-UNNAMED</jvm-options>
                 <jvm-options>-Xmx512m</jvm-options>
@@ -471,16 +456,6 @@
                 <jvm-options>--add-opens=java.logging/java.util.logging=ALL-UNNAMED</jvm-options>
                 <jvm-options>--add-opens=java.management/javax.management=ALL-UNNAMED</jvm-options>
                 <jvm-options>--add-opens=java.management/javax.management.openmbean=ALL-UNNAMED</jvm-options>
-<<<<<<< HEAD
-                <jvm-options>[17|]--add-exports=java.base/sun.net.www=ALL-UNNAMED</jvm-options>
-                <jvm-options>[17|]--add-exports=java.base/sun.security.util=ALL-UNNAMED</jvm-options>
-                <jvm-options>[17|]--add-opens=java.base/java.lang.invoke=ALL-UNNAMED</jvm-options>
-                <jvm-options>[17|]--add-opens=java.desktop/java.beans=ALL-UNNAMED</jvm-options>
-                <jvm-options>[17|]--add-exports=jdk.naming.dns/com.sun.jndi.dns=ALL-UNNAMED</jvm-options>
-                <jvm-options>[17|]--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED</jvm-options>
-                <jvm-options>[17|]--add-opens=java.base/java.io=ALL-UNNAMED</jvm-options>
-                <jvm-options>[21|]--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED</jvm-options>
-=======
                 <jvm-options>--add-exports=java.base/sun.net.www=ALL-UNNAMED</jvm-options>
                 <jvm-options>--add-exports=java.base/sun.security.util=ALL-UNNAMED</jvm-options>
                 <jvm-options>--add-opens=java.base/java.lang.invoke=ALL-UNNAMED</jvm-options>
@@ -489,7 +464,6 @@
                 <jvm-options>--add-exports=java.naming/com.sun.jndi.ldap=ALL-UNNAMED</jvm-options>
                 <jvm-options>--add-opens=java.base/java.io=ALL-UNNAMED</jvm-options>
                 <jvm-options>--add-opens=java.base/jdk.internal.misc=ALL-UNNAMED</jvm-options>
->>>>>>> Test-Disappearing
                 <jvm-options>[24|]--sun-misc-unsafe-memory-access=allow</jvm-options>
                 <jvm-options>[24|]--enable-native-access=ALL-UNNAMED</jvm-options>
                 <jvm-options>-Xmx512m</jvm-options>

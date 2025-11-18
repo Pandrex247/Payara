@@ -1,11 +1,7 @@
 /*
  *  DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
-<<<<<<< HEAD
- *  Copyright (c) [2018-2024] Payara Foundation and/or its affiliates. All rights reserved.
-=======
  *  Copyright (c) 2018-2025 Payara Foundation and/or its affiliates. All rights reserved.
->>>>>>> Test-Disappearing
  * 
  *  The contents of this file are subject to the terms of either the GNU
  *  General Public License Version 2 only ("GPL") or the Common Development
@@ -172,17 +168,6 @@ extends BaseHealthCheck<HealthCheckTimeoutExecutionOptions, MicroProfileHealthCh
     protected EventLevel createNotificationEventLevel (HealthCheckResultStatus checkResult) {
         if (checkResult == HealthCheckResultStatus.FINE || checkResult == HealthCheckResultStatus.GOOD) {
             return EventLevel.INFO;
-<<<<<<< HEAD
-        }
-        return EventLevel.WARNING;
-    }
-
-    @Override
-    public void collect(MonitoringWatchCollector collector) {
-        if (!envrionment.isDas() || options == null || !options.isEnabled()) {
-            return;
-=======
->>>>>>> Test-Disappearing
         }
         return EventLevel.WARNING;
     }

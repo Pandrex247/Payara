@@ -47,11 +47,7 @@
     <parent>
         <groupId>fish.payara.server.internal.core</groupId>
         <artifactId>nucleus-core</artifactId>
-<<<<<<< HEAD
-        <version>6.2025.12-SNAPSHOT</version>
-=======
         <version>7.2025.2-SNAPSHOT</version>
->>>>>>> Test-Disappearing
     </parent>
 
     <artifactId>kernel</artifactId>
@@ -263,13 +259,6 @@
             <groupId>fish.payara.server.internal.packager</groupId>
             <artifactId>tiger-types</artifactId>
             <version>${project.version}</version>
-<<<<<<< HEAD
-        </dependency>
-        <dependency>
-            <groupId>fish.payara.monitoring-console</groupId>
-            <artifactId>monitoring-console-api</artifactId>
-=======
->>>>>>> Test-Disappearing
         </dependency>
         <dependency>
             <groupId>fish.payara.transformer</groupId>

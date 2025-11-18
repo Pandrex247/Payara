@@ -48,11 +48,7 @@
     <parent>
         <groupId>fish.payara.server.internal.concurrent</groupId>
         <artifactId>concurrent</artifactId>
-<<<<<<< HEAD
-        <version>6.2025.12-SNAPSHOT</version>
-=======
         <version>7.2025.2-SNAPSHOT</version>
->>>>>>> Test-Disappearing
     </parent>    
     <artifactId>concurrent-impl</artifactId>
     <packaging>glassfish-jar</packaging>
@@ -90,15 +86,12 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-<<<<<<< HEAD
-=======
             <groupId>fish.payara.server.internal.test-utils</groupId>
             <artifactId>utils</artifactId>
             <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
->>>>>>> Test-Disappearing
             <groupId>fish.payara.server.internal.admin</groupId>
             <artifactId>admin-util</artifactId>
             <version>${project.version}</version>

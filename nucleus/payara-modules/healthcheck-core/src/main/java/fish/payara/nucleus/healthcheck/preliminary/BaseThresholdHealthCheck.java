@@ -1,11 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
-<<<<<<< HEAD
- * Copyright (c) [2016-2025] Payara Foundation and/or its affiliates. All rights reserved.
-=======
  * Copyright (c) 2016-2025 Payara Foundation and/or its affiliates. All rights reserved.
->>>>>>> Test-Disappearing
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -44,10 +40,6 @@
 package fish.payara.nucleus.healthcheck.preliminary;
 
 import fish.payara.internal.notification.EventLevel;
-<<<<<<< HEAD
-import fish.payara.monitoring.collect.MonitoringWatchCollector;
-=======
->>>>>>> Test-Disappearing
 import fish.payara.notification.healthcheck.HealthCheckResultStatus;
 import fish.payara.nucleus.healthcheck.HealthCheckWithThresholdExecutionOptions;
 import fish.payara.nucleus.healthcheck.configuration.ThresholdDiagnosticsChecker;

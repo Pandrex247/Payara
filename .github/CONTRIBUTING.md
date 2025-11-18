@@ -58,7 +58,6 @@ To get the latest updates from upstream and merge them into your local repo, ent
 git fetch upstream
 ```
 
-<<<<<<< HEAD
 Then ensure that you are on your local main branch (as opposed to any issue branches you may have):
 
 ```
@@ -73,22 +72,6 @@ git pull upstream main
 
 ```
 git push origin main
-=======
-Then ensure that you are on your local /blob/main branch (as opposed to any issue branches you may have):
-
-```
-git checkout /blob/main
-```
-
-Finally, pull in the changes from upstream to your /blob/main and update your remote repository:
-
-```
-git pull upstream /blob/main
-```
-
-```
-git push origin /blob/main
->>>>>>> Test-Disappearing
 ```
 
 ## Working on an issue
@@ -134,7 +117,6 @@ git add  . [or specify specific files
 git commit -m "fixes #<GithubNumber>"
 ```
 
-<<<<<<< HEAD
 Before you merge the branch, ensure that you have updated your main to match the upstream payara. This can be accomplished by using the following:
 
 First, switch to the main branch:
@@ -147,20 +129,6 @@ Then synchronise your branch with the changes from main:
 
 ```
 git pull upstream main
-=======
-Before you merge the branch, ensure that you have updated your /blob/main to match the upstream payara. This can be accomplished by using the following:
-
-First, switch to the /blob/main branch:
-
-```
-git checkout /blob/main
-```
-
-Then synchronise your branch with the changes from /blob/main:
-
-```
-git pull upstream /blob/main
->>>>>>> Test-Disappearing
 ```
 
 Flip back to your own branch, with your changes:
@@ -169,17 +137,10 @@ Flip back to your own branch, with your changes:
 git checkout <YourBranchName>
 ```
 
-<<<<<<< HEAD
 Merge said changes with the main branch by rebasing your code (effectively a neater marge for private repos):
 
 ```
 git rebase main
-=======
-Merge said changes with the /blob/main branch by rebasing your code (effectively a neater marge for private repos):
-
-```
-git rebase /blob/main
->>>>>>> Test-Disappearing
 ```
 
 Finally, push the changes from your branch to a new branch on the main repo (origin), with the same name (so as to preserve the issue numbers and history):

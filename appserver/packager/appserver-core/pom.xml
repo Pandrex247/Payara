@@ -47,11 +47,7 @@
     <parent>
         <groupId>fish.payara.server.internal.packager</groupId>
         <artifactId>packages</artifactId>
-<<<<<<< HEAD
-        <version>6.2025.12-SNAPSHOT</version>
-=======
         <version>7.2025.2-SNAPSHOT</version>
->>>>>>> Test-Disappearing
     </parent>
     <artifactId>appserver-core</artifactId>
     <name>Payara Appserver Core Modules</name>
@@ -180,14 +176,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-<<<<<<< HEAD
-            <groupId>fish.payara.server.internal.security</groupId>
-            <artifactId>jaspic.provider.framework</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-=======
->>>>>>> Test-Disappearing
             <groupId>fish.payara.server.internal.packager</groupId>
             <artifactId>libpam4j-repackaged</artifactId>
             <version>${project.version}</version>
@@ -303,13 +291,10 @@
             <artifactId>jakarta.jws-api</artifactId>
         </dependency>
         <dependency>
-<<<<<<< HEAD
-=======
             <groupId>jakarta.enterprise</groupId>
             <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
         </dependency>
         <dependency>
->>>>>>> Test-Disappearing
             <groupId>com.fasterxml.jackson.dataformat</groupId>
             <artifactId>jackson-dataformat-toml</artifactId>
         </dependency>

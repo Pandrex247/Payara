@@ -37,11 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-<<<<<<< HEAD
-// Portions Copyright [2017-2025] [Payara Foundation and/or its affiliates]
-=======
 // Portions Copyright 2017-2025 [Payara Foundation and/or its affiliates]
->>>>>>> Test-Disappearing
 
 package org.glassfish.resources.admin.cli;
 
