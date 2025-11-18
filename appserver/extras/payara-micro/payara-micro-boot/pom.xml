@@ -45,7 +45,11 @@
     <parent>
         <groupId>fish.payara.server.internal.extras</groupId>
         <artifactId>payara-micro-parent</artifactId>
+<<<<<<< HEAD
         <version>6.2025.12-SNAPSHOT</version>
+=======
+        <version>7.2025.2-SNAPSHOT</version>
+>>>>>>> Test-Disappearing
     </parent>
     <artifactId>payara-micro-boot</artifactId>
     <packaging>glassfish-jar</packaging>

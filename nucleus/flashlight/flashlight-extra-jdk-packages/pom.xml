@@ -47,7 +47,11 @@
     <parent>
         <groupId>fish.payara.server.internal.flashlight</groupId>
         <artifactId>nucleus-flashlight</artifactId>
+<<<<<<< HEAD
         <version>6.2025.12-SNAPSHOT</version>
+=======
+        <version>7.2025.2-SNAPSHOT</version>
+>>>>>>> Test-Disappearing
     </parent>
     <artifactId>flashlight-extra-jdk-packages</artifactId>
     <name>GlassFish Flashlight Extra JDK Pkgs</name>

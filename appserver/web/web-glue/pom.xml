@@ -46,7 +46,11 @@
     <parent>
         <groupId>fish.payara.server.internal.web</groupId>
         <artifactId>web</artifactId>
+<<<<<<< HEAD
         <version>6.2025.12-SNAPSHOT</version>
+=======
+        <version>7.2025.2-SNAPSHOT</version>
+>>>>>>> Test-Disappearing
     </parent>
 
     <artifactId>web-glue</artifactId>
@@ -105,11 +109,23 @@
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
         <dependency>
+<<<<<<< HEAD
             <groupId>fish.payara.server.internal.web</groupId>
             <artifactId>web-cli</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
+=======
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>fish.payara.server.internal.web</groupId>
+            <artifactId>web-cli</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+>>>>>>> Test-Disappearing
             <groupId>fish.payara.server.internal.flashlight</groupId>
             <artifactId>flashlight-framework</artifactId>
             <version>${project.version}</version>

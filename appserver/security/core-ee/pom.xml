@@ -48,7 +48,11 @@
     <parent>
         <groupId>fish.payara.server.internal.security</groupId>
         <artifactId>securitymodule</artifactId>
+<<<<<<< HEAD
         <version>6.2025.12-SNAPSHOT</version>
+=======
+        <version>7.2025.2-SNAPSHOT</version>
+>>>>>>> Test-Disappearing
     </parent>
     <groupId>fish.payara.server.internal.security</groupId>
     <artifactId>security-ee</artifactId>
@@ -238,11 +242,14 @@
             <artifactId>jakarta.security.enterprise-api</artifactId>
             <scope>provided</scope>
         </dependency>
+<<<<<<< HEAD
          <dependency>
             <groupId>fish.payara.server.internal.security</groupId>
             <artifactId>jaspic.provider.framework</artifactId>
              <version>${project.version}</version>
         </dependency>
+=======
+>>>>>>> Test-Disappearing
         <dependency>
             <groupId>fish.payara.server.internal.common</groupId>
             <artifactId>internal-api</artifactId>
@@ -293,6 +300,10 @@
         <dependency>
             <groupId>org.glassfish.exousia</groupId>
             <artifactId>exousia</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.epicyro</groupId>
+            <artifactId>epicyro</artifactId>
         </dependency>
     </dependencies>
 </project>

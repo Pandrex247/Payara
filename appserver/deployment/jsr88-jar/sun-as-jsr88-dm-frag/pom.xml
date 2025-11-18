@@ -46,7 +46,11 @@
     <parent>
         <groupId>fish.payara.server.internal.deployment</groupId>
         <artifactId>jsr-88</artifactId>
+<<<<<<< HEAD
         <version>6.2025.12-SNAPSHOT</version>
+=======
+        <version>7.2025.2-SNAPSHOT</version>
+>>>>>>> Test-Disappearing
     </parent>
 
     <artifactId>sun-as-jsr88-dm-frag</artifactId>

@@ -82,4 +82,8 @@ public enum EventLevel {
     public boolean compare (EventLevel other, BiPredicate<Integer, Integer> predicate) {
         return predicate.test(this.severityLevel, other.severityLevel);
     }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> Test-Disappearing

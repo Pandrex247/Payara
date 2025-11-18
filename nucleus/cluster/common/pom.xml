@@ -47,7 +47,11 @@
     <parent>
         <groupId>fish.payara.server.internal.cluster</groupId>
         <artifactId>cluster</artifactId>
+<<<<<<< HEAD
         <version>6.2025.12-SNAPSHOT</version>
+=======
+        <version>7.2025.2-SNAPSHOT</version>
+>>>>>>> Test-Disappearing
     </parent>
     <artifactId>cluster-common</artifactId>
     <packaging>glassfish-jar</packaging>

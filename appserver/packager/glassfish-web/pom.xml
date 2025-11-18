@@ -48,7 +48,11 @@
     <parent>
         <groupId>fish.payara.server.internal.packager</groupId>
         <artifactId>packages</artifactId>
+<<<<<<< HEAD
         <version>6.2025.12-SNAPSHOT</version>
+=======
+        <version>7.2025.2-SNAPSHOT</version>
+>>>>>>> Test-Disappearing
     </parent>
 
     <artifactId>glassfish-web</artifactId>
@@ -171,10 +175,6 @@
             <groupId>jakarta.servlet.jsp.jstl</groupId>
             <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.web</groupId>
-            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-        </dependency>
 
         <!-- Java EE Security -->
         <dependency>
@@ -183,12 +183,12 @@
         </dependency>
         <dependency>
             <groupId>org.glassfish.soteria</groupId>
-            <artifactId>jakarta.security.enterprise</artifactId>
+            <artifactId>soteria</artifactId>
         </dependency>
         <dependency>
             <groupId>org.glassfish.soteria</groupId>
             <artifactId>soteria.spi.bean.decorator.weld</artifactId>
-            <version>${jakarta.security.enterprise.version}</version>
+            <version>${soteria.version}</version>
         </dependency>
         <dependency>
             <groupId>jakarta.el</groupId>
@@ -260,6 +260,10 @@
             <groupId>fish.payara.server.internal.security</groupId>
             <artifactId>realm-stores</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.epicyro</groupId>
+            <artifactId>epicyro</artifactId>
         </dependency>
     </dependencies>
 </project>

@@ -1,7 +1,11 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
+<<<<<<< HEAD
  *    Copyright (c) [2018-2024] Payara Foundation and/or its affiliates. All rights reserved.
+=======
+ *    Copyright (c) 2018-2025 Payara Foundation and/or its affiliates. All rights reserved.
+>>>>>>> Test-Disappearing
  *
  *     The contents of this file are subject to the terms of either the GNU
  *     General Public License Version 2 only ("GPL") or the Common Development
@@ -50,8 +54,6 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -63,14 +65,8 @@ import jakarta.annotation.PostConstruct;
 import jakarta.inject.Inject;
 import jakarta.xml.bind.JAXB;
 
-import org.eclipse.microprofile.metrics.Counting;
-import org.eclipse.microprofile.metrics.Gauge;
-import org.eclipse.microprofile.metrics.Metadata;
-import org.eclipse.microprofile.metrics.Metric;
 import org.eclipse.microprofile.metrics.MetricID;
 import org.eclipse.microprofile.metrics.MetricRegistry;
-import org.eclipse.microprofile.metrics.MetricUnits;
-import org.eclipse.microprofile.metrics.Timer;
 import org.glassfish.api.StartupRunLevel;
 import org.glassfish.api.admin.ServerEnvironment;
 import org.glassfish.api.invocation.ComponentInvocation;
@@ -83,23 +79,18 @@ import org.jvnet.hk2.config.ConfigListener;
 import org.jvnet.hk2.config.UnprocessedChangeEvent;
 import org.jvnet.hk2.config.UnprocessedChangeEvents;
 
-import fish.payara.microprofile.metrics.MetricUnitsUtils;
 import fish.payara.microprofile.metrics.MetricsService;
 import fish.payara.microprofile.metrics.admin.MetricsServiceConfiguration;
 import fish.payara.microprofile.metrics.exception.NoSuchRegistryException;
 import fish.payara.microprofile.metrics.jmx.MetricsMetadata;
 import fish.payara.microprofile.metrics.jmx.MetricsMetadataConfig;
 import fish.payara.microprofile.metrics.jmx.MetricsMetadataHelper;
-import fish.payara.monitoring.collect.MonitoringDataCollector;
-import fish.payara.monitoring.collect.MonitoringDataSource;
 import fish.payara.nucleus.executorservice.PayaraExecutorService;
 import fish.payara.nucleus.healthcheck.HealthCheckService;
-import fish.payara.nucleus.healthcheck.HealthCheckStatsProvider;
-import java.util.logging.Level;
 
 @Service(name = "microprofile-metrics-service")
 @RunLevel(StartupRunLevel.VAL)
-public class MetricsServiceImpl implements MetricsService, ConfigListener, MonitoringDataSource {
+public class MetricsServiceImpl implements MetricsService, ConfigListener {
 
     private static final Logger LOGGER = Logger.getLogger(MetricsService.class.getName());
 
@@ -256,6 +247,7 @@ public class MetricsServiceImpl implements MetricsService, ConfigListener, Monit
         return contextByName.get(name);
     }
 
+<<<<<<< HEAD
     @Override
     public void collect(MonitoringDataCollector rootCollector) {
         if (!isEnabled())
@@ -404,6 +396,8 @@ public class MetricsServiceImpl implements MetricsService, ConfigListener, Monit
         return collector.group(tag);
     }
 
+=======
+>>>>>>> Test-Disappearing
     private static void checkSystemCpuLoadIssue(MetricsMetadataConfig metadataConfig) {
         // Could be constant but placed it in method as it is a workaround until fixed in JVM.
         // TODO Make this check dependent on the JDK version (as it hopefully will get solved in the future) -> Azul fix request made.

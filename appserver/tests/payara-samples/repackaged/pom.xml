@@ -44,7 +44,11 @@
     <parent>
         <groupId>fish.payara.samples</groupId>
         <artifactId>payara-samples</artifactId>
+<<<<<<< HEAD
         <version>6.2025.12-SNAPSHOT</version>
+=======
+        <version>7.2025.2-SNAPSHOT</version>
+>>>>>>> Test-Disappearing
     </parent>
 
     <groupId>fish.payara.server.internal.tests</groupId>
@@ -55,7 +59,6 @@
     
     <modules>
         <module>http-matchers-repackaged</module>
-        <module>jacc-provider-repackaged</module>
         <module>smallrye-config-repackaged</module>
     </modules>
 

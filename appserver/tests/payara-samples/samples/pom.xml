@@ -45,7 +45,11 @@
     <parent>
         <groupId>fish.payara.samples</groupId>
         <artifactId>payara-samples</artifactId>
+<<<<<<< HEAD
         <version>6.2025.12-SNAPSHOT</version>
+=======
+        <version>7.2025.2-SNAPSHOT</version>
+>>>>>>> Test-Disappearing
     </parent>
 
     <artifactId>payara-samples-profiled-tests</artifactId>
@@ -62,7 +66,7 @@
         <module>formauth</module>
         <module>jacc-per-app</module>
         <module>jaxrs-rolesallowed</module>
-        <module>jaxrs-rolesallowed-servlet</module>
+        <!--module>jaxrs-rolesallowed-servlet</module-->
         <module>jaxws-security</module>
         <module>jaxws-tracing</module>
         <module>legacy-mode-empty-beans-xml</module>
@@ -74,7 +78,10 @@
         <module>rest-management</module>
         <module>rolesPermitted</module>
         <module>realm-identity-stores</module>
+<<<<<<< HEAD
         <module>jakartaee-namespace-transformer</module>
+=======
+>>>>>>> Test-Disappearing
         <module>http</module>
         <module>logging</module>
         <module>ejb-http-remoting</module>
@@ -91,6 +98,10 @@
         <module>opentelemetry</module>
         <module>use-bundled-jsf-primefaces</module>
         <module>mvc</module>
+<<<<<<< HEAD
+=======
+        <module>data</module>
+>>>>>>> Test-Disappearing
         <module>versioned-deployment</module>
     </modules>
 

@@ -1,7 +1,11 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
+<<<<<<<< HEAD:appserver/tests/payara-samples/samples/mvc/src/main/java/fish/payara/samples/mvc/RestConfiguration.java
  * Copyright (c) 2024 Payara Foundation and/or its affiliates. All rights reserved.
+========
+ * Copyright (c) 2025 Payara Foundation and/or its affiliates. All rights reserved.
+>>>>>>>> Test-Disappearing:appserver/payara-appserver-modules/microprofile/openapi/src/main/java/fish/payara/microprofile/openapi/util/BeanValidationType.java
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -37,6 +41,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+<<<<<<<< HEAD:appserver/tests/payara-samples/samples/mvc/src/main/java/fish/payara/samples/mvc/RestConfiguration.java
 
 package fish.payara.samples.mvc;
 
@@ -48,5 +53,10 @@ import jakarta.ws.rs.core.Application;
  */
 @ApplicationPath("mvc")
 public class RestConfiguration extends Application {
+========
+package fish.payara.microprofile.openapi.util;
+>>>>>>>> Test-Disappearing:appserver/payara-appserver-modules/microprofile/openapi/src/main/java/fish/payara/microprofile/openapi/util/BeanValidationType.java
 
+public enum BeanValidationType {
+    NOT_EMPTY, NOT_BLANK, SIZE, DECIMAL_MAX, DECIMAL_MIN, MAX, MIN, NEGATIVE, NEGATIVE_OR_ZERO, POSITIVE, POSITIVE_OR_ZER0
 }

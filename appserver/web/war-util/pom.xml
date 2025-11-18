@@ -46,7 +46,11 @@
     <parent>
         <groupId>fish.payara.server.internal.web</groupId>
         <artifactId>web</artifactId>
+<<<<<<< HEAD
         <version>6.2025.12-SNAPSHOT</version>
+=======
+        <version>7.2025.2-SNAPSHOT</version>
+>>>>>>> Test-Disappearing
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>war-util</artifactId>
@@ -91,6 +95,13 @@
             <artifactId>jakarta.servlet-api</artifactId>
         </dependency>
         <dependency>
+<<<<<<< HEAD
+=======
+            <groupId>jakarta.enterprise</groupId>
+            <artifactId>jakarta.enterprise.cdi-el-api</artifactId>
+        </dependency>
+        <dependency>
+>>>>>>> Test-Disappearing
             <groupId>fish.payara.server.internal.common</groupId>
             <artifactId>glassfish-api</artifactId>
             <version>${project.version}</version>
