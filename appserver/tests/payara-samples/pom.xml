@@ -223,7 +223,7 @@
                                             <artifactId>payara-micro</artifactId>
                                             <version>${payara.version}</version>
                                             <overWrite>false</overWrite>
-                                            <outputDirectory>${session.executionRootDirectory}/target/</outputDirectory>
+                                            <outputDirectory>${maven.multiModuleProjectDirectory}${file.separator}target${file.separator}</outputDirectory>
                                             <destFileName>payara-micro-${payara.version}.jar</destFileName>
                                         </artifactItem>
                                     </artifactItems>
@@ -471,7 +471,7 @@
                         <payara.home>${payara.home}</payara.home>
                         <payara.domain.name>${payara.domain.name}</payara.domain.name>
                         <!-- affects micro only -->
-                        <payara.microJar>${session.executionRootDirectory}/target/payara-micro-${payara.version}.jar</payara.microJar>
+                        <payara.microJar>${maven.multiModuleProjectDirectory}${file.separator}target${file.separator}payara-micro-${payara.version}.jar</payara.microJar>
                         <payara.clusterEnabled>true</payara.clusterEnabled>
                         <payara.debug>${payara.debug}</payara.debug>
                         <payara.version>${payara.version}</payara.version>
@@ -488,7 +488,7 @@
                         <payara.home>${payara.home}</payara.home>
                         <payara.domain.name>${payara.domain.name}</payara.domain.name>
                         <!-- affects micro only -->
-                        <payara.microJar>${session.executionRootDirectory}/target/payara-micro-${payara.version}.jar</payara.microJar>
+                        <payara.microJar>${maven.multiModuleProjectDirectory}${file.separator}target${file.separator}payara-micro-${payara.version}.jar</payara.microJar>
                         <payara.clusterEnabled>true</payara.clusterEnabled>
                         <payara.debug>${payara.debug}</payara.debug>
                         <payara.version>${payara.version}</payara.version>
