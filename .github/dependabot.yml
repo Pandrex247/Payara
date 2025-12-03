@@ -77,6 +77,8 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "org.glassfish.woodstock:woodstock-webui-jsf-suntheme"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "org.glassfish.woodstock.external:dojo"
+        update-types: [ "version-update:semver-major" ]
       - dependency-name: "org.glassfish.jsftemplating:jsftemplating"
         update-types: ["version-update:semver-major"]
       - dependency-name: "org.glassfish.jsftemplating:jsftemplating-dt"
