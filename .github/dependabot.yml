@@ -151,12 +151,3 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "org.jboss.weld.environment:weld-environment-common"
         update-types: ["version-update:semver-major"]
-
-  # Configuration for gitsubmodule
-  - package-ecosystem: "gitsubmodule"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    ignore:
-    - dependency-name: "*"
-    target-branch: "master"
