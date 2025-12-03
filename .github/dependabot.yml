@@ -51,7 +51,7 @@ updates:
         update-types: [ "version-update:semver-major" ]
       - dependency-name: "org.glassfish:jakarta.faces"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "org.glassfish.soteria:jakarta.security.enterprise"
+      - dependency-name: "org.glassfish.soteria:soteria"
         update-types: ["version-update:semver-major"]
       - dependency-name: "org.glassfish.soteria:soteria.spi.bean.decorator.weld"
         update-types: ["version-update:semver-major"]
