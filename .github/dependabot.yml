@@ -29,8 +29,6 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "org.eclipse.persistence:org.eclipse.persistence.moxy"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "org.eclipse.persistence:org.eclipse.persistence.sdo"
-        update-types: ["version-update:semver-major"]
       - dependency-name: "org.eclipse.persistence:org.eclipse.persistence.dbws"
         update-types: ["version-update:semver-major"]
       - dependency-name: "org.eclipse.persistence:org.eclipse.persistence.oracle"
