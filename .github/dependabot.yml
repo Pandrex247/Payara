@@ -43,7 +43,7 @@ updates:
         update-types: ["version-update:semver-major"]
 
       # Ignore major version updates for org.glassfish and related dependencies
-      - dependency-name: "org.glassfish:jakarta.enterprise.concurrent"
+      - dependency-name: "org.glassfish.concurro:concurro"
         update-types: ["version-update:semver-major"]
       - dependency-name: "org.glassfish.mq:mq"
         update-types: ["version-update:semver-major"]
