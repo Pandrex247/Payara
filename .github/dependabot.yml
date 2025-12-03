@@ -45,8 +45,10 @@ updates:
       # Ignore major version updates for org.glassfish and related dependencies
       - dependency-name: "org.glassfish.concurro:concurro"
         update-types: ["version-update:semver-major"]
-      - dependency-name: "org.glassfish.mq:mq"
+      - dependency-name: "org.glassfish.mq:mq-distribution"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "org.glassfish.mq:mq-client"
+        update-types: [ "version-update:semver-major" ]
       - dependency-name: "org.glassfish:jakarta.faces"
         update-types: ["version-update:semver-major"]
       - dependency-name: "org.glassfish.soteria:jakarta.security.enterprise"
