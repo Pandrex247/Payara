@@ -91,6 +91,8 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "org.glassfish.pfl:pfl-basic"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "org.glassfish.pfl:pfl-tf"
+        update-types: [ "version-update:semver-major" ]
       - dependency-name: "org.glassfish.corba:glassfish-corba-omgapi"
         update-types: ["version-update:semver-major"]
       - dependency-name: "org.glassfish.corba:glassfish-corba-internal-api"
