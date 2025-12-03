@@ -79,6 +79,8 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "org.glassfish.jsftemplating:jsftemplating"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "org.glassfish.jsftemplating:jsftemplating-dt"
+        update-types: [ "version-update:semver-major" ]
       - dependency-name: "org.glassfish.annotations:logging-annotation-processor"
         update-types: ["version-update:semver-major"]
       - dependency-name: "org.glassfish.pfl:pfl-tf-tools"
