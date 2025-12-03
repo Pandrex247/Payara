@@ -103,6 +103,8 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "org.glassfish.ha:ha-api"
         update-types: ["version-update:semver-major"]
+      - dependency-name: "org.glassfish.epicyro:epicyro"
+        update-types: [ "version-update:semver-major" ]
       
       # Ignore major version updates for org.eclipse and related dependencies
       - dependency-name: "org.eclipse:yasson"
