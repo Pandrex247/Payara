@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2020] Payara Foundation and/or affiliates
+// Portions Copyright 2020-2026 Payara Foundation and/or its affiliates
 
 package com.sun.enterprise.security.cli;
 
@@ -215,6 +215,15 @@ public class ChangeAdminPassword implements AdminCommand, AdminCommandSecurity.P
             return;
         }
 
+        // Authenticate the old password
+        String[] groups = fr.authenticate(userName, oldpassword.toCharArray());
+        if (groups == null) {
+            report.setMessage(localStrings.getLocalString("change.admin.password.userupdatefailed",
+                    "Password change failed for user named {0}", userName));
+            report.setActionExitCode(ActionReport.ExitCode.FAILURE);
+            return;
+        }
+
         //now updating admin user password
         try {
             Enumeration en = fr.getGroupNames(userName);            
@@ -223,7 +232,7 @@ public class ChangeAdminPassword implements AdminCommand, AdminCommandSecurity.P
                 size++; 
                 en.nextElement(); 
             }            
-            String[] groups = new String[size];            
+            groups = new String[size];
             en = fr.getGroupNames(userName);            
             for (int i = 0; i < size; i++) {
                 groups[i] = (String) en.nextElement();
