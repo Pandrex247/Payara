@@ -83,7 +83,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -91,7 +90,7 @@ import java.util.stream.Stream;
 import static fish.payara.data.core.util.DataCommonOperationUtility.endTransaction;
 import static fish.payara.data.core.util.DataCommonOperationUtility.evaluateReturnTypeVoidPredicate;
 import static fish.payara.data.core.util.DataCommonOperationUtility.extractDataParameter;
-import static fish.payara.data.core.util.DataCommonOperationUtility.getEntityManagerSupplier;
+import static fish.payara.data.core.util.DataCommonOperationUtility.getEntityManager;
 import static fish.payara.data.core.util.DataCommonOperationUtility.paginationPredicate;
 import static fish.payara.data.core.util.DataCommonOperationUtility.processReturnQueryUpdate;
 import static fish.payara.data.core.util.DataCommonOperationUtility.processReturnType;
@@ -110,15 +109,13 @@ public class RepositoryImpl<T> implements InvocationHandler {
     private final Class<T> repositoryInterface;
     private final Map<Method, QueryData> queries = new HashMap<>();
     private final String applicationName;
-    private final Supplier<EntityManager> entityManagerSupplier;
     private TransactionManager transactionManager;
     private EntityManager em;
     private final Map<Class<?>, Member> idAccessorCache = new ConcurrentHashMap<>();
 
-    public RepositoryImpl(Class<T> repositoryInterface, Map<Class<?>, List<QueryData>> queriesPerEntityClass, String applicationName, String dataStore) {
+    public RepositoryImpl(Class<T> repositoryInterface, Map<Class<?>, List<QueryData>> queriesPerEntityClass, String applicationName) {
         this.repositoryInterface = repositoryInterface;
         this.applicationName = applicationName;
-        this.entityManagerSupplier = getEntityManagerSupplier(applicationName, dataStore);
 
         Map<Method, QueryData> r = queriesPerEntityClass.entrySet().stream().map(e -> e.getValue())
                 .flatMap(List::stream).collect(Collectors.toMap(QueryData::getMethod, Function.identity()));
@@ -180,13 +177,13 @@ public class RepositoryImpl<T> implements InvocationHandler {
                 case FIND -> objectToReturn = processFindOperation(proxy, args, dataForQuery);
                 case QUERY -> objectToReturn = processQueryOperation(args, dataForQuery);
                 case FIND_BY_NAME -> objectToReturn = QueryByNameOperationUtility.processFindByNameOperation(args,
-                        dataForQuery, entityManagerSupplier.get());
+                        dataForQuery, getEntityManager(this.applicationName));
                 case DELETE_BY_NAME -> objectToReturn = QueryByNameOperationUtility.processDeleteByNameOperation(args,
-                        dataForQuery, entityManagerSupplier.get(), getTransactionManager());
+                        dataForQuery, getEntityManager(this.applicationName), getTransactionManager());
                 case COUNT_BY_NAME -> objectToReturn = QueryByNameOperationUtility.processCountByNameOperation(args,
-                        dataForQuery, entityManagerSupplier.get());
+                        dataForQuery, getEntityManager(this.applicationName));
                 case EXISTS_BY_NAME -> objectToReturn = QueryByNameOperationUtility.processExistsByNameOperation(args,
-                        dataForQuery, entityManagerSupplier.get());
+                        dataForQuery, getEntityManager(this.applicationName));
                 default ->
                         throw new UnsupportedOperationException("QueryType " + dataForQuery.getQueryType() + " not supported.");
             }
@@ -209,7 +206,7 @@ public class RepositoryImpl<T> implements InvocationHandler {
 
         if (parameterAnnotations.length > 0) {
             Object returnObject = FindOperationUtility.processFindByOperation(
-                    args, entityManagerSupplier.get(),
+                    args, getEntityManager(this.applicationName),
                     dataForQuery, dataParameter, evaluatePages);
 
             if (returnObject instanceof List<?>) {
@@ -222,7 +219,7 @@ public class RepositoryImpl<T> implements InvocationHandler {
             // For "findAll" operations
             Object result = FindOperationUtility.processFindAllOperation(
                     dataForQuery.getDeclaredEntityClass(),
-                    entityManagerSupplier.get(),
+                    getEntityManager(this.applicationName),
                     extractOrderByClause(dataForQuery.getMethod()),
                     dataForQuery,
                     dataParameter
@@ -284,7 +281,7 @@ public class RepositoryImpl<T> implements InvocationHandler {
         Object arg = args[0] instanceof Stream ? ((Stream<?>) args[0]).sequential().collect(Collectors.toList()) : args[0];
 
         if (dataForQuery.getEntityParamType().isArray()) {
-            return processInsertAndSaveOperationForArray(args, getTransactionManager(), entityManagerSupplier.get(), dataForQuery);
+            return processInsertAndSaveOperationForArray(args, getTransactionManager(), getEntityManager(this.applicationName), dataForQuery);
         } else if (arg instanceof Iterable toIterate) {
             results = new ArrayList<>();
             startTransactionAndJoin(transactionManager, em, dataForQuery);
@@ -342,7 +339,7 @@ public class RepositoryImpl<T> implements InvocationHandler {
 
         try {
             if (dataForQuery.getEntityParamType().isArray()) { //insert multiple entities from array reference
-                return processInsertAndSaveOperationForArray(args, getTransactionManager(), entityManagerSupplier.get(), dataForQuery);
+                return processInsertAndSaveOperationForArray(args, getTransactionManager(), getEntityManager(this.applicationName), dataForQuery);
             } else if (arg instanceof Iterable toIterate) {  //insert multiple entities from list reference
                 results = new ArrayList<>();
                 startTransactionAndJoin(transactionManager, em, dataForQuery);
@@ -635,7 +632,7 @@ public class RepositoryImpl<T> implements InvocationHandler {
     public Object processQueryOperation(Object[] args, QueryData dataForQuery) throws HeuristicRollbackException, SystemException, HeuristicMixedException, RollbackException, NotSupportedException {
         DataParameter dataParameter = extractDataParameter(args);
         return QueryOperationUtility.processQueryOperation(args, dataForQuery,
-                entityManagerSupplier.get(), getTransactionManager(), dataParameter);
+                getEntityManager(this.applicationName), getTransactionManager(), dataParameter);
     }
 
     public TransactionManager getTransactionManager() {
@@ -651,7 +648,7 @@ public class RepositoryImpl<T> implements InvocationHandler {
 
     public void startTransactionComponents() {
         transactionManager = getTransactionManager();
-        em = entityManagerSupplier.get();
+        em = getEntityManager(this.applicationName);
     }
     
 }
