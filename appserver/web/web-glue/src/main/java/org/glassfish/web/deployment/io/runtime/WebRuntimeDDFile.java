@@ -37,48 +37,60 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright 2018-2026 Payara Foundation and/or its affiliates
+package org.glassfish.web.deployment.io.runtime;
 
-package org.glassfish.ejb.deployment.node.runtime;
+import static com.sun.enterprise.deployment.io.DescriptorConstants.S1AS_WEB_JAR_ENTRY;
 
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import com.sun.enterprise.deployment.node.runtime.RuntimeDescriptorNode;
-import com.sun.enterprise.deployment.xml.RuntimeTagNames;
-import org.glassfish.ejb.deployment.descriptor.runtime.PersistenceManagerInUse;
-import org.w3c.dom.Node;
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.hk2.api.PerLookup;
+import org.glassfish.web.sniffer.WarType;
+import org.glassfish.web.deployment.descriptor.WebBundleDescriptorImpl;
+import org.glassfish.web.deployment.node.runtime.gf.WebBundleRuntimeNode;
+import org.jvnet.hk2.annotations.Service;
+
+import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
+import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
+import com.sun.enterprise.deployment.node.RootXMLNode;
 
 /**
- * This node handles the pm-inuse runtime xml element
+ * This class is responsible for handling the XML configuration information for the SunOne AppServer Web Container
  *
- * @author  Jerome Dochez
- * @version 
+ * @author Jerome Dochez
  */
+@ConfigurationDeploymentDescriptorFileFor(WarType.ARCHIVE_TYPE)
+@Service
+@PerLookup
+@Deprecated
+public class WebRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
 
-public class PMInUseNode extends RuntimeDescriptorNode<PersistenceManagerInUse> {
-
-    private PersistenceManagerInUse descriptor;
-
+    /**
+     * @return the location of the DeploymentDescriptor file for a particular type of EE Archive
+     */
     @Override
-    public PersistenceManagerInUse getDescriptor() {
-        if (descriptor == null) descriptor = new PersistenceManagerInUse();
-        return descriptor;
+    public String getDeploymentDescriptorPath() {
+        return S1AS_WEB_JAR_ENTRY;
+    }
+
+    /**
+     * @return a RootXMLNode responsible for handling the deployment descriptors associated with this J2EE module
+     *
+     * @param descriptor the descriptor for which we need the node
+     */
+    @Override
+    public RootXMLNode getRootXMLNode(Descriptor descriptor) {
+        if (descriptor instanceof WebBundleDescriptorImpl) {
+            return new WebBundleRuntimeNode((WebBundleDescriptorImpl) descriptor);
+        }
+
+        return null;
     }
 
     @Override
-    protected Map getDispatchTable() {
-        Map table = new HashMap();
-        table.put(RuntimeTagNames.PM_IDENTIFIER, "set_pm_identifier");
-        table.put(RuntimeTagNames.PM_VERSION, "set_pm_version");
-        return table;
-    }
-
-
-    @Override
-    public Node writeDescriptor(Node parent, String nodeName, PersistenceManagerInUse descriptor) {
-        Node pmInUse = super.writeDescriptor(parent, nodeName, descriptor);
-        appendTextChild(pmInUse, RuntimeTagNames.PM_IDENTIFIER, descriptor.get_pm_identifier());
-        appendTextChild(pmInUse, RuntimeTagNames.PM_VERSION, descriptor.get_pm_version());
-        return pmInUse;
+    public void registerBundle(Map<String, Class<?>> rootNodesMap, Map<String, String> publicIDToDTDMap, Map<String, List<Class<?>>> versionUpgrades) {
+        rootNodesMap.put(WebBundleRuntimeNode.registerBundle(publicIDToDTDMap, versionUpgrades), WebBundleRuntimeNode.class);
     }
 }
