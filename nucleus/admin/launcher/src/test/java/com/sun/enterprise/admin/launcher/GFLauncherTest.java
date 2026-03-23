@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2018] Payara Foundation and/or affiliates
+// Portions Copyright 2018-2026 Payara Foundation and/or its affiliates
 
 package com.sun.enterprise.admin.launcher;
 
@@ -203,14 +203,6 @@ public class GFLauncherTest {
         info.setDomainName("domainNoLog");
         launcher.launch();
         assertTrue(launcher.getLogFilename().endsWith("server.log"));
-    }
-
-    @Test
-    public void testDropInterruptedCommands() throws GFLauncherException {
-        info.setDomainName("domainNoLog");
-        info.setDropInterruptedCommands(true);
-        launcher.launch();
-        assertTrue(launcher.getJvmOptions().contains("-Dorg.glassfish.job-manager.drop-interrupted-commands=true"));
     }
 
     //private static File domain1, domain2, domain3, domain4, domain5;

@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2019] Payara Foundation and/or affiliates
+// Portions Copyright 2019-2026 Payara Foundation and/or its affiliates
 
 package org.glassfish.common.util.admin;
 
@@ -57,7 +57,7 @@ import org.glassfish.api.ParamDefaultCalculator;
 import org.glassfish.api.UnknownOptionsAreOperands;
 import org.glassfish.api.admin.CommandModel;
 import org.glassfish.api.admin.ExecuteOn;
-import org.glassfish.api.admin.ManagedJob;
+import org.glassfish.api.admin.Progress;
 import org.glassfish.api.admin.config.ModelBinding;
 import org.jvnet.hk2.annotations.Service;
 import org.jvnet.hk2.config.Attribute;
@@ -77,7 +77,7 @@ public class CommandModelImpl extends CommandModel {
     private final I18n i18n;
     private final boolean dashOk;
     private final LocalStringManager localStrings;
-    private boolean managedJob;
+    private boolean progressJob;
 
     public CommandModelImpl(Class<?> commandType) {
 
@@ -87,7 +87,7 @@ public class CommandModelImpl extends CommandModel {
         i18n = commandType.getAnnotation(I18n.class);
         execOn = commandType.getAnnotation(ExecuteOn.class);
         localStrings = new LocalStringManagerImpl(commandType);
-        managedJob = AnnotationUtil.presentTransitive(ManagedJob.class, commandType);
+        progressJob = AnnotationUtil.presentTransitive(Progress.class, commandType);
 
         params = init(commandType, i18n, localStrings);
         Class currentClazz = commandType;
@@ -172,14 +172,14 @@ public class CommandModelImpl extends CommandModel {
     public ExecuteOn getClusteringAttributes() {
         return execOn;
     }
-    
+
     @Override
-    public boolean isManagedJob() {
-        return managedJob;
+    public boolean isProgressJob() {
+        return progressJob;
     }
-    
-    public void setManagedJob(boolean value) {
-        this.managedJob = value;
+
+    public void setProgressJob(boolean value) {
+        this.progressJob = value;
     }
             
 

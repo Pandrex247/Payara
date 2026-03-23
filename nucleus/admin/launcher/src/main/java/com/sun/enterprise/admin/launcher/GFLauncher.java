@@ -852,9 +852,6 @@ public abstract class GFLauncher {
                 .collect(Collectors.toList());
         rawJvmOptions.addAll(getSpecialSystemProperties());
         jvmOptions = new JvmOptions(rawJvmOptions);
-        if (info.isDropInterruptedCommands()) {
-            jvmOptions.sysProps.put(SystemPropertyConstants.DROP_INTERRUPTED_COMMANDS, Boolean.TRUE.toString());
-        }
         
         // PAYARA-1681 - Add default Payara JVM options if an override isn't in place
         addDefaultJvmOptions();

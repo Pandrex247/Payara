@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright 2026 Payara Foundation and/or its affiliates
 
 package org.glassfish.api.admin;
 
@@ -106,13 +107,13 @@ public abstract class CommandModel {
      * @return the command class, or null if none
      */
     public abstract Class<?> getCommandClass();
-    
-    /** This command is managed job. It is preferred to listen using SSE
+
+    /** This command is progress job. It is preferred to listen using SSE
      * in case of remote execution.
-     * 
-     * @return {@code true} only if command is @ManagedJob
+     *
+     * @return {@code true} only if command is @Progress
      */
-    public abstract boolean isManagedJob();
+    public abstract boolean isProgressJob();
 
     /**
      * Return the cluster parameters for this command  or null if none are

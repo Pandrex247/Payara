@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  * 
- * Portions Copyright [2016] [Payara Foundation]
+ * Portions Copyright 2016-2026 Payara Foundation and/or its affiliates
  */
 
 package org.glassfish.config.support;
@@ -97,7 +97,7 @@ public class GenericCreateCommand extends GenericCrudCommand implements AdminCom
             model = new GenericCommandModel(targetType, true, create.cluster(), create.i18n(),
                     new LocalStringManagerImpl(targetType),
                     habitat.<DomDocument>getService(DomDocument.class),
-                    commandName, AnnotationUtil.presentTransitive(ManagedJob.class, create.decorator()), create.resolver(), create.decorator());
+                    commandName, AnnotationUtil.presentTransitive(Progress.class, create.decorator()), create.resolver(), create.decorator());
             if (LOGGER.isLoggable(level)) {
                 for (String paramName : model.getParametersNames()) {
                     CommandModel.ParamModel param = model.getModelFor(paramName);

@@ -1129,12 +1129,7 @@ public class CommandRunnerImpl implements CommandRunner {
     /**
      * Called from ExecutionContext.execute.
      */
-    private void doCommand(ExecutionContext inv, AdminCommand command,
-            final Subject subject, final Job job) {
-
-        boolean fromCheckpoint = job != null &&
-                (job.getState() == AdminCommandState.State.REVERTING ||
-                job.getState() == AdminCommandState.State.FAILED_RETRYABLE);
+    private void doCommand(ExecutionContext inv, AdminCommand command, final Subject subject, final Job job) {
         CommandModel model;
         try {
             CommandModelProvider c = CommandModelProvider.class.cast(command);
@@ -1144,10 +1139,8 @@ public class CommandRunnerImpl implements CommandRunner {
         }
         UploadedFilesManager ufm = null;
         ActionReport report = inv.report();
-        if (!fromCheckpoint) {
-            report.setActionDescription(model.getCommandName() + " command");
-            report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
-        }
+        report.setActionDescription(model.getCommandName() + " command");
+        report.setActionExitCode(ActionReport.ExitCode.SUCCESS);
         ParameterMap parameters;
         final AdminCommandContext context = new AdminCommandContextImpl(
                 logger, report, inv.inboundPayload(), inv.outboundPayload(),
@@ -1216,7 +1209,7 @@ public class CommandRunnerImpl implements CommandRunner {
                 }
 
                 try {
-                    if (!fromCheckpoint && !skipValidation(command)) {
+                    if (!skipValidation(command)) {
                         validateParameters(model, parameters);
                     }
                 } catch (MultiException e) {
@@ -1432,10 +1425,8 @@ public class CommandRunnerImpl implements CommandRunner {
                     lock = adminLock.getLock(command, "asadmin");
 
                     //Set there progress statuses
-                    if (!fromCheckpoint) {
-                        for (SupplementalCommand supplementalCommand : supplementalCommands) {
-                            progressHelper.addProgressStatusToSupplementalCommand(supplementalCommand);
-                        }
+                    for (SupplementalCommand supplementalCommand : supplementalCommands) {
+                        progressHelper.addProgressStatusToSupplementalCommand(supplementalCommand);
                     }
 
                     // If command is undoable, then invoke prepare method
@@ -1455,19 +1446,17 @@ public class CommandRunnerImpl implements CommandRunner {
                     ClusterOperationUtil.clearInstanceList();
 
                     // Run Supplemental commands that have to run before this command on this instance type
-                    if (!fromCheckpoint) {
-                        logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.presupplemental",
-                                "Command execution stage 2 : Call pre supplemental commands for {0}", inv.name()));
-                        preSupplementalReturn = supplementalExecutor.execute(supplementalCommands,
-                                Supplemental.Timing.Before, context, parameters, ufm.optionNameToFileMap());
-                        if (preSupplementalReturn.equals(ActionReport.ExitCode.FAILURE)) {
-                            report.setActionExitCode(preSupplementalReturn);
-                            if (!StringUtils.ok(report.getTopMessagePart().getMessage())) {
-                                report.setMessage(adminStrings.getLocalString("commandrunner.executor.supplementalcmdfailed",
+                    logger.fine(adminStrings.getLocalString("dynamicreconfiguration.diagnostics.presupplemental",
+                            "Command execution stage 2 : Call pre supplemental commands for {0}", inv.name()));
+                    preSupplementalReturn = supplementalExecutor.execute(supplementalCommands,
+                            Supplemental.Timing.Before, context, parameters, ufm.optionNameToFileMap());
+                    if (preSupplementalReturn.equals(ActionReport.ExitCode.FAILURE)) {
+                        report.setActionExitCode(preSupplementalReturn);
+                        if (!StringUtils.ok(report.getTopMessagePart().getMessage())) {
+                            report.setMessage(adminStrings.getLocalString("commandrunner.executor.supplementalcmdfailed",
                                     "A supplemental command failed; cannot proceed further"));
-                            }
-                            return;
                         }
+                        return;
                     }
 
                     //Run main command if it is applicable for this instance type
@@ -1644,11 +1633,6 @@ public class CommandRunnerImpl implements CommandRunner {
         return result;
     }
 
-    public void executeFromCheckpoint(JobManager.Checkpoint checkpoint, boolean revert, AdminCommandEventBroker eventBroker) {
-        ExecutionContext ec = new ExecutionContext(null, null, null, null,false);
-        ec.executeFromCheckpoint(checkpoint, revert, eventBroker);
-    }
-
     /*
      * Some private classes used in the implementation of CommandRunner.
      */
@@ -1680,7 +1664,7 @@ public class CommandRunnerImpl implements CommandRunner {
         protected Payload.Outbound outbound;
         protected Subject subject;
         protected ProgressStatus progressStatusChild;
-        protected boolean isManagedJob;
+        protected boolean isProgressJob;
         protected boolean isNotify;
         private final List<NameListerPair> nameListerPairs = new ArrayList<>();
 
@@ -1729,8 +1713,8 @@ public class CommandRunnerImpl implements CommandRunner {
         }
 
         @Override
-        public CommandInvocation managedJob() {
-            this.isManagedJob = true;
+        public CommandInvocation progressJob() {
+            this.isProgressJob = true;
             return this;
         }
 
@@ -1772,40 +1756,6 @@ public class CommandRunnerImpl implements CommandRunner {
             return outbound;
         }
 
-        private void executeFromCheckpoint(JobManager.Checkpoint checkpoint, boolean revert, AdminCommandEventBroker eventBroker) {
-            Job job = checkpoint.getJob();
-            if (subject == null) {
-                subject = checkpoint.getContext().getSubject();
-            }
-            parameters(job.getParameters());
-            AdminCommandContext context = checkpoint.getContext();
-            this.report = context.getActionReport();
-            this.inbound = context.getInboundPayload();
-            this.outbound = context.getOutboundPayload();
-            this.scope = job.getScope();
-            this.name = job.getName();
-            if (eventBroker == null) {
-                eventBroker = job.getEventBroker() == null ? new AdminCommandEventBrokerImpl() : job.getEventBroker();
-            }
-            ((AdminCommandInstanceImpl) job).setEventBroker(eventBroker);
-            ((AdminCommandInstanceImpl) job).setState(revert ? AdminCommandState.State.REVERTING : AdminCommandState.State.RUNNING_RETRYABLE);
-            //command
-            AdminCommand command = checkpoint.getCommand();
-            if (command == null) {
-                command = getCommand(job.getScope(), job.getName(), report(), logger);
-                if (command == null) {
-                    return;
-                }
-            }
-            //execute
-            CommandRunnerImpl.this.doCommand(this, command, subject, job);
-            job.complete(report(), outboundPayload());
-            if (progressStatusChild != null) {
-                progressStatusChild.complete();
-            }
-            CommandSupport.done(habitat, command, job);
-        }
-
         @Override
         public void execute(AdminCommand command) {
             if (command == null) {
@@ -1829,9 +1779,6 @@ public class CommandRunnerImpl implements CommandRunner {
                 });
             }
 
-            if(!isManagedJob) {
-                isManagedJob = AnnotationUtil.presentTransitive(ManagedJob.class, command.getClass());
-            }
             JobCreator jobCreator = null;
 
             jobCreator = habitat.getService(JobCreator.class,scope+"job-creator");
@@ -1842,7 +1789,7 @@ public class CommandRunnerImpl implements CommandRunner {
             }
 
             Job job = null;
-            job = jobCreator.createJob(null, scope(), name(), subject, isManagedJob, parameters());
+            job = jobCreator.createJob(null, scope(), name(), subject, parameters());
 
 
             //Register the brokers  else the detach functionality will not work

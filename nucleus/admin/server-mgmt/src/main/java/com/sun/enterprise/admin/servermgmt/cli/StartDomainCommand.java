@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-//Portions Copyright 2017-2026 Payara Foundation and/or affiliates
+//Portions Copyright 2017-2026 Payara Foundation and/or its affiliates
 
 package com.sun.enterprise.admin.servermgmt.cli;
 
@@ -88,8 +88,6 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
     @Param(name = "dry-run", shortName = "n", optional = true,
             defaultValue = "false")
     private boolean dry_run;
-    @Param(name = "drop-interrupted-commands", optional = true, defaultValue = "false")
-    private boolean drop_interrupted_commands;
     @Param(name = "prebootcommandfile", optional = true)
     private String preBootCommand;
     @Param(name = "postbootcommandfile", optional = true)
@@ -246,7 +244,6 @@ public class StartDomainCommand extends LocalDomainCommand implements StartServe
         info.setDebug(debug);
         info.setWatchdog(watchdog);
         info.setWarmup(warmup);
-        info.setDropInterruptedCommands(drop_interrupted_commands);
         info.setPrebootCommandsFile(preBootCommand);
         info.setpostbootCommandsFile(postBootCommand);
         info.setRespawnInfo(programOpts.getClassName(),

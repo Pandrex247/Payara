@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  *
- * Portions Copyright [2017-2021] Payara Foundation and/or affiliates
+ * Portions Copyright 2017-2026 Payara Foundation and/or its affiliates
  */
 package org.glassfish.admin.rest.composite;
 
@@ -117,18 +117,6 @@ public abstract class LegacyCompositeResource extends CompositeResource implemen
     }
     protected Response legacyDeleted(ResponseBody responseBody) {
         return Response.ok().entity(responseBody).build();
-    }
-
-    protected Response legacyAccepted(String command, ParameterMap parameters) {
-        return legacyAccepted(command, parameters, null);
-    }
-    protected Response legacyAccepted(String command, ParameterMap parameters, URI childUri) {
-        URI jobUri = launchDetachedCommand(command, parameters);
-        ResponseBuilder rb = Response.status(Response.Status.ACCEPTED).header("Location", jobUri);
-        if (childUri != null) {
-            rb.header("X-Location", childUri);
-        }
-        return rb.build();
     }
 
     protected <T extends RestModel> RestModelResponseBody<T> legacyResponseBody(Class<T> modelIface) {

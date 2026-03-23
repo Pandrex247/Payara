@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright 2026 Payara Foundation and/or its affiliates
 package org.glassfish.api.admin;
 
 import java.lang.annotation.ElementType;
@@ -50,16 +51,12 @@ import java.lang.annotation.Target;
  * ProgressStatus object can be used to asynchronously generate ongoing 
  * progress messages and command completion information.
  *
- * A Command annotated with @Progress will also be a ManagedJob which will be
- * managed by the Job Manager
  * @see org.glassfish.api.admin.ProgressStatus
- * @see org.glassfish.api.admin.JobManager
  * @author mmares
  * @author Bhakti Mehta
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.TYPE})
-@ManagedJob
 public @interface Progress {
     
     /** Optional: Context of the progress.   Generally this is the command

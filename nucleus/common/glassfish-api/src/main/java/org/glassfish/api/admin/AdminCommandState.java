@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright 2026 Payara Foundation and/or its affiliates
 package org.glassfish.api.admin;
 
 import org.glassfish.api.ActionReport;
@@ -51,7 +52,7 @@ public interface AdminCommandState {
     public static final String EVENT_STATE_CHANGED = "AdminCommandInstance/stateChanged";
     
     public enum State {
-        PREPARED, RUNNING, COMPLETED, RECORDED, RUNNING_RETRYABLE, FAILED_RETRYABLE, REVERTING, REVERTED;
+        PREPARED, RUNNING, COMPLETED;
     }
     
     public State getState();

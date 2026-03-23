@@ -38,7 +38,7 @@
  * holder.
  */
  
-// Portions Copyright [2016-2021] [Payara Foundation and/or its affiliates]
+// Portions Copyright 2016-2026 Payara Foundation and/or its affiliates
 
 package org.glassfish.admin.rest.utils;
 
@@ -245,13 +245,13 @@ public class ResourceUtil {
      * @param commandName
      * @param parameters
      * @param subject
-     * @param managedJob
+     * @param progressJob
      * @return
      */
     public static RestActionReporter runCommand(String commandName,
                                                 ParameterMap parameters,
                                                 Subject subject,
-                                                boolean managedJob) {            
+                                                boolean progressJob) {
         AsadminRecorderService asadminRecorderService = Globals.get(AsadminRecorderService.class);
         if (asadminRecorderService != null && asadminRecorderService.isEnabled()) {
             asadminRecorderService.recordAsadminCommand(commandName, 
@@ -266,8 +266,8 @@ public class ResourceUtil {
         CommandRunner cr = Globals.getDefaultHabitat().getService(CommandRunner.class);
         RestActionReporter ar = new RestActionReporter();
         final CommandInvocation commandInvocation = cr.getCommandInvocation(commandName, ar, subject);
-        if (managedJob) {
-            commandInvocation.managedJob();
+        if (progressJob) {
+            commandInvocation.progressJob();
         }
         commandInvocation.parameters(parameters).execute();
         addCommandLog(ar, commandName, parameters);

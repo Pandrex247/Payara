@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright 2026 Payara Foundation and/or its affiliates
 
 package com.sun.enterprise.admin.util;
 
@@ -60,7 +61,7 @@ public class CommandModelData extends CommandModel {
     // use a LinkedHashMap so params appears in the order they are added
     private final Map<String, CommandModel.ParamModel> params = new LinkedHashMap<String, ParamModel>();
     private final String commandName;
-    public boolean managedJob = false;
+    public boolean progressJob = false;
     public boolean dashOk = false;
 
     public CommandModelData(String name) {
@@ -105,10 +106,10 @@ public class CommandModelData extends CommandModel {
     public ExecuteOn getClusteringAttributes() {
         return null;
     }
-    
+
     @Override
-    public boolean isManagedJob() {
-        return this.managedJob;
+    public boolean isProgressJob() {
+        return this.progressJob;
     }
 
     /**

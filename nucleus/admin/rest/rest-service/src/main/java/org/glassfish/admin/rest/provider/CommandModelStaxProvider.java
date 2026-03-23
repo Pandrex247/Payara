@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  *
- * Portions Copyright [2017-2021] Payara Foundation and/or affiliates.
+ * Portions Copyright 2017-2026 Payara Foundation and/or its affiliates.
  */
 package org.glassfish.admin.rest.provider;
 
@@ -76,8 +76,8 @@ public class CommandModelStaxProvider extends AbstractStaxProvider<CommandModel>
         if (proxy.unknownOptionsAreOperands()) {
             wr.writeAttribute("@unknown-options-are-operands", true);
         }
-        if (proxy.isManagedJob()) {
-            wr.writeAttribute("@managed-job", true);
+        if (proxy.isProgressJob()) {
+            wr.writeAttribute("@progress-job", true);
         }
         String usage = proxy.getUsageText();
         if (StringUtils.ok(usage)) {

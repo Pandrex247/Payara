@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2018-2024] Payara Foundation and/or affiliates
+// Portions Copyright 2018-2026 Payara Foundation and/or its affiliates
 
 package com.sun.enterprise.admin.cli;
 
@@ -222,7 +222,6 @@ public abstract class CLICommand implements PostConstruct {
         ProgramOptions po = serviceLocator.getService(ProgramOptions.class);
         CLICommand cmd = serviceLocator.getService(CLICommand.class, name);
         if (cmd != null) {
-            po.removeDetach();
             return cmd;
         }
         // nope, must be a remote command
@@ -238,7 +237,6 @@ public abstract class CLICommand implements PostConstruct {
         ProgramOptions po = cLIContainer.getProgramOptions();
         CLICommand cmd = cLIContainer.getLocalCommand(name);
         if (cmd != null) {
-            po.removeDetach();
             return cmd;
         }
         // nope, must be a remote command

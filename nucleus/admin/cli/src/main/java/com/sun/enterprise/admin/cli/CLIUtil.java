@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2018-2019] Payara Foundation and/or affiliates
+// Portions Copyright 2018-2026 Payara Foundation and/or its affiliates
 
 package com.sun.enterprise.admin.cli;
 
@@ -255,7 +255,6 @@ public class CLIUtil {
         /*
          * Now get the list of remote commands.
          */
-        po.removeDetach();
         RemoteCLICommand cmd = new RemoteCLICommand("list-commands", po, env);
         ActionReport report = cmd.executeAndReturnActionReport("list-commands");
         List<MessagePart> children = report.getTopMessagePart().getChildren();

@@ -37,10 +37,10 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright 2026 Payara Foundation and/or its affiliates
 package com.sun.enterprise.util;
 
 import java.lang.annotation.Annotation;
-import org.glassfish.api.admin.ManagedJob;
 
 /**  Place for handy annotation utils.
  *
@@ -60,7 +60,7 @@ public class AnnotationUtil {
         }
         //Search for annotated annotations
         for (Annotation anno : type.getAnnotations()) {
-            if (anno.annotationType().isAnnotationPresent(ManagedJob.class)) {
+            if (anno.annotationType().isAnnotationPresent(annotationClass)) {
                 return true;
             }
         }

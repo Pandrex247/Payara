@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright 2026 Payara Foundation and/or its affiliates
 package com.sun.enterprise.admin.remote;
 
 import java.io.Serializable;
@@ -77,11 +78,7 @@ public class AdminCommandStateImpl implements AdminCommandState, Serializable {
     @Override
     public void complete(ActionReport actionReport) {
         this.actionReport = actionReport;
-        if (getState().equals(State.REVERTING)) {
-            setState(State.REVERTED);
-        } else {
-            setState(State.COMPLETED);
-        }
+        setState(State.COMPLETED);
     }
 
     @Override

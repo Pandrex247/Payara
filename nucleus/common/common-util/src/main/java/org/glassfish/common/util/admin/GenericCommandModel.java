@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright 2026 Payara Foundation and/or its affiliates
 
 package org.glassfish.common.util.admin;
 
@@ -65,7 +66,7 @@ public class GenericCommandModel extends CommandModel {
     final ExecuteOn cluster;
     final I18n i18n;
     final LocalStringManager localStrings;
-    final boolean managedJob;
+    final boolean progressJob;
 
     /**
      * GenericCommandModel constructor.
@@ -91,14 +92,14 @@ public class GenericCommandModel extends CommandModel {
                                LocalStringManager localStrings,
                                DomDocument document,
                                String commandName,
-                               boolean managedJob,
+                               boolean progressJob,
                                Class<?>... extraTypes) {
         this.commandName = commandName;
         this.commandClass = targetType;
         this.cluster = cluster;
         this.i18n = i18n;
         this.localStrings = localStrings;
-        this.managedJob = managedJob;
+        this.progressJob = progressJob;
 
         if (useAnnotations && targetType!=null &&
 		ConfigBeanProxy.class.isAssignableFrom(targetType)) {
@@ -185,8 +186,8 @@ public class GenericCommandModel extends CommandModel {
     }
 
     @Override
-    public boolean isManagedJob() {
-        return managedJob;
+    public boolean isProgressJob() {
+        return progressJob;
     }
 
     private final class ParamBasedModel extends ParamModel {

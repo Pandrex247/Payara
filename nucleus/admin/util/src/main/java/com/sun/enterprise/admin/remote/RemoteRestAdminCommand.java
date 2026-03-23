@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  *
- * Portions Copyright [2017-2023] Payara Foundation and/or affiliates
+ * Portions Copyright 2017-2026 Payara Foundation and/or its affiliates
  */
 
 package com.sun.enterprise.admin.remote;
@@ -473,7 +473,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
             obj = obj.getJsonObject("command");
             CachedCommandModel cm = new CachedCommandModel(obj.getString("@name"), etag);
             cm.dashOk = parseBoolean(obj,"@unknown-options-are-operands", false);
-            cm.managedJob = parseBoolean(obj,"@managed-job", false);
+            cm.progressJob = parseBoolean(obj,"@progress-job", false);
             cm.setUsage(obj.getString("usage", null));
             JsonValue optns = obj.get("option");
             if (!JsonValue.NULL.equals(optns) && optns != null) {
@@ -561,7 +561,7 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
     }
 
     protected boolean useSse() throws CommandException {
-        return getCommandModel().isManagedJob();
+        return getCommandModel().isProgressJob();
     }
 
     /**
@@ -839,24 +839,13 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
                                     }
                                     switch (acs.getState()) {
                                         case COMPLETED:
-                                        case RECORDED:
-                                        case REVERTED:
                                             if (acs.getActionReport() != null) {
                                                 setActionReport(acs.getActionReport());
-                                            }   closeSse = true;
+                                            }
+                                            closeSse = true;
                                             if (!acs.isOutboundPayloadEmpty()) {
                                                 logger.log(Level.FINEST, "Romote command holds data. Must load it");
-                                                downloadPayloadFromManaged(instanceId);
-                                            }   break;
-                                        case FAILED_RETRYABLE:
-                                            logger.log(Level.INFO, STRINGS.get("remotecommand.failedretryable", acs.getId()));
-                                            if (acs.getActionReport() != null) {
-                                                setActionReport(acs.getActionReport());
-                                            }   closeSse = true;
-                                            break;
-                                        case RUNNING_RETRYABLE:
-                                            logger.log(Level.FINEST, "Command stores checkpoint and is retryable");
-                                            retryableCommand = true;
+                                            }
                                             break;
                                         default:
                                             break;
@@ -929,22 +918,6 @@ public class RemoteRestAdminCommand extends AdminCommandEventBrokerImpl<GfSseInb
         }
         if (actionReport.getActionExitCode() == ExitCode.FAILURE) {
             throw new CommandException(STRINGS.getString("remote.failure.prefix", "remote failure:") + " " + this.output);
-        }
-    }
-
-    private void downloadPayloadFromManaged(String jobId) {
-        if (jobId == null) {
-            return;
-        }
-        try {
-            RemoteRestAdminCommand command = new RemoteRestAdminCommand("_get-payload",
-                    this.host, this.port, this.secure, this.user, this.password,
-                    this.logger, this.scope, this.authToken, this.prohibitDirectoryUploads,notify);
-            ParameterMap params = new ParameterMap();
-            params.add("DEFAULT", jobId);
-            command.executeCommand(params);
-        } catch (CommandException ex) {
-            logger.log(Level.WARNING, STRINGS.getString("remote.sse.canNotGetPayload", "Cannot retrieve payload. {0}"), ex.getMessage());
         }
     }
 

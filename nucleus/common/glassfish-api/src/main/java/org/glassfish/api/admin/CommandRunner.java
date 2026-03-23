@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright 2026 Payara Foundation and/or its affiliates
 
 package org.glassfish.api.admin;
 
@@ -228,12 +229,9 @@ public interface CommandRunner {
          * @return 
          */
         public CommandInvocation progressStatusChild(ProgressStatus ps);
-        
-        /**
-         * Set the AdminCommand to be a managed job
-         */
-        public CommandInvocation managedJob(); 
-        
+
+        public CommandInvocation progressJob();
+
         /** Current report. After command execution report can be changed by command
          */
         public ActionReport report();

@@ -371,7 +371,7 @@ public class CommandResource {
         }
         commandInvocation
                 .outbound(new RestPayloadImpl.Outbound(false))
-                .managedJob()
+                .progressJob()
                 .parameters(params);
         ResponseBuilder rb = Response.status(HttpURLConnection.HTTP_OK);
         if ( isSingleInstanceCommand(model)) {

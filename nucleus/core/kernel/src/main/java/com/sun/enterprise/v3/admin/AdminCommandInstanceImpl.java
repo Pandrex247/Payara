@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2022] [Payara Foundation and/or its affiliates]
+// Portions Copyright 2022-2026 Payara Foundation and/or its affiliates
 package com.sun.enterprise.v3.admin;
 
 import com.sun.enterprise.admin.event.AdminCommandEventBrokerImpl;
@@ -83,29 +83,22 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
 
     private final String scope;
 
-    private boolean isManagedJob;
-
-    private File jobsFile;
-
     private long completionDate;
     
     private ParameterMap parameters;
-    
-    private boolean failToRetryable;
 
-    protected AdminCommandInstanceImpl(String id, String name, String commandScope, Subject sub, boolean managedJob, ParameterMap parameters) {
+    protected AdminCommandInstanceImpl(String id, String name, String commandScope, Subject sub, ParameterMap parameters) {
         super(id);
         this.broker = new AdminCommandEventBrokerImpl();
         this.executionDate = new Date().getTime();
         this.commandName = name;
         this.scope= commandScope;
-        isManagedJob = managedJob;
         this.subjectUsernames = SubjectUtil.getUsernamesFromSubject(sub);
         this.parameters = parameters;
     }
 
-    protected AdminCommandInstanceImpl(String name, String scope, Subject sub, boolean managedJob, ParameterMap parameters) {
-        this(null, name, scope, sub, managedJob, parameters);
+    protected AdminCommandInstanceImpl(String name, String scope, Subject sub, ParameterMap parameters) {
+        this(null, name, scope, sub, parameters);
     }
     
     @Override
@@ -126,16 +119,6 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
     
     public void setEventBroker(AdminCommandEventBroker eventBroker) {
         this.broker = eventBroker;
-    }
-
-    @Override
-    public File getJobsFile() {
-        return jobsFile;
-    }
-
-    @Override
-    public void setJobsFile(File jobsFile) {
-        this.jobsFile = jobsFile;
     }
     
     @Override
@@ -171,11 +154,6 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
         this.completionDate = System.currentTimeMillis();
         setState(State.COMPLETED);
     }
-    
-    @Override
-    public void revert() {
-        setState(State.REVERTING);
-    }
 
     @Override
     public long getCommandExecutionDate ()  {
@@ -196,11 +174,6 @@ public class AdminCommandInstanceImpl extends AdminCommandStateImpl implements J
     @Override
     public long getCommandCompletionDate() {
          return completionDate;
-    }
-    
-    @Override
-    public void setFailToRetryable(boolean value) {
-        this.failToRetryable = value;
     }
 
     @Override

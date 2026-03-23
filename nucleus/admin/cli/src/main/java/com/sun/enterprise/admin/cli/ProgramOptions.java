@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2018-2019] [Payara Foundation and/or affiliates]
+// Portions Copyright 2018-2026 Payara Foundation and/or its affiliates
 
 package com.sun.enterprise.admin.cli;
 
@@ -86,7 +86,6 @@ public class ProgramOptions {
     public static final String INTERACTIVE      = "interactive";
     public static final String SECURE           = "secure";
     public static final String HELP             = "help";
-    public static final String DETACH           = "detach";
     public static final String NOTIFY           = "notify";
     public static final String EXTRATERSE       = "extraterse";
     public static final String AUTHTOKEN        = AuthTokenManager.AUTH_TOKEN_OPTION_NAME;
@@ -129,7 +128,6 @@ public class ProgramOptions {
         addMetaOption(opts, HELP, '?', Boolean.class, false, "false");
         addMetaOption(opts, AUXINPUT, '\0', String.class, false, null);
         addMetaOption(opts, AUTHTOKEN, '\0', String.class, false, null);
-        addMetaOption(opts, DETACH, '\0', Boolean.class, false, "false");
         addMetaOption(opts, NOTIFY, '\0', Boolean.class, false, "false");
         addMetaOption(opts, EXTRATERSE, 'T', Boolean.class, false, "false");
         addMetaOption(opts, AUTONAME, 'a', Boolean.class, false, "false");
@@ -514,17 +512,6 @@ public class ProgramOptions {
 
         return autoName;
     }
-    
-    /**
-     * @return detach option
-     */
-    public boolean isDetachedCommand() {
-        if (options.containsKey(DETACH)) {
-            String value = options.getOne(DETACH);
-            return (ok(value)) ? Boolean.parseBoolean(value) : true;
-        }
-        return false;
-    }
 
     /**
      * @return notify option
@@ -535,12 +522,6 @@ public class ProgramOptions {
             return (ok(value)) ? Boolean.parseBoolean(value) : true;
         }
         return false;
-    }
-    
-    public void removeDetach() {
-        if (options.containsKey(DETACH)) {
-            options.remove(DETACH);
-        }
     }
 
     /**

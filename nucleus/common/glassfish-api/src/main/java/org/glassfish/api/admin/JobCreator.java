@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright 2026 Payara Foundation and/or its affiliates
 package org.glassfish.api.admin;
 
 import org.jvnet.hk2.annotations.Contract;
@@ -50,7 +51,7 @@ import javax.security.auth.Subject;
 @Contract
 public interface JobCreator {
 
-    public Job createJob(String id,String scope , String name, Subject subject, boolean isManagedJob, ParameterMap parameters);
+    public Job createJob(String id,String scope , String name, Subject subject, ParameterMap parameters);
 
 }
 

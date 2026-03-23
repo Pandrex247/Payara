@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright 2018-2022 Payara Foundation and/or affiliates
+// Portions Copyright 2018-2026 Payara Foundation and/or its affiliates
 package com.sun.enterprise.admin.cli;
 
 import com.sun.enterprise.admin.remote.reader.ProprietaryReaderFactory;
@@ -284,10 +284,7 @@ public class AdminMain {
         switch (exitCode) {
             case SUCCESS:
                 if (!po.isTerse()) {
-                    logger.fine(strings.get((po.isDetachedCommand() ?
-                                                "CommandSuccessfulStarted" :
-                                                "CommandSuccessful"),
-                                            command));
+                    logger.fine(strings.get(("CommandSuccessful"), command));
                 }
                 break;
 

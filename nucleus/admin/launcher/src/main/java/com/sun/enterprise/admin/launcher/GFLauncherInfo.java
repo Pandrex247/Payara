@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright 2016-2026 Payara Foundation
+// Portions Copyright 2016-2026 Payara Foundation and/or its affiliates
 
 package com.sun.enterprise.admin.launcher;
 
@@ -159,10 +159,6 @@ public class GFLauncherInfo {
         instanceRootDir = f;
     }
 
-    public void setDropInterruptedCommands(boolean dropInterruptedCommands) {
-        this.dropInterruptedCommands = dropInterruptedCommands;
-    }
-
     public final boolean isDomain() {
         return type == RuntimeType.DAS;
     }
@@ -270,10 +266,6 @@ public class GFLauncherInfo {
 
     File getDomainParentDir() {
         return domainParentDir;
-    }
-
-    public boolean isDropInterruptedCommands() {
-        return dropInterruptedCommands;
     }
 
     /**
@@ -614,7 +606,6 @@ public class GFLauncherInfo {
     private File configFile; // domain.xml
     private String domainName;
     private String instanceName;
-    private boolean dropInterruptedCommands = false;
     private boolean valid = false;
     private Map<String, String> argsMap;
     private ArrayList<String> argsRaw = new ArrayList<String>();

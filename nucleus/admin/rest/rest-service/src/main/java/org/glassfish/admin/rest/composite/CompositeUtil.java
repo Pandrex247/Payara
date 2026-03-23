@@ -567,8 +567,8 @@ public class CompositeUtil {
      * @param throwOnWarning  (vs.ignore warning)
      * @return
      */
-    public ActionReporter executeCommand(Subject subject, String command, ParameterMap parameters, Status status, boolean includeFailureMessage, boolean throwOnWarning, boolean managed) {
-        RestActionReporter ar = ResourceUtil.runCommand(command, parameters, subject, managed);
+    public ActionReporter executeCommand(Subject subject, String command, ParameterMap parameters, Status status, boolean includeFailureMessage, boolean throwOnWarning, boolean progress) {
+        RestActionReporter ar = ResourceUtil.runCommand(command, parameters, subject, progress);
         ExitCode code = ar.getActionExitCode();
         if (code.equals(ExitCode.FAILURE) || (code.equals(ExitCode.WARNING) && throwOnWarning)) {
             Throwable t = ar.getFailureCause();

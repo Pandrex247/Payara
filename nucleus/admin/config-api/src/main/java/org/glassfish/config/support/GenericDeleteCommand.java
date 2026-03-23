@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2018-2021] Payara Foundation and/or affiliates
+// Portions Copyright 2018-2026 Payara Foundation and/or its affiliates
 
 package org.glassfish.config.support;
 
@@ -102,8 +102,8 @@ public class GenericDeleteCommand extends GenericCrudCommand implements AdminCom
 	    // the target type are not used for the Delete method parameters.
             model = new GenericCommandModel(targetType, false, delete.cluster(), delete.i18n(),
                     new LocalStringManagerImpl(targetType),
-                    habitat.<DomDocument>getService(DomDocument.class), commandName, 
-                    AnnotationUtil.presentTransitive(ManagedJob.class, delete.decorator()),
+                    habitat.<DomDocument>getService(DomDocument.class), commandName,
+                    AnnotationUtil.presentTransitive(Progress.class, delete.decorator()),
                     delete.resolver(), delete.decorator());
             if (LOGGER.isLoggable(level)) {
                 for (String paramName : model.getParametersNames()) {

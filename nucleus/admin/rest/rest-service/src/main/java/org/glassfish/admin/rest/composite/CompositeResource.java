@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  *
- * Portions Copyright [2017-2021] [Payara Foundation and/or its affiliates]
+ * Portions Copyright 2017-2026 Payara Foundation and/or its affiliates
  */
 package org.glassfish.admin.rest.composite;
 
@@ -67,7 +67,6 @@ import org.glassfish.admin.rest.model.RestCollectionResponseBody;
 import org.glassfish.admin.rest.model.RestModelResponseBody;
 import org.glassfish.admin.rest.model.SseResponseBody;
 import org.glassfish.admin.rest.resources.AbstractResource;
-import org.glassfish.admin.rest.utils.DetachedCommandHelper;
 import org.glassfish.admin.rest.utils.JsonFilter;
 import org.glassfish.admin.rest.utils.JsonUtil;
 import org.glassfish.admin.rest.utils.SseCommandHelper;
@@ -438,18 +437,6 @@ public abstract class CompositeResource extends AbstractResource implements Rest
         }
         return bldr.build();
     }
-    protected Response accepted(String command, ParameterMap parameters, URI childUri) {
-        return accepted(responseBody(), launchDetachedCommand(command, parameters), childUri);
-    }
-    protected URI launchDetachedCommand(String command, ParameterMap parameters) {
-        CommandRunner cr = Globals.getDefaultHabitat().getService(CommandRunner.class);
-        final RestActionReporter ar = new RestActionReporter();
-        final CommandRunner.CommandInvocation commandInvocation =
-                cr.getCommandInvocation(command, ar, getSubject()).
-                parameters(parameters);
-        final String jobId = DetachedCommandHelper.invokeAsync(commandInvocation);
-        return getUri("jobs/id/" + jobId);
-    }
 
     protected Response ok(ResponseBody rb) {
         return Response.ok(rb).build();
@@ -565,13 +552,9 @@ public abstract class CompositeResource extends AbstractResource implements Rest
                     new ThreadPoolExecutor.CallerRunsPolicy());
     }
 
-    protected Response act(final CommandInvoker invoker, boolean detached) {
-        if (detached) {
-            return accepted(invoker.getCommand(), invoker.getParams(), null);
-        } else {
-            invoker.setResult(executeWriteCommand(invoker.getCommand(), invoker.getParams()).getExtraProperties());
-            return acted(invoker.getSuccessMessage());
-        }
+    protected Response act(final CommandInvoker invoker) {
+        invoker.setResult(executeWriteCommand(invoker.getCommand(), invoker.getParams()).getExtraProperties());
+        return acted(invoker.getSuccessMessage());
     }
 
     protected Response actSse(final CommandInvoker invoker) {
@@ -594,14 +577,8 @@ public abstract class CompositeResource extends AbstractResource implements Rest
     }
 
     protected Response create(final CreateCommandInvoker invoker, boolean detached) throws Exception {
-        if (detached) {
-            final String newItemName = invoker.getNewItemName();
-            final URI newItemUri = StringUtil.notEmpty(newItemName) ? getChildItemUri(newItemName) : null;
-            return accepted(invoker.getCommand(), invoker.getParams(), newItemUri);
-        } else {
-            invoker.setResult(executeWriteCommand(invoker.getCommand(), invoker.getParams()).getExtraProperties());
-            return created(invoker.getNewItemName(), invoker.getSuccessMessage());
-        }
+        invoker.setResult(executeWriteCommand(invoker.getCommand(), invoker.getParams()).getExtraProperties());
+        return created(invoker.getNewItemName(), invoker.getSuccessMessage());
     }
 
     protected Response createSse(final CreateCommandInvoker invoker) throws Exception {

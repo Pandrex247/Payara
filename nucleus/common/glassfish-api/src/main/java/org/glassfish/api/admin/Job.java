@@ -37,6 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright 2026 Payara Foundation and/or its affiliates
 package org.glassfish.api.admin;
 
 import org.glassfish.api.ActionReport;
@@ -61,11 +62,6 @@ public interface Job extends AdminCommandState, Serializable {
     
     public void complete(ActionReport report, Payload.Outbound outbound);
     
-    /** Change state to reverting. Command Can use it to send info about reverting
-     * to Job management infrastructure.
-     */
-    public void revert();
-    
     public AdminCommandEventBroker getEventBroker();
 
     public List<String> getSubjectUsernames();
@@ -76,18 +72,9 @@ public interface Job extends AdminCommandState, Serializable {
 
     public Payload.Outbound getPayload();
 
-    public File getJobsFile() ;
-
-    public void setJobsFile(File jobsFile) ;
-
     public String getScope();
 
     public long getCommandCompletionDate();
-    
-    /** Job will be considered as retryable after fail. It means that checkpoint
-     * will not be deleted and revert or continue can be decided by the user.
-     */
-    public void setFailToRetryable(boolean value);
     
     public ParameterMap getParameters();
     
