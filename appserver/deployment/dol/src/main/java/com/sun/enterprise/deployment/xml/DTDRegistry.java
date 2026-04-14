@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2018] Payara Foundation and/or affiliates
+// Portions Copyright 2018-2026 Payara Foundation and/or its affiliates
 
 // START OF IASRI 4661135
 
@@ -280,6 +280,18 @@ public final class DTDRegistry {
     
     public static final String PAYARA_WEBAPP_4_DTD_PUBLIC_ID = "-//Payara.fish//DTD Payara Server 4 Servlet 3.0//EN";
     public static final String PAYARA_WEBAPP_4_DTD_SYSTEM_ID = "https://docs.payara.fish/schemas/payara-web-app_4.dtd";
+
+    public static final String PAYARA_WEBAPP_610_DTD_PUBLIC_ID = "-//Payara.fish//DTD Payara Server 7 Servlet 6.1//EN";
+    public static final String PAYARA_WEBAPP_610_DTD_SYSTEM_ID = "https://docs.payara.fish/schemas/payara-web-app_6_1-0.dtd";
+
+    public static final String PAYARA_APPCLIENT_110_DTD_PUBLIC_ID = "-//Payara.fish//DTD Payara Application Server 7 Jakarta EE Application Client 11//EN";
+    public static final String PAYARA_APPCLIENT_110_DTD_SYSTEM_ID = "https://docs.payara.fish/schemas/payara-application-client_11-0.dtd";
+
+    public static final String PAYARA_APPLICATION_110_DTD_PUBLIC_ID = "-//Payara.fish//DTD Payara Application Server 7 Jakarta EE Application 11//EN";
+    public static final String PAYARA_APPLICATION_110_DTD_SYSTEM_ID = "https://docs.payara.fish/schemas/payara-application_11-0.dtd";
+
+    public static final String PAYARA_EJBJAR_400_DTD_PUBLIC_ID = "-//Payara.fish//DTD Payara Application Server 7 EJB 4.0//EN";
+    public static final String PAYARA_EJBJAR_400_DTD_SYSTEM_ID = "https://docs.payara.fish/schemas/payara-ejb-jar_4_0-0.dtd";
     
 }
 
