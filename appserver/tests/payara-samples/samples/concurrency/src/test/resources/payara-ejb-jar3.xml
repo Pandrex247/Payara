@@ -1,0 +1,13 @@
+<!DOCTYPE payara-ejb-jar PUBLIC "-//Payara.fish// DTD Payara Application Server 7 EJB 4.0//EN" "https://docs.payara.fish/schemas/payara-ejb-jar_4_0-0.dtd">
+<payara-ejb-jar>
+    <enterprise-beans>
+        <ejb>
+            <ejb-name>ManagedScheduledExecutorEJBFromConfig</ejb-name>
+            <managed-scheduled-executor>
+                <name>java:app/jakartaee/CustomManagedScheduledExecutorE</name>
+                <max-async>5</max-async>
+                <hung-task-threshold>120000</hung-task-threshold>
+            </managed-scheduled-executor>
+        </ejb>
+    </enterprise-beans>
+</payara-ejb-jar>

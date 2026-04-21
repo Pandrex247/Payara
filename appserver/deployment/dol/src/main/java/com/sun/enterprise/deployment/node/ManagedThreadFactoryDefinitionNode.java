@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) [2022-2024] Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022-2026 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -40,37 +40,37 @@
 package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.ManagedThreadFactoryDefinitionDescriptor;
-import com.sun.enterprise.deployment.xml.TagNames;
+import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import org.w3c.dom.Node;
 
 import java.util.Map;
 
 public class ManagedThreadFactoryDefinitionNode extends DeploymentDescriptorNode<ManagedThreadFactoryDefinitionDescriptor> {
 
-    public final static XMLElement tag = new XMLElement(TagNames.MANAGED_THREAD_FACTORY);
+    public final static XMLElement tag = new XMLElement(RuntimeTagNames.MANAGED_THREAD_FACTORY);
 
     ManagedThreadFactoryDefinitionDescriptor descriptor = null;
 
     public ManagedThreadFactoryDefinitionNode() {
-        registerElementHandler(new XMLElement(TagNames.RESOURCE_PROPERTY),
+        registerElementHandler(new XMLElement(RuntimeTagNames.RESOURCE_PROPERTY),
                 ResourcePropertyNode.class, "addManagedThreadFactoryPropertyDescriptor");
     }
 
     protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
-        table.put(TagNames.MANAGED_THREAD_FACTORY_NAME, "setName");
-        table.put(TagNames.MANAGED_THREAD_FACTORY_CONTEXT_SERVICE_REF, "setContext");
-        table.put(TagNames.MANAGED_THREAD_FACTORY_PRIORITY, "setPriority");
-        table.put(TagNames.MANAGED_THREAD_FACTORY_QUALIFIER, "addQualifier");
+        table.put(RuntimeTagNames.MANAGED_THREAD_FACTORY_NAME, "setName");
+        table.put(RuntimeTagNames.MANAGED_THREAD_FACTORY_CONTEXT_SERVICE_REF, "setContext");
+        table.put(RuntimeTagNames.MANAGED_THREAD_FACTORY_PRIORITY, "setPriority");
+        table.put(RuntimeTagNames.MANAGED_THREAD_FACTORY_QUALIFIER, "addQualifier");
         return table;
     }
 
     public Node writeDescriptor(Node parent, String nodeName,
                                 ManagedThreadFactoryDefinitionDescriptor managedThreadFactoryDefinitionDescriptor) {
         Node node = appendChild(parent, nodeName);
-        appendTextChild(node, TagNames.MANAGED_EXECUTOR_NAME, managedThreadFactoryDefinitionDescriptor.getName());
-        appendTextChild(node, TagNames.MANAGED_THREAD_FACTORY_CONTEXT_SERVICE_REF, managedThreadFactoryDefinitionDescriptor.getContext());
-        appendTextChild(node, TagNames.MANAGED_THREAD_FACTORY_PRIORITY, String.valueOf(managedThreadFactoryDefinitionDescriptor.getPriority()));
+        appendTextChild(node, RuntimeTagNames.MANAGED_EXECUTOR_NAME, managedThreadFactoryDefinitionDescriptor.getName());
+        appendTextChild(node, RuntimeTagNames.MANAGED_THREAD_FACTORY_CONTEXT_SERVICE_REF, managedThreadFactoryDefinitionDescriptor.getContext());
+        appendTextChild(node, RuntimeTagNames.MANAGED_THREAD_FACTORY_PRIORITY, String.valueOf(managedThreadFactoryDefinitionDescriptor.getPriority()));
         ResourcePropertyNode propertyNode = new ResourcePropertyNode();
         propertyNode.writeDescriptor(node, managedThreadFactoryDefinitionDescriptor);
         return node;

@@ -68,6 +68,8 @@ public interface RuntimeTagNames extends TagNames {
     public final static String PAYARA_JAXRS_ROLES_ALLOWED_ENABLED = "jaxrs-roles-allowed-enabled";
     public final static String PAYARA_APPLICATION_RUNTIME_TAG = "payara-application";
     public final static String PAYARA_WEB_RUNTIME_TAG = "payara-web-app";
+    String PAYARA_EJB_RUNTIME_TAG = "payara-ejb-jar";
+    String PAYARA_APPCLIENT_RUNTIME_TAG = "payara-application-client";
 
     // The name of the deployment context property used to disable implicit bean discovery for a
     // particular application deployment.
@@ -77,6 +79,36 @@ public interface RuntimeTagNames extends TagNames {
     public final static String PAYARA_CLUSTERED_LOCK_TYPE = "clustered-lock-type";
     public final static String PAYARA_CLUSTERED_POSTCONSTRUCT_ON_ATTACH = "clustered-attach-postconstruct";
     public final static String PAYARA_CLUSTERED_PREDESTROY_ON_DETTACH = "clustered-detach-predestroy";
+
+    String MANAGED_EXECUTOR = "managed-executor";
+    String MANAGED_EXECUTOR_NAME = "name";
+    String MANAGED_EXECUTOR_MAX_ASYNC = "max-async";
+    String MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD = "hung-task-threshold";
+    String MANAGED_EXECUTOR_CONTEXT_SERVICE_REF = "context-service-ref";
+    String MANAGED_EXECUTOR_QUALIFIER = "qualifier";
+    String MANAGED_EXECUTOR_VIRTUAL = "virtual";
+
+    String MANAGED_THREAD_FACTORY = "managed-thread-factory";
+    String MANAGED_THREAD_FACTORY_NAME = "name";
+    String MANAGED_THREAD_FACTORY_CONTEXT_SERVICE_REF = "context-service-ref";
+    String MANAGED_THREAD_FACTORY_PRIORITY = "priority";
+    String MANAGED_THREAD_FACTORY_QUALIFIER = "qualifier";
+    String MANAGED_THREAD_FACTORY_EXECUTOR_VIRTUAL = "virtual";
+
+    String MANAGED_SCHEDULED_EXECUTOR = "managed-scheduled-executor";
+    String MANAGED_SCHEDULED_EXECUTOR_NAME = "name";
+    String MANAGED_SCHEDULED_EXECUTOR_CONTEXT_SERVICE_REF = "context-service-ref";
+    String MANAGED_SCHEDULED_EXECUTOR_MAX_ASYNC = "max-async";
+    String MANAGED_SCHEDULED_EXECUTOR_HUNG_TASK_THRESHOLD = "hung-task-threshold";
+    String MANAGED_SCHEDULED_EXECUTOR_QUALIFIER = "qualifier";
+    String MANAGED_SCHEDULED_EXECUTOR_EXECUTOR_VIRTUAL = "virtual";
+
+    String CONTEXT_SERVICE = "context-service";
+    String CONTEXT_SERVICE_NAME = "name";
+    String CONTEXT_SERVICE_CLEARED = "cleared";
+    String CONTEXT_SERVICE_PROPAGATED = "propagated";
+    String CONTEXT_SERVICE_UNCHANGED = "unchanged";
+    String CONTEXT_SERVICE_QUALIFIER = "qualifier";
 
     String AS_CONTEXT = "as-context";
     String AUTH_METHOD = "auth-method";

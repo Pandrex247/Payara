@@ -47,14 +47,14 @@
 
   It must include a DOCTYPE of the following form:
 
-  <!DOCTYPE payara-ejb-jar PUBLIC "-//Payara.fish//DTD Payara Application Server 7 EJB 4.0//EN" "https://raw.githubusercontent.com/payara/Payara/main/appserver/deployment/dtds/src/main/resources/glassfish/lib/dtds/payara-ejb-jar_4_0-0.dtd">
+  <!DOCTYPE payara-ejb-jar PUBLIC "-//Payara.fish//DTD Payara Application Server 7 EJB 4.0//EN" "https://docs.payara.fish/schemas/payara-ejb-jar_4_0-0.dtd">
 
 -->
 
 <!--
 This is the root element of the ejb module descriptor document.
 -->
-<!ELEMENT glassfish-ejb-jar (security-role-mapping*, enterprise-beans, compatibility?, disable-nonportable-jndi-names?, keep-state?, version-identifier?, property*) >
+<!ELEMENT payara-ejb-jar (security-role-mapping*, enterprise-beans, compatibility?, disable-nonportable-jndi-names?, keep-state?, version-identifier?, property*) >
 
 <!-- 
 System unique object id. Automatically generated and updated at deployment/redeployment 
@@ -64,7 +64,7 @@ System unique object id. Automatically generated and updated at deployment/redep
 <!--
 This is the root element describing all the runtime of an ejb-jar in the application.
 -->
-<!ELEMENT enterprise-beans (name?, unique-id?, ejb*, pm-descriptors?, cmp-resource?,
+<!ELEMENT enterprise-beans (name?, unique-id?, ejb*,
 	message-destination*, webservice-description*, property*, webservice-default-login-config?)>
 
 <!--
@@ -81,7 +81,7 @@ Additional properties applicable to a stateful session bean:
     bean-cache, webservice-endpoint, checkpointed-methods?, checkpoint-at-end-of-method?
 
 Additional properties applicable to an entity bean:
-   is-read-only-bean?, refresh-period-in-seconds?, cmp?, commit-option?, bean-cache?, bean-pool?, flush-at-end-of-method?
+   is-read-only-bean?, refresh-period-in-seconds?, commit-option?, bean-cache?, bean-pool?, flush-at-end-of-method?
 
 Additional properties applicable to a message-driven bean:
    mdb-resource-adapter?, mdb-connection-factory?, jms-durable-subscription-name?, 
@@ -90,10 +90,10 @@ Additional properties applicable to a message-driven bean:
 -->
 
 <!ELEMENT ejb (ejb-name, jndi-name?, ejb-ref*, resource-ref*, resource-env-ref*, service-ref*, message-destination-ref*, pass-by-reference?, 
-               cmp?, principal?, mdb-connection-factory?, jms-durable-subscription-name?, 
+               principal?, mdb-connection-factory?, jms-durable-subscription-name?,
                jms-max-messages-load?, ior-security-config?, is-read-only-bean?, clustered-bean?, clustered-key-name?, clustered-lock-type?, clustered-attach-postconstruct?, clustered-detach-predestroy?,
                refresh-period-in-seconds?, commit-option?, cmt-timeout-in-seconds?, use-thread-pool-id?, gen-classes?, 
-               bean-pool?, bean-cache?, mdb-resource-adapter?, webservice-endpoint*, flush-at-end-of-method?, checkpointed-methods?, checkpoint-at-end-of-method?, per-request-load-balancing?)>
+               bean-pool?, bean-cache?, mdb-resource-adapter?, webservice-endpoint*, flush-at-end-of-method?, checkpoint-at-end-of-method?, per-request-load-balancing?, managed-executor?, managed-scheduled-executor?, managed-thread-factory?, context-service?)>
 
 <!-- 
 This attribute is only applicable for stateful session bean 
@@ -152,6 +152,32 @@ bean.  If set to false or not set, per-request load balancing is not enabled.
 -->
 <!ELEMENT per-request-load-balancing (#PCDATA)>
 
+<!ELEMENT managed-executor (name, context-service-ref?, qualifier?, max-async?, hung-task-threshold?, maximum-pool-size?)>
+
+<!ELEMENT context-service-ref (#PCDATA)>
+
+<!ELEMENT qualifier (#PCDATA)>
+
+<!ELEMENT max-async (#PCDATA)>
+
+<!ELEMENT hung-task-threshold (#PCDATA)>
+
+<!ELEMENT maximum-pool-size (#PCDATA)>
+
+<!ELEMENT managed-scheduled-executor (name, context-service-ref?, qualifier?, max-async?, hung-task-threshold?)>
+
+<!ELEMENT managed-thread-factory (name, context-service-ref?, qualifier?, priority?)>
+
+<!ELEMENT priority (#PCDATA)>
+
+<!ELEMENT context-service (name, qualifier?, cleared?, propagated?, unchanged?)>
+
+<!ELEMENT cleared (#PCDATA)>
+
+<!ELEMENT propagated (#PCDATA)>
+
+<!ELEMENT unchanged (#PCDATA)>
+
 <!--
 This is the root element which binds an ejb reference to a jndi name.
 It is used for both ejb remote reference and ejb local reference.
@@ -164,38 +190,6 @@ The ejb ref name locates the name of the ejb reference in the application.
 <!ELEMENT ejb-ref-name (#PCDATA)>
 
 <!--
-This element describes runtime information for a CMP EntityBean object for 
-EJB1.1 and EJB2.0 beans.  
--->
-<!ELEMENT cmp (mapping-properties?, is-one-one-cmp?, one-one-finders?, prefetch-disabled?)>
-
-<!--
-This contains the location of the persistence vendor specific O/R mapping file
--->
-<!ELEMENT mapping-properties (#PCDATA)>
-
-<!--
-This root element contains the finders for CMP 1.1.
--->
-<!ELEMENT one-one-finders (finder+ )>
-
-<!--
-This element allows to selectively disable relationship prefetching for finders of a bean.
-Used in: cmp
--->
-<!ELEMENT prefetch-disabled (query-method+)>
-
-<!--
-Used in: prefetch-disabled
--->
-<!ELEMENT query-method (method-name, method-params)>
-
-<!--
-This root element contains the finder for CMP 1.1 with a method-name and query parameters
--->
-<!ELEMENT finder (method-name, query-params?, query-filter?, query-variables?,  query-ordering?)>
-
-<!--
 The method-name element contains a name of an enterprise bean method
 or the asterisk (*) character. The asterisk is used when the element
 denotes all the methods of an enterprise bean's component and home
@@ -204,55 +198,6 @@ interfaces.
 Used in: method, finder, query-method, java-method
 -->
 <!ELEMENT method-name (#PCDATA)>
-
-
-<!--
-This contains the query parameters for CMP 1.1 finder
--->
-<!ELEMENT query-params (#PCDATA)>
-
-<!--
-This optional element contains the query filter for CMP 1.1 finder
--->
-<!ELEMENT query-filter (#PCDATA)>
-
-<!--
-This optional element contains variables in query expression for CMP 1.1 finder
--->
-<!ELEMENT query-variables (#PCDATA)>
-
-<!--
-This optional element contains the ordering specification for CMP 1.1 finder.
--->
-
-<!ELEMENT query-ordering (#PCDATA)>
-
-<!--
-This element identifies the database and the policy for processing CMP beans
-storage. The jndi-name element identifies either the persistence-manager-
-factory-resource or the jdbc-resource as defined in the server configuration.
--->
-<!ELEMENT cmp-resource (jndi-name, default-resource-principal?, property*,
-        create-tables-at-deploy?, drop-tables-at-undeploy?,
-        database-vendor-name?, schema-generator-properties?)>
-
-<!--
-This element contains the override properties for the schema generation 
-from CMP beans in this module.
--->
-<!ELEMENT schema-generator-properties (property*) >
-
-<!--
-This element specifies whether automatic creation of tables for the CMP beans 
-is done at module deployment. Acceptable values are true or false
--->
-<!ELEMENT create-tables-at-deploy ( #PCDATA )>
-
-<!--
-This element specifies whether automatic dropping of tables for the CMP beans 
-is done at module undeployment. Acceptabel values are true of false
--->
-<!ELEMENT drop-tables-at-undeploy ( #PCDATA )>
 
 <!--
 This element specifies the database vendor name for ddl files generated at
@@ -378,7 +323,7 @@ Used in: ejb
 bean-pool is a root element containing the bean pool properties. Used
 for stateless session bean, entity bean, and message-driven bean pools.
 -->
-<!ELEMENT bean-pool (steady-pool-size?, resize-quantity?, max-pool-size?, pool-idle-timeout-in-seconds?, max-wait-time-in-millis?)>
+<!ELEMENT bean-pool (steady-pool-size?, resize-quantity?, max-pool-size?, pool-idle-timeout-in-seconds?)>
 
 <!--
 steady-pool-size specified the initial and minimum number of beans that must be maintained in the pool. 
@@ -579,51 +524,6 @@ named element at glassfish-application.xml, it can apply to all the enclosed
 ejb modules. Allowed values are true and false. Default will be false.
  -->
 <!ELEMENT pass-by-reference (#PCDATA)>
-
-<!--
-PM descriptors contain one or more pm descriptors, but only one of them must
-be in use at any given time. If not specified, the Sun CMP is used.
--->
-<!ELEMENT pm-descriptors ( pm-descriptor+, pm-inuse)>
-
-<!--
-pm-descriptor describes the pluggable vendor implementation for the CMP 
-support of the CMP entity beans in this module.
--->
-<!ELEMENT pm-descriptor ( pm-identifier, pm-version, pm-config?, pm-class-generator?, pm-mapping-factory?)>
-
-<!--
-pm-identifier element identifies the vendor who provides the CMP implementation
--->
-<!ELEMENT pm-identifier (#PCDATA)>
-
-<!--
-pm-version further specifies which version of PM vendor product to be used
--->
-<!ELEMENT pm-version (#PCDATA)>
-
-<!--
-pm-config specifies the vendor specific config file to be used
--->
-<!ELEMENT pm-config (#PCDATA)>
-
-<!--
-pm-class-generator specifies the vendor specific class generator to be used
-at the module deploymant time. This is the name of the class specific to this 
-vendor.
--->
-<!ELEMENT pm-class-generator (#PCDATA)>
-
-<!--
-pm-mapping-factory specifies the vendor specific mapping factory
-This is the name of the class specific to a vendor.
--->
-<!ELEMENT pm-mapping-factory (#PCDATA)>
-
-<!--
-pm-inuse specifies which CMP vendor is used.
--->
-<!ELEMENT pm-inuse (pm-identifier, pm-version)>
 
 
 <!--

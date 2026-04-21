@@ -37,7 +37,7 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright [2014-2022] [Payara Foundation and/or its affiliates]
+// Portions Copyright 2014-2026 Payara Foundation and/or its affiliates
 package org.glassfish.web.deployment.node;
 
 import com.sun.enterprise.deployment.*;
@@ -46,6 +46,7 @@ import com.sun.enterprise.deployment.types.EjbReference;
 import com.sun.enterprise.deployment.util.DOLUtils;
 import com.sun.enterprise.deployment.web.LoginConfiguration;
 import com.sun.enterprise.deployment.web.SessionConfig;
+import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
 import com.sun.enterprise.deployment.xml.WebServicesTagNames;
 import org.glassfish.web.deployment.descriptor.*;
@@ -125,10 +126,10 @@ public abstract class WebCommonNode<T extends WebBundleDescriptorImpl> extends A
         registerElementHandler(new XMLElement(TagNames.JMS_DESTINATION), JMSDestinationDefinitionNode.class, "addResourceDescriptor");
         registerElementHandler(new XMLElement(TagNames.MAIL_SESSION), MailSessionNode.class, "addResourceDescriptor");
         registerElementHandler(new XMLElement(TagNames.ADMINISTERED_OBJECT), AdministeredObjectDefinitionNode.class, "addResourceDescriptor");
-        registerElementHandler(new XMLElement(TagNames.MANAGED_EXECUTOR), ManagedExecutorDefinitionNode.class, "addResourceDescriptor");
-        registerElementHandler(new XMLElement(TagNames.MANAGED_THREAD_FACTORY), ManagedThreadFactoryDefinitionNode.class, "addResourceDescriptor");
-        registerElementHandler(new XMLElement(TagNames.MANAGED_SCHEDULED_EXECUTOR), ManagedScheduledExecutorDefinitionNode.class, "addResourceDescriptor");
-        registerElementHandler(new XMLElement(TagNames.CONTEXT_SERVICE), ContextServiceDefinitionNode.class, "addResourceDescriptor");
+        registerElementHandler(new XMLElement(RuntimeTagNames.MANAGED_EXECUTOR), ManagedExecutorDefinitionNode.class, "addResourceDescriptor");
+        registerElementHandler(new XMLElement(RuntimeTagNames.MANAGED_THREAD_FACTORY), ManagedThreadFactoryDefinitionNode.class, "addResourceDescriptor");
+        registerElementHandler(new XMLElement(RuntimeTagNames.MANAGED_SCHEDULED_EXECUTOR), ManagedScheduledExecutorDefinitionNode.class, "addResourceDescriptor");
+        registerElementHandler(new XMLElement(RuntimeTagNames.CONTEXT_SERVICE), ContextServiceDefinitionNode.class, "addResourceDescriptor");
     }
     
     /**

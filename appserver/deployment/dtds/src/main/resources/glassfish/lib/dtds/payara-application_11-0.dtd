@@ -47,14 +47,14 @@
 
   It must include a DOCTYPE of the following form:
 
-  <!DOCTYPE payara-application PUBLIC "-//Payara.fish//DTD Payara Application Server 7 Jakarta EE Application 11//EN" "https://raw.githubusercontent.com/payara/Payara/main/appserver/deployment/dtds/src/main/resources/glassfish/lib/dtds/payara-application_11-0.dtd">
+  <!DOCTYPE payara-application PUBLIC "-//Payara.fish//DTD Payara Application Server 7 Jakarta EE Application 11//EN" "https://docs.payara.fish/schemas/payara-application_11-0.dtd">
 
 -->
 
 <!--
 This is the root element of the runtime descriptor document.
 -->
-<!ELEMENT glassfish-application (web*, pass-by-reference?, unique-id?, security-role-mapping*, realm?, ejb-ref*, resource-ref*, resource-env-ref*, service-ref*, message-destination-ref*, message-destination*, archive-name?, compatibility?, keep-state?, version-identifier?, classloading-delegate?, enable-implicit-cdi?, scanning-exclude*, scanning-include*, whitelist-package*, property*) >
+<!ELEMENT payara-application (web*, pass-by-reference?, unique-id?, security-role-mapping*, realm?, ejb-ref*, resource-ref*, resource-env-ref*, service-ref*, message-destination-ref*, message-destination*, archive-name?, compatibility?, keep-state?, version-identifier?, classloading-delegate?, enable-implicit-cdi?, scanning-exclude*, scanning-include*, whitelist-package*, property*) >
 
 <!ELEMENT web (web-uri, context-root)>
 <!ELEMENT web-uri (#PCDATA)>

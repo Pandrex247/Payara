@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) [2022-2024] Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022-2026 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -40,10 +40,10 @@
 package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.ContextServiceDefinitionDescriptor;
-import com.sun.enterprise.deployment.xml.TagNames;
+import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 
 public class ContextServiceDefinitionNode extends DeploymentDescriptorNode<ContextServiceDefinitionDescriptor> {
-    public final static XMLElement tag = new XMLElement(TagNames.CONTEXT_SERVICE);
+    public final static XMLElement tag = new XMLElement(RuntimeTagNames.CONTEXT_SERVICE);
 
     ContextServiceDefinitionDescriptor descriptor = null;
 
@@ -54,28 +54,28 @@ public class ContextServiceDefinitionNode extends DeploymentDescriptorNode<Conte
 
     protected java.util.Map getDispatchTable() {
         java.util.Map table = super.getDispatchTable();
-        table.put(TagNames.CONTEXT_SERVICE_NAME, "setName");
-        table.put(TagNames.CONTEXT_SERVICE_PROPAGATED, "addPropagated");
-        table.put(TagNames.CONTEXT_SERVICE_CLEARED, "addCleared");
-        table.put(TagNames.CONTEXT_SERVICE_UNCHANGED, "addUnchanged");
-        table.put(TagNames.CONTEXT_SERVICE_QUALIFIER, "addQualifier");
+        table.put(RuntimeTagNames.CONTEXT_SERVICE_NAME, "setName");
+        table.put(RuntimeTagNames.CONTEXT_SERVICE_PROPAGATED, "addPropagated");
+        table.put(RuntimeTagNames.CONTEXT_SERVICE_CLEARED, "addCleared");
+        table.put(RuntimeTagNames.CONTEXT_SERVICE_UNCHANGED, "addUnchanged");
+        table.put(RuntimeTagNames.CONTEXT_SERVICE_QUALIFIER, "addQualifier");
         return table;
     }
 
     public org.w3c.dom.Node writeDescriptor(org.w3c.dom.Node parent, String nodeName,
                                             ContextServiceDefinitionDescriptor contextServiceDefinitionDescriptor) {
         org.w3c.dom.Node node = appendChild(parent, nodeName);
-        appendTextChild(node, TagNames.CONTEXT_SERVICE_NAME, contextServiceDefinitionDescriptor.getName());
+        appendTextChild(node, RuntimeTagNames.CONTEXT_SERVICE_NAME, contextServiceDefinitionDescriptor.getName());
         for(String s : contextServiceDefinitionDescriptor.getCleared()) {
-            appendTextChild(node, TagNames.CONTEXT_SERVICE_CLEARED, s);
+            appendTextChild(node, RuntimeTagNames.CONTEXT_SERVICE_CLEARED, s);
         }
 
         for(String s : contextServiceDefinitionDescriptor.getPropagated()) {
-            appendTextChild(node, TagNames.CONTEXT_SERVICE_PROPAGATED, s);
+            appendTextChild(node, RuntimeTagNames.CONTEXT_SERVICE_PROPAGATED, s);
         }
 
         for(String s : contextServiceDefinitionDescriptor.getUnchanged()) {
-            appendTextChild(node, TagNames.CONTEXT_SERVICE_UNCHANGED, s);
+            appendTextChild(node, RuntimeTagNames.CONTEXT_SERVICE_UNCHANGED, s);
         }
 
         ResourcePropertyNode propertyNode = new ResourcePropertyNode();

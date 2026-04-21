@@ -53,6 +53,7 @@ import com.sun.enterprise.deployment.node.runtime.connector.ConnectorNode;
  *
  * @author Jerome Dochez
  */
+@Deprecated
 public class ConnectorRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {  
    
     /**

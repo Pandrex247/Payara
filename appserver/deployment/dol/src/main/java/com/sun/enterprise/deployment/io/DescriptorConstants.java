@@ -52,9 +52,11 @@ import java.io.File;
 public interface DescriptorConstants {
     
     /** Prefix used for S1AS xmls */
+    @Deprecated
     String S1AS_PREFIX = "sun-";
 
     /** Prefix used for GF xmls */
+    @Deprecated
     String GF_PREFIX = "glassfish-";
     
     String PAYARA_PREFIX = "payara-";
@@ -66,10 +68,12 @@ public interface DescriptorConstants {
     String APPLICATION_JAR_ENTRY = "META-INF/application.xml";
 
     /** The name of the deployment descriptor entry in Sun application ear. */
+    @Deprecated
     String S1AS_APPLICATION_DD_ENTRY = "META-INF" + File.separator
                                     + S1AS_PREFIX + "application.xml";
 
     /** The name of the deployment descriptor entry in Sun application jar. */
+    @Deprecated
     String S1AS_APPLICATION_JAR_ENTRY = "META-INF/"+S1AS_PREFIX+"application.xml";
 
     /** The name of the deployment descriptor entry in the ejb module jar. */
@@ -82,12 +86,15 @@ public interface DescriptorConstants {
     String EJB_IN_WAR_ENTRY = "WEB-INF/ejb-jar.xml";
 
     /** The name of the Sun deployment descriptor entry in ejb module jar. */
+    @Deprecated
     String S1AS_EJB_DD_ENTRY="META-INF"+File.separator+S1AS_PREFIX+"ejb-jar.xml";
 
     /** The Sun ejb deployment descriptor entry inside an ejb jar. */
+    @Deprecated
     String S1AS_EJB_JAR_ENTRY = "META-INF/" + S1AS_PREFIX + "ejb-jar.xml";
 
     /** The Sun ejb deployment descriptor entry inside a war. */
+    @Deprecated
     String S1AS_EJB_IN_WAR_ENTRY = "WEB-INF/" + S1AS_PREFIX + "ejb-jar.xml";
 
     /** The name of the deployment descriptor entry in the web module. */
@@ -114,12 +121,15 @@ public interface DescriptorConstants {
     String RAR_JAR_ENTRY = "META-INF/ra.xml";
 
     /** The name of the deployment descriptor entry in the rar module */
+    @Deprecated
     String S1AS_RAR_DD_ENTRY = "META-INF"+File.separator+S1AS_PREFIX+"ra.xml";
 
     /** The name of the deployment descriptor entry in the rar jar */
+    @Deprecated
     String S1AS_RAR_JAR_ENTRY = "META-INF/" + S1AS_PREFIX + "ra.xml";
 
     /** The name of the glassfish deployment descriptor entry inside the ear. */
+    @Deprecated
     String GF_APPLICATION_JAR_ENTRY = "META-INF/" + GF_PREFIX +
         "application.xml";
 
@@ -128,12 +138,15 @@ public interface DescriptorConstants {
     String GF_WEB_JAR_ENTRY = "WEB-INF/" + GF_PREFIX + "web.xml";
 
     /** The name of the glassfish deployment descriptor entry in the ejb jar. */
+    @Deprecated
     String GF_EJB_JAR_ENTRY = "META-INF/" + GF_PREFIX + "ejb-jar.xml";
 
     /** The name of the glassfish deployment descriptor entry in the war. */
+    @Deprecated
     String GF_EJB_IN_WAR_ENTRY = "WEB-INF/" + GF_PREFIX + "ejb-jar.xml";
 
     /** The name of the glassfish deployment descriptor entry in the client jar. */
+    @Deprecated
     String GF_APP_CLIENT_JAR_ENTRY = "META-INF/"+ GF_PREFIX + "application-client.xml";
     
     /** The name of the Payara deployment descriptor entry in web jar. */
@@ -169,11 +182,13 @@ public interface DescriptorConstants {
     String APP_CLIENT_JAR_ENTRY = "META-INF/application-client.xml";
 
     /** The name of the deployment descriptor entry in the client jar. */
+    @Deprecated
     String S1AS_APP_CLIENT_DD_ENTRY = "META-INF" 
                                    + File.separator
                                    + S1AS_PREFIX+"application-client.xml";
 
     /** The Sun application client entry inside a jar file. */
+    @Deprecated
     String S1AS_APP_CLIENT_JAR_ENTRY = "META-INF/"
                                     + S1AS_PREFIX + "application-client.xml";
 

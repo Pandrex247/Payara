@@ -37,51 +37,60 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
-// Portions Copyright 2026 Payara Foundation and/or its affiliates
+// Portions Copyright 2018-2026 Payara Foundation and/or its affiliates
+package fish.payara.deployment.io.runtime;
 
-package org.glassfish.ejb.deployment.io;
-
-import org.glassfish.deployment.common.Descriptor;
-import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
-import org.glassfish.ejb.deployment.node.runtime.GFEjbBundleRuntimeNode;
-import org.glassfish.hk2.api.PerLookup;
-
-import org.jvnet.hk2.annotations.Service;
-
-import com.sun.ejb.containers.EjbContainerUtil;
+import com.sun.enterprise.deployment.Application;
+import com.sun.enterprise.deployment.EarType;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
 import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
 import com.sun.enterprise.deployment.io.DescriptorConstants;
 import com.sun.enterprise.deployment.node.RootXMLNode;
-import com.sun.enterprise.deployment.util.DOLUtils;
+import fish.payara.deployment.node.runtime.application.PayaraApplicationRuntimeNode;
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
- * This class is responsible for handling the XML configuration information
- * for the Glassfish EJB Container
+ * This class is responsible for handling the XML configuration information for the Glassfish Application Container
  */
-@ConfigurationDeploymentDescriptorFileFor(EjbContainerUtil.EJB_CONTAINER_NAME)
-@Service
+@ConfigurationDeploymentDescriptorFileFor(EarType.ARCHIVE_TYPE)
 @PerLookup
-@Deprecated
-public class GFEjbRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
+@Service
+public class PayaraApplicationRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
+
     /**
-     * @return the location of the DeploymentDescriptor file for a
-     *         particular type of J2EE Archive
+     * @return the location of the DeploymentDescriptor file for a particular type of EE Archive
      */
     public String getDeploymentDescriptorPath() {
-        return DOLUtils.warType().equals(getArchiveType()) ?
-        		DescriptorConstants.GF_EJB_IN_WAR_ENTRY : DescriptorConstants.GF_EJB_JAR_ENTRY;
+        return DescriptorConstants.GF_APPLICATION_JAR_ENTRY;
     }
 
     /**
-     * @param descriptor the descriptor for which we need the node
-     * @return a RootXMLNode responsible for handling the deployment
-     *         descriptors associated with this J2EE module
+     * @return a RootXMLNode responsible for handling the deployment descriptors associated with this J2EE module
+     *
+     * @param descriptor The descriptor for which we need the node
      */
-    public RootXMLNode<EjbBundleDescriptorImpl> getRootXMLNode(Descriptor descriptor) {
-        if (descriptor instanceof EjbBundleDescriptorImpl) {
-            return new GFEjbBundleRuntimeNode((EjbBundleDescriptorImpl) descriptor);
+    public RootXMLNode getRootXMLNode(Descriptor descriptor) {
+        if (descriptor instanceof Application) {
+            return new PayaraApplicationRuntimeNode((Application) descriptor);
         }
+
         return null;
+    }
+
+    /**
+     * Register the root node for this runtime deployment descriptor file in the root nodes map, and also in the dtd map
+     * which will be used for dtd validation.
+     *
+     * @param rootNodesMap the map for storing all the root nodes
+     * @param publicIDToDTDMap the map for storing public id to dtd mapping
+     * @param versionUpgrades The list of upgrades from older versions
+     */
+    public void registerBundle(Map<String, Class<?>> rootNodesMap, Map<String, String> publicIDToDTDMap, Map<String, List<Class<?>>> versionUpgrades) {
+        rootNodesMap.put(PayaraApplicationRuntimeNode.registerBundle(publicIDToDTDMap), PayaraApplicationRuntimeNode.class);
     }
 }

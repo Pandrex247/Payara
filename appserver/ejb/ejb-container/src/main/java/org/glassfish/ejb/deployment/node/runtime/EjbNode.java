@@ -44,7 +44,11 @@ package org.glassfish.ejb.deployment.node.runtime;
 import com.sun.enterprise.deployment.EjbIORConfigurationDescriptor;
 import com.sun.enterprise.deployment.EjbSessionDescriptor;
 import com.sun.enterprise.deployment.RunAsIdentityDescriptor;
+import com.sun.enterprise.deployment.node.ContextServiceDefinitionNode;
 import com.sun.enterprise.deployment.node.DeploymentDescriptorNode;
+import com.sun.enterprise.deployment.node.ManagedExecutorDefinitionNode;
+import com.sun.enterprise.deployment.node.ManagedScheduledExecutorDefinitionNode;
+import com.sun.enterprise.deployment.node.ManagedThreadFactoryDefinitionNode;
 import com.sun.enterprise.deployment.node.XMLElement;
 import com.sun.enterprise.deployment.node.runtime.EjbRefNode;
 import com.sun.enterprise.deployment.node.runtime.MessageDestinationRefNode;
@@ -109,6 +113,14 @@ public class EjbNode extends DeploymentDescriptorNode<EjbDescriptor> {
                                WebServiceEndpointRuntimeNode.class);
         registerElementHandler(new XMLElement(RuntimeTagNames.FLUSH_AT_END_OF_METHOD), FlushAtEndOfMethodNode.class);
         registerElementHandler(new XMLElement(RuntimeTagNames.CHECKPOINT_AT_END_OF_METHOD), CheckpointAtEndOfMethodNode.class);
+
+        registerElementHandler(new XMLElement(RuntimeTagNames.MANAGED_EXECUTOR), ManagedExecutorDefinitionNode.class, "addResourceDescriptor");
+        //adding support for the managed-thread-factory tag
+        registerElementHandler(new XMLElement(RuntimeTagNames.MANAGED_THREAD_FACTORY), ManagedThreadFactoryDefinitionNode.class, "addResourceDescriptor");
+        //adding support for the managed-scheduled-executor tag
+        registerElementHandler(new XMLElement(RuntimeTagNames.MANAGED_SCHEDULED_EXECUTOR), ManagedScheduledExecutorDefinitionNode.class, "addResourceDescriptor");
+        //adding support for the context-service tag
+        registerElementHandler(new XMLElement(RuntimeTagNames.CONTEXT_SERVICE), ContextServiceDefinitionNode.class, "addResourceDescriptor");
     }
 
     @Override

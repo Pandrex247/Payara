@@ -59,6 +59,7 @@ import java.util.Map;
  * @author  Jerome Dochez
  * @version 
  */
+@Deprecated // Is the sun connector still a thing?
 public class ConnectorNode extends RuntimeBundleNode<ConnectorDescriptor> {
 
     protected SunConnector connector=null;

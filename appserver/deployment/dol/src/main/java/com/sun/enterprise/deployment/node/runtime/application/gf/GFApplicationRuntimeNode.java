@@ -52,6 +52,7 @@ import java.util.Map;
  * This node is responsible for handling all runtime information for 
  * application.
  */
+@Deprecated
 public class GFApplicationRuntimeNode extends ApplicationRuntimeNode {
 
     public GFApplicationRuntimeNode(Application descriptor) {

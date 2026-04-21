@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) [2022-2024] Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022-2026 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -40,6 +40,7 @@
 package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.ManagedScheduledExecutorDefinitionDescriptor;
+import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
 import org.w3c.dom.Node;
 
@@ -47,7 +48,7 @@ import java.util.Map;
 
 public class ManagedScheduledExecutorDefinitionNode extends DeploymentDescriptorNode<ManagedScheduledExecutorDefinitionDescriptor> {
 
-    public final static XMLElement tag = new XMLElement(TagNames.MANAGED_SCHEDULED_EXECUTOR);
+    public final static XMLElement tag = new XMLElement(RuntimeTagNames.MANAGED_SCHEDULED_EXECUTOR);
 
     ManagedScheduledExecutorDefinitionDescriptor descriptor = null;
 
@@ -58,24 +59,24 @@ public class ManagedScheduledExecutorDefinitionNode extends DeploymentDescriptor
 
     protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
-        table.put(TagNames.MANAGED_SCHEDULED_EXECUTOR_NAME, "setName");
-        table.put(TagNames.MANAGED_SCHEDULED_EXECUTOR_MAX_ASYNC, "setMaxAsync");
-        table.put(TagNames.MANAGED_SCHEDULED_EXECUTOR_CONTEXT_SERVICE_REF, "setContext");
-        table.put(TagNames.MANAGED_SCHEDULED_EXECUTOR_HUNG_TASK_THRESHOLD, "setHungTaskThreshold");
-        table.put(TagNames.MANAGED_SCHEDULED_EXECUTOR_QUALIFIER, "addQualifier");
+        table.put(RuntimeTagNames.MANAGED_SCHEDULED_EXECUTOR_NAME, "setName");
+        table.put(RuntimeTagNames.MANAGED_SCHEDULED_EXECUTOR_MAX_ASYNC, "setMaxAsync");
+        table.put(RuntimeTagNames.MANAGED_SCHEDULED_EXECUTOR_CONTEXT_SERVICE_REF, "setContext");
+        table.put(RuntimeTagNames.MANAGED_SCHEDULED_EXECUTOR_HUNG_TASK_THRESHOLD, "setHungTaskThreshold");
+        table.put(RuntimeTagNames.MANAGED_SCHEDULED_EXECUTOR_QUALIFIER, "addQualifier");
         return table;
     }
 
     public Node writeDescriptor(Node parent, String nodeName,
                                 ManagedScheduledExecutorDefinitionDescriptor managedScheduledExecutorDefinitionDescriptor) {
         Node node = appendChild(parent, nodeName);
-        appendTextChild(node, TagNames.MANAGED_SCHEDULED_EXECUTOR_NAME,
+        appendTextChild(node, RuntimeTagNames.MANAGED_SCHEDULED_EXECUTOR_NAME,
                 managedScheduledExecutorDefinitionDescriptor.getName());
-        appendTextChild(node, TagNames.MANAGED_SCHEDULED_EXECUTOR_MAX_ASYNC,
+        appendTextChild(node, RuntimeTagNames.MANAGED_SCHEDULED_EXECUTOR_MAX_ASYNC,
                 managedScheduledExecutorDefinitionDescriptor.getMaxAsync());
-        appendTextChild(node, TagNames.MANAGED_SCHEDULED_EXECUTOR_CONTEXT_SERVICE_REF,
+        appendTextChild(node, RuntimeTagNames.MANAGED_SCHEDULED_EXECUTOR_CONTEXT_SERVICE_REF,
                 managedScheduledExecutorDefinitionDescriptor.getContext());
-        appendTextChild(node, TagNames.MANAGED_SCHEDULED_EXECUTOR_HUNG_TASK_THRESHOLD,
+        appendTextChild(node, RuntimeTagNames.MANAGED_SCHEDULED_EXECUTOR_HUNG_TASK_THRESHOLD,
                 String.valueOf(managedScheduledExecutorDefinitionDescriptor.getHungTaskThreshold()));
         ResourcePropertyNode propertyNode = new ResourcePropertyNode();
         propertyNode.writeDescriptor(node, managedScheduledExecutorDefinitionDescriptor);

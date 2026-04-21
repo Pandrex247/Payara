@@ -52,6 +52,7 @@ import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
  * This node is responsible for handling all runtime information for 
  * ejb.
  */
+@Deprecated
 public class GFEjbBundleRuntimeNode extends EjbBundleRuntimeNode {
 
     public GFEjbBundleRuntimeNode(EjbBundleDescriptorImpl descriptor) {

@@ -1,0 +1,12 @@
+<!DOCTYPE payara-ejb-jar PUBLIC "-//Payara.fish// DTD Payara Application Server 7 EJB 4.0//EN" "https://docs.payara.fish/schemas/payara-ejb-jar_4_0-0.dtd">
+<payara-ejb-jar>
+    <enterprise-beans>
+        <ejb>
+            <ejb-name>ManagedThreadFactoryEJBFromConfig</ejb-name>
+            <managed-thread-factory>
+                <name>java:app/jakartaee/ManagedThreadFactoryE</name>
+                <priority>4</priority>
+            </managed-thread-factory>
+        </ejb>
+    </enterprise-beans>
+</payara-ejb-jar>

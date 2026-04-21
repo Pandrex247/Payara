@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) [2022-2024] Payara Foundation and/or its affiliates. All rights reserved.
+ * Copyright (c) 2022-2026 Payara Foundation and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -40,6 +40,7 @@
 package com.sun.enterprise.deployment.node;
 
 import com.sun.enterprise.deployment.ManagedExecutorDefinitionDescriptor;
+import com.sun.enterprise.deployment.xml.RuntimeTagNames;
 import com.sun.enterprise.deployment.xml.TagNames;
 import org.w3c.dom.Node;
 
@@ -47,7 +48,7 @@ import java.util.Map;
 
 public class ManagedExecutorDefinitionNode extends DeploymentDescriptorNode<ManagedExecutorDefinitionDescriptor> {
 
-    public final static XMLElement tag = new XMLElement(TagNames.MANAGED_EXECUTOR);
+    public final static XMLElement tag = new XMLElement(RuntimeTagNames.MANAGED_EXECUTOR);
 
     ManagedExecutorDefinitionDescriptor descriptor = null;
 
@@ -58,20 +59,20 @@ public class ManagedExecutorDefinitionNode extends DeploymentDescriptorNode<Mana
 
     protected Map getDispatchTable() {
         Map table = super.getDispatchTable();
-        table.put(TagNames.MANAGED_EXECUTOR_NAME, "setName");
-        table.put(TagNames.MANAGED_EXECUTOR_MAX_ASYNC, "setMaximumPoolSize");
-        table.put(TagNames.MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD, "setHungAfterSeconds");
-        table.put(TagNames.MANAGED_EXECUTOR_CONTEXT_SERVICE_REF, "setContext");
-        table.put(TagNames.MANAGED_EXECUTOR_QUALIFIER, "addQualifier");
+        table.put(RuntimeTagNames.MANAGED_EXECUTOR_NAME, "setName");
+        table.put(RuntimeTagNames.MANAGED_EXECUTOR_MAX_ASYNC, "setMaximumPoolSize");
+        table.put(RuntimeTagNames.MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD, "setHungAfterSeconds");
+        table.put(RuntimeTagNames.MANAGED_EXECUTOR_CONTEXT_SERVICE_REF, "setContext");
+        table.put(RuntimeTagNames.MANAGED_EXECUTOR_QUALIFIER, "addQualifier");
         return table;
     }
 
     public Node writeDescriptor(Node parent, String nodeName, ManagedExecutorDefinitionDescriptor managedExecutorDefinitionDescriptor) {
         Node node = appendChild(parent, nodeName);
-        appendTextChild(node, TagNames.MANAGED_EXECUTOR_NAME, managedExecutorDefinitionDescriptor.getName());
-        appendTextChild(node, TagNames.MANAGED_EXECUTOR_MAX_ASYNC, String.valueOf(managedExecutorDefinitionDescriptor.getMaximumPoolSize()));
-        appendTextChild(node, TagNames.MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD, String.valueOf(managedExecutorDefinitionDescriptor.getHungAfterSeconds()));
-        appendTextChild(node, TagNames.MANAGED_EXECUTOR_CONTEXT_SERVICE_REF, managedExecutorDefinitionDescriptor.getContext());
+        appendTextChild(node, RuntimeTagNames.MANAGED_EXECUTOR_NAME, managedExecutorDefinitionDescriptor.getName());
+        appendTextChild(node, RuntimeTagNames.MANAGED_EXECUTOR_MAX_ASYNC, String.valueOf(managedExecutorDefinitionDescriptor.getMaximumPoolSize()));
+        appendTextChild(node, RuntimeTagNames.MANAGED_EXECUTOR_HUNG_TASK_THRESHOLD, String.valueOf(managedExecutorDefinitionDescriptor.getHungAfterSeconds()));
+        appendTextChild(node, RuntimeTagNames.MANAGED_EXECUTOR_CONTEXT_SERVICE_REF, managedExecutorDefinitionDescriptor.getContext());
         ResourcePropertyNode propertyNode = new ResourcePropertyNode();
         propertyNode.writeDescriptor(node, managedExecutorDefinitionDescriptor);
         return node;

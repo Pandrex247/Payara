@@ -1,7 +1,7 @@
 /*
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS HEADER.
  *
- * Copyright (c) 1997-2012 Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2010-2012 Oracle and/or its affiliates. All rights reserved.
  *
  * The contents of this file are subject to the terms of either the GNU
  * General Public License Version 2 only ("GPL") or the Common Development
@@ -37,65 +37,48 @@
  * only if the new code is made subject to such option by the copyright
  * holder.
  */
+// Portions Copyright 2026 Payara Foundation and/or its affiliates
 
-package com.sun.enterprise.deployment.io;
+package fish.payara.ejb.deployment.io;
 
-import org.glassfish.api.deployment.archive.ArchiveType;
-
+import com.sun.ejb.containers.EjbContainerUtil;
+import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFile;
+import com.sun.enterprise.deployment.io.ConfigurationDeploymentDescriptorFileFor;
+import com.sun.enterprise.deployment.io.DescriptorConstants;
+import com.sun.enterprise.deployment.node.RootXMLNode;
 import com.sun.enterprise.deployment.util.DOLUtils;
+import fish.payara.ejb.deployment.node.runtime.PayaraEjbBundleRuntimeNode;
+import org.glassfish.deployment.common.Descriptor;
+import org.glassfish.ejb.deployment.descriptor.EjbBundleDescriptorImpl;
+import org.glassfish.hk2.api.PerLookup;
+import org.jvnet.hk2.annotations.Service;
 
 /**
- * Repository of descriptors
- * This class will evolve to provide a comprhensive list of
- * descriptors for any given type of j2ee application or
- * stand-alone module.
- *
- * @author Sreenivas Munnangi
+ * This class is responsible for handling the XML configuration information
+ * for the Payara EJB Container
  */
+@ConfigurationDeploymentDescriptorFileFor(EjbContainerUtil.EJB_CONTAINER_NAME)
+@Service
+@PerLookup
+public class PayaraEjbRuntimeDDFile extends ConfigurationDeploymentDescriptorFile {
+    /**
+     * @return the location of the DeploymentDescriptor file for a
+     *         particular type of J2EE Archive
+     */
+    public String getDeploymentDescriptorPath() {
+        return DOLUtils.warType().equals(getArchiveType()) ?
+        		DescriptorConstants.PAYARA_EJB_IN_WAR_ENTRY : DescriptorConstants.PAYARA_EJB_JAR_ENTRY;
+    }
 
-public class DescriptorList {
-
-	private final static String [] earList = {
-		DescriptorConstants.APPLICATION_DD_ENTRY,
-		DescriptorConstants.S1AS_APPLICATION_DD_ENTRY
-	};
-
-	private final static String [] ejbList = {
-		DescriptorConstants.EJB_DD_ENTRY,
-		DescriptorConstants.S1AS_EJB_DD_ENTRY,
-		DescriptorConstants.EJB_WEBSERVICES_JAR_ENTRY
-	};
-
-	private final static String [] warList = {
-		DescriptorConstants.WEB_DD_ENTRY,
-		DescriptorConstants.S1AS_WEB_DD_ENTRY,
-		DescriptorConstants.WEB_WEBSERVICES_JAR_ENTRY,
-		DescriptorConstants.JAXRPC_JAR_ENTRY
-	};
-
-	private final static String [] rarList = {
-		DescriptorConstants.RAR_DD_ENTRY,
-		DescriptorConstants.S1AS_RAR_DD_ENTRY
-	};
-
-	private final static String [] carList = {
-		DescriptorConstants.APP_CLIENT_DD_ENTRY,
-		DescriptorConstants.S1AS_APP_CLIENT_DD_ENTRY
-	};
-
-	public final static String [] getDescriptorsList (ArchiveType moduleType) {
-		if (moduleType == null) return null;
-		if (moduleType.equals(DOLUtils.earType())) {
-			return (String[])earList.clone();
-		} else if (moduleType.equals(DOLUtils.ejbType())) {
-			return (String[])ejbList.clone();
-		} else if (moduleType.equals(DOLUtils.warType())) {
-			return (String[])warList.clone();
-		} else if (moduleType.equals(DOLUtils.rarType())) {
-			return (String[])rarList.clone();
-		} else if (moduleType.equals(DOLUtils.carType())) {
-			return (String[])carList.clone();
-		}
-		return null;
-	}
+    /**
+     * @param descriptor the descriptor for which we need the node
+     * @return a RootXMLNode responsible for handling the deployment
+     *         descriptors associated with this J2EE module
+     */
+    public RootXMLNode<EjbBundleDescriptorImpl> getRootXMLNode(Descriptor descriptor) {
+        if (descriptor instanceof EjbBundleDescriptorImpl) {
+            return new PayaraEjbBundleRuntimeNode((EjbBundleDescriptorImpl) descriptor);
+        }
+        return null;
+    }
 }
