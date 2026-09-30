@@ -80,10 +80,5 @@
             <artifactId>jakarta.faces</artifactId>
             <optional>true</optional>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.microprofile.rest.client</groupId>
-            <artifactId>microprofile-rest-client-api</artifactId>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
 </project>
